@@ -1,0 +1,26 @@
+C:\Users\minht\OneDrive\Máy tính\DATN_Code\VStyle\MinhTuan.Service\bin\Debug\net8.0\MinhTuan.Service.deps.json
+C:\Users\minht\OneDrive\Máy tính\DATN_Code\VStyle\MinhTuan.Service\bin\Debug\net8.0\MinhTuan.Service.dll
+C:\Users\minht\OneDrive\Máy tính\DATN_Code\VStyle\MinhTuan.Service\bin\Debug\net8.0\MinhTuan.Service.pdb
+C:\Users\minht\OneDrive\Máy tính\DATN_Code\VStyle\MinhTuan.Service\obj\Debug\net8.0\MinhTuan.Service.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\minht\OneDrive\Máy tính\DATN_Code\VStyle\MinhTuan.Service\obj\Debug\net8.0\MinhTuan.Service.AssemblyInfoInputs.cache
+C:\Users\minht\OneDrive\Máy tính\DATN_Code\VStyle\MinhTuan.Service\obj\Debug\net8.0\MinhTuan.Service.AssemblyInfo.cs
+C:\Users\minht\OneDrive\Máy tính\DATN_Code\VStyle\MinhTuan.Service\obj\Debug\net8.0\MinhTuan.Service.csproj.CoreCompileInputs.cache
+C:\Users\minht\OneDrive\Máy tính\DATN_Code\VStyle\MinhTuan.Service\obj\Debug\net8.0\MinhTuan.Service.dll
+C:\Users\minht\OneDrive\Máy tính\DATN_Code\VStyle\MinhTuan.Service\obj\Debug\net8.0\refint\MinhTuan.Service.dll
+C:\Users\minht\OneDrive\Máy tính\DATN_Code\VStyle\MinhTuan.Service\obj\Debug\net8.0\MinhTuan.Service.pdb
+C:\Users\minht\OneDrive\Máy tính\DATN_Code\VStyle\MinhTuan.Service\obj\Debug\net8.0\ref\MinhTuan.Service.dll
+E:\BE_STUDYING\DATN\Code\HelloWorld\VStyle\MinhTuan.Service\bin\Debug\net8.0\MinhTuan.Service.deps.json
+E:\BE_STUDYING\DATN\Code\HelloWorld\VStyle\MinhTuan.Service\bin\Debug\net8.0\MinhTuan.Service.dll
+E:\BE_STUDYING\DATN\Code\HelloWorld\VStyle\MinhTuan.Service\bin\Debug\net8.0\MinhTuan.Service.pdb
+E:\BE_STUDYING\DATN\Code\HelloWorld\VStyle\MinhTuan.Service\obj\Debug\net8.0\MinhTuan.Service.GeneratedMSBuildEditorConfig.editorconfig
+E:\BE_STUDYING\DATN\Code\HelloWorld\VStyle\MinhTuan.Service\obj\Debug\net8.0\MinhTuan.Service.AssemblyInfoInputs.cache
+E:\BE_STUDYING\DATN\Code\HelloWorld\VStyle\MinhTuan.Service\obj\Debug\net8.0\MinhTuan.Service.AssemblyInfo.cs
+E:\BE_STUDYING\DATN\Code\HelloWorld\VStyle\MinhTuan.Service\obj\Debug\net8.0\MinhTuan.Service.csproj.CoreCompileInputs.cache
+E:\BE_STUDYING\DATN\Code\HelloWorld\VStyle\MinhTuan.Service\obj\Debug\net8.0\MinhTuan.Service.dll
+E:\BE_STUDYING\DATN\Code\HelloWorld\VStyle\MinhTuan.Service\obj\Debug\net8.0\refint\MinhTuan.Service.dll
+E:\BE_STUDYING\DATN\Code\HelloWorld\VStyle\MinhTuan.Service\obj\Debug\net8.0\MinhTuan.Service.pdb
+E:\BE_STUDYING\DATN\Code\HelloWorld\VStyle\MinhTuan.Service\obj\Debug\net8.0\ref\MinhTuan.Service.dll
+E:\BE_STUDYING\DATN\Code\HelloWorld\VStyle\MinhTuan.Service\bin\Debug\net8.0\MinhTuan.Domain.dll
+E:\BE_STUDYING\DATN\Code\HelloWorld\VStyle\MinhTuan.Service\bin\Debug\net8.0\MinhTuan.Domain.pdb
+E:\BE_STUDYING\DATN\Code\HelloWorld\VStyle\MinhTuan.Service\obj\Debug\net8.0\MinhTuan.Service.csproj.AssemblyReference.cache
+E:\BE_STUDYING\DATN\Code\HelloWorld\VStyle\MinhTuan.Service\obj\Debug\net8.0\MinhTuan.39F2EAC9.Up2Date

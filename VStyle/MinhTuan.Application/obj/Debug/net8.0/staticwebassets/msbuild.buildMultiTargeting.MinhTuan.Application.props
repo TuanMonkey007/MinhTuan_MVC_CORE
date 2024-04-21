@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\MinhTuan.Application.props" />
+</Project>
