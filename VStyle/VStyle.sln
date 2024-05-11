@@ -3,12 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
-
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinhTuan.Domain", "MinhTuan.Domain\MinhTuan.Domain.csproj", "{D4B6DF77-9168-4480-BB17-FADCCFA5071B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinhTuan.Service", "MinhTuan.Service\MinhTuan.Service.csproj", "{DEBE580D-242F-4837-B819-CDA1B198B7A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinhTuan.Application", "MinhTuan.Application\MinhTuan.Application.csproj", "{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinhTuan.Application", "MinhTuan.Application\MinhTuan.Application.csproj", "{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,10 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C991B404-8FE5-4186-8DC2-6C3D38519988}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C991B404-8FE5-4186-8DC2-6C3D38519988}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C991B404-8FE5-4186-8DC2-6C3D38519988}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C991B404-8FE5-4186-8DC2-6C3D38519988}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D4B6DF77-9168-4480-BB17-FADCCFA5071B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D4B6DF77-9168-4480-BB17-FADCCFA5071B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4B6DF77-9168-4480-BB17-FADCCFA5071B}.Release|Any CPU.ActiveCfg = Release|Any CPU

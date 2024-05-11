@@ -9,16 +9,16 @@ namespace MinhTuan.Domain.Core.UnitOfWork
     {
         private readonly VStyleContext _context;
 
-        public UnitOfWork(VStyleContext context, IRepository<Product> productRepo)
+        public UnitOfWork(VStyleContext context)
         {
             _context = context;
-            ProductRepo = productRepo;
+          
         }
         public IRepository<T> GetRepository<T>() where T : class
         {
             return new Repository<T>(_context);
         }
-        public IRepository<Product> ProductRepo { get; }
+
 
         public void Dispose()
         {

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\BE_STUDYING\\DATN\\Code\\HelloWorld\\VStyle\\MinhTuan.Service\\MinhTuan.Service.csproj": {}
+    "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Service\\MinhTuan.Service.csproj": {}
   },
   "projects": {
-    "E:\\BE_STUDYING\\DATN\\Code\\HelloWorld\\VStyle\\MinhTuan.Domain\\MinhTuan.Domain.csproj": {
+    "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Domain\\MinhTuan.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\BE_STUDYING\\DATN\\Code\\HelloWorld\\VStyle\\MinhTuan.Domain\\MinhTuan.Domain.csproj",
+        "projectUniqueName": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Domain\\MinhTuan.Domain.csproj",
         "projectName": "MinhTuan.Domain",
-        "projectPath": "E:\\BE_STUDYING\\DATN\\Code\\HelloWorld\\VStyle\\MinhTuan.Domain\\MinhTuan.Domain.csproj",
+        "projectPath": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Domain\\MinhTuan.Domain.csproj",
         "packagesPath": "C:\\Users\\minht\\.nuget\\packages\\",
-        "outputPath": "E:\\BE_STUDYING\\DATN\\Code\\HelloWorld\\VStyle\\MinhTuan.Domain\\obj\\",
+        "outputPath": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\minht\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -45,17 +45,29 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
             "Autofac.Extensions.DependencyInjection": {
               "target": "Package",
               "version": "[9.0.0, )"
             },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.4, )"
+            },
             "Microsoft.AspNetCore.Hosting": {
               "target": "Package",
-              "version": "[2.1.1, )"
+              "version": "[2.2.7, )"
             },
             "Microsoft.AspNetCore.Hosting.Abstractions": {
               "target": "Package",
               "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.4, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
@@ -114,14 +126,14 @@
         }
       }
     },
-    "E:\\BE_STUDYING\\DATN\\Code\\HelloWorld\\VStyle\\MinhTuan.Service\\MinhTuan.Service.csproj": {
+    "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Service\\MinhTuan.Service.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\BE_STUDYING\\DATN\\Code\\HelloWorld\\VStyle\\MinhTuan.Service\\MinhTuan.Service.csproj",
+        "projectUniqueName": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Service\\MinhTuan.Service.csproj",
         "projectName": "MinhTuan.Service",
-        "projectPath": "E:\\BE_STUDYING\\DATN\\Code\\HelloWorld\\VStyle\\MinhTuan.Service\\MinhTuan.Service.csproj",
+        "projectPath": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Service\\MinhTuan.Service.csproj",
         "packagesPath": "C:\\Users\\minht\\.nuget\\packages\\",
-        "outputPath": "E:\\BE_STUDYING\\DATN\\Code\\HelloWorld\\VStyle\\MinhTuan.Service\\obj\\",
+        "outputPath": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Service\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\minht\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -138,8 +150,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "E:\\BE_STUDYING\\DATN\\Code\\HelloWorld\\VStyle\\MinhTuan.Domain\\MinhTuan.Domain.csproj": {
-                "projectPath": "E:\\BE_STUDYING\\DATN\\Code\\HelloWorld\\VStyle\\MinhTuan.Domain\\MinhTuan.Domain.csproj"
+              "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Domain\\MinhTuan.Domain.csproj": {
+                "projectPath": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Domain\\MinhTuan.Domain.csproj"
               }
             }
           }
@@ -159,6 +171,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
             "Autofac": {
               "target": "Package",
               "version": "[8.0.0, )"

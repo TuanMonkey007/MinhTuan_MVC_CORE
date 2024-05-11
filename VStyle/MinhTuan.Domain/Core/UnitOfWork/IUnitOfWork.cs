@@ -7,7 +7,7 @@ namespace MinhTuan.Domain.Core.UnitOfWork
     {
         //Khai báo Repository được sử dụng
        
-        IRepository<Product> ProductRepo { get; }
+        
 
         //Kết thúc khai báo
         IRepository<T> GetRepository<T>() where T : class;

@@ -5,7 +5,7 @@ namespace MinhTuan.Domain.Core.Entity
     public abstract class AuditableEntity : Entity, IAuditableEntity
     {
         [ScaffoldColumn(false)]
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
         [MaxLength(256)]
         [ScaffoldColumn(false)]
@@ -14,7 +14,7 @@ namespace MinhTuan.Domain.Core.Entity
         public Guid? CreatedID { get; set; }
 
         [ScaffoldColumn(false)]
-        public DateTime UpdatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
 
         [MaxLength(256)]
         [ScaffoldColumn(false)]

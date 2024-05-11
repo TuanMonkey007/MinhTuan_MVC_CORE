@@ -1,8 +1,13 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@using HGO.ASPNetCore.FileManager
+@using HGO.ASPNetCore.FileManager.ViewComponentsModel
+@using System.IO
 
-<div class="text-center">
-    <h1 class="display-4">@ViewBag.hello</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@{
+	Layout = "_Layout";
+}
+@this.RenderHgoFileManagerJavaScripts();
+@this.RenderHgoFileManagerCss(false);
+<main class="main container" id="main" style="min-height:100px">
+
+</main>
+<h1>Đây là trang dành cho khách hàng</h1>

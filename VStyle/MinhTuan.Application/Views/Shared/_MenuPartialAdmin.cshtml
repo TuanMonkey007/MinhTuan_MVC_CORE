@@ -1,0 +1,57 @@
+﻿<!-- ======= Sidebar ======= -->
+<aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+        <li class="nav-item">
+            <a class="nav-link collapsed " href="@Url.Action("index", "Home")">
+                <i class="bi bi-bar-chart"></i>
+                <span>Thống kê bán hàng</span>
+            </a>
+        </li><!-- End Dashboard Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed " data-bs-target="#components-nav" data-bs-toggle="collapse" href="@Url.Action("Privacy", "Home")">
+                <i class="bx bxs-t-shirt"></i><span>Quản lý sản phẩm</span>
+            </a>
+
+        </li><!-- End Components Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#" style="background-color: #fff !important">
+                <i class="bi bi-cart3"></i><span>Quản lý đơn hàng</span>
+            </a>
+
+        </li><!-- End Forms Nav -->
+
+
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
+                <i class="ri-settings-3-line"></i><span>Quản trị hệ thống</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li>
+                    @{
+                        Guid id = new Guid("a3042b23-a912-48c9-47f9-08dc5133c54f");
+                    }
+                    <a href="@Url.Action("Privacy", "Home",new { id =id }))">
+                        <i class="bi bi-circle"></i><span>Tài khoản người dùng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="bi bi-circle"></i><span>Vai trò</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="bi bi-circle"></i><span>Danh mục dùng chung</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- End Charts Nav -->
+
+    </ul>
+
+</aside><!-- End Sidebar-->
