@@ -1,4 +1,4 @@
-﻿@using HGO.ASPNetCore.FileManager
+﻿
 <!DOCTYPE html>
 <html lang="en">
 @* <head>
@@ -44,8 +44,7 @@
 	<link rel="stylesheet" type="text/css" href="~/css/util.css">
 	<link rel="stylesheet" type="text/css" href="~/css/main.css">
 	<!--===============================================================================================-->
-	@this.RenderHgoFileManagerCss(false);
-	@* /* //Dark mode == false */ *@
+
 
 </head>
 <body>
@@ -245,7 +244,7 @@
 			<i class="zmdi zmdi-chevron-up"></i>
 		</span>
 	</div>
-    @this.RenderHgoFileManagerJavaScripts();
+
     @await RenderSectionAsync("Scripts", required: false)
 	<!--===============================================================================================-->
 	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
