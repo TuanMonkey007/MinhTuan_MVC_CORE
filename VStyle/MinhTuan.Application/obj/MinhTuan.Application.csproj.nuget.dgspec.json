@@ -56,14 +56,6 @@
               "target": "Package",
               "version": "[13.0.1, )"
             },
-            "GleamTech.FileUltimate": {
-              "target": "Package",
-              "version": "[8.8.8, )"
-            },
-            "HGO.ASPNetCore.FileManager": {
-              "target": "Package",
-              "version": "[1.0.7, )"
-            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[8.0.4, )"
@@ -71,10 +63,6 @@
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
               "version": "[8.0.4, )"
-            },
-            "Microsoft.AspNetCore.Mvc.Core": {
-              "target": "Package",
-              "version": "[2.1.38, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
@@ -180,14 +168,6 @@
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[8.0.4, )"
-            },
-            "Microsoft.AspNetCore.Hosting": {
-              "target": "Package",
-              "version": "[2.2.7, )"
-            },
-            "Microsoft.AspNetCore.Hosting.Abstractions": {
-              "target": "Package",
-              "version": "[2.2.0, )"
             },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",

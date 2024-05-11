@@ -1,4 +1,4 @@
-﻿using HGO.ASPNetCore.FileManager;
+﻿
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,12 +10,12 @@ using MinhTuan.Domain.Core.UnitOfWork;
 using MinhTuan.Domain.Entities;
 using MinhTuan.Service.Core;
 using MinhTuan.Service.Core.Services;
-using System.Runtime.InteropServices.JavaScript;
+
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddHgoFileManager(); // Đăng ký service dùng file manager
+
 builder.Services.AddHttpContextAccessor(); // đăng ký để truy cập thông tin
 
 //Add service identity
@@ -85,7 +85,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseHgoFileManager();//Sử dụng FileManager
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(

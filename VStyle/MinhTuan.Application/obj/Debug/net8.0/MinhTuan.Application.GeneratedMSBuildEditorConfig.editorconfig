@@ -17,71 +17,71 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = MinhTuan.Application
 build_property.RootNamespace = MinhTuan.Application
-build_property.ProjectDir = e:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\
+build_property.ProjectDir = E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
-build_property.GenerateRazorMetadataSourceChecksumAttributes = true
-build_property.MSBuildProjectDirectory = e:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application
 build_property._RazorSourceGeneratorDebug = 
 
-[e:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Areas/Dashboard/Views/Dashboard/Index.cshtml]
+[E:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Areas/Dashboard/Views/Dashboard/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcRGFzaGJvYXJkXFZpZXdzXERhc2hib2FyZFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[e:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Account/Login.cshtml]
+[E:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[e:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Account/Register.cshtml]
+[E:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Account/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[e:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Account/UserProfile.cshtml]
+[E:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Account/UserProfile.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxVc2VyUHJvZmlsZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[e:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Home/Index.cshtml]
+[E:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[e:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Home/Privacy.cshtml]
+[E:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[e:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Shared/Error.cshtml]
+[E:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[e:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Shared/_FooterAdmin.cshtml]
+[E:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Shared/_FooterAdmin.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Gb290ZXJBZG1pbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[e:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Shared/_FooterCustomer.cshtml]
+[E:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Shared/_FooterCustomer.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Gb290ZXJDdXN0b21lci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[e:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Shared/_Layout.cshtml]
+[E:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[e:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Shared/_LayoutAdmin.cshtml]
+[E:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Shared/_LayoutAdmin.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXRBZG1pbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[e:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Shared/_MenuPartialAdmin.cshtml]
+[E:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Shared/_MenuPartialAdmin.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9NZW51UGFydGlhbEFkbWluLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[e:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Shared/_ValidationScriptsPartial.cshtml]
+[E:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[e:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/_ViewImports.cshtml]
+[E:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[e:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/_ViewStart.cshtml]
+[E:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
