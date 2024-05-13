@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 namespace MinhTuan.Application.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IMapper _mapper;

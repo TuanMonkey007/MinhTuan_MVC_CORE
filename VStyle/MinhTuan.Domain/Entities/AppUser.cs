@@ -11,4 +11,5 @@ namespace MinhTuan.Domain.Entities;
 public class AppUser : IdentityUser
 {
     public string FullName { get; set; }
+    public string AccountType { get; set; }
 }

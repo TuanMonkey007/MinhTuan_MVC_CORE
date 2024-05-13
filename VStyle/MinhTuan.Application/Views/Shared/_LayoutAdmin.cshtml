@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using MinhTuan.Domain.Entities
 @using MinhTuan.Domain.Helper;
+@using MinhTuan.Domain.Helper.Constants;
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
 <!DOCTYPE html>
@@ -9,9 +10,7 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
     <meta charset="utf-8">
-    
 
-    
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -34,14 +33,25 @@
 
     <!-- Template Main CSS File -->
     <link href="~/assets/css/style.css" rel="stylesheet">
+    <style>
+        /* Thêm hiệu ứng transition cho hiển thị và ẩn đi ô alert */
+        .alert {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            transform: translateX(20px); /* Di chuyển alert lên trên */
+         
+           
+        }
 
-    <!-- =======================================================
-    * Template Name: VStyle
-    * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-    * Updated: Apr 7 2024 with Bootstrap v5.3.3
-    * Author: BootstrapMade.com
-    * License: https://bootstrapmade.com/license/
-    ======================================================== -->
+            .alert.show {
+                opacity: 1;
+                transform: translateY(0); /* Di chuyển alert về vị trí ban đầu và bên phải */
+            }
+
+
+       
+    </style>
+   
 </head>
 <body>
     <!-- ======= Header ======= -->
@@ -54,8 +64,7 @@
             </a>
             <i class="bi bi-list toggle-sidebar-btn"></i>
         </div><!-- End Logo -->
-
-       
+        
 
         <nav class="header-nav ms-auto">
             <ul class="d-flex align-items-center">
@@ -153,7 +162,7 @@
                            
                             @if (User.IsInRole(AppRole.ADMINISTRATOR))
                             {
-                               
+
                                 <span>Quản trị viên</span>
                             }
                             else if (User.IsInRole(AppRole.STAFF))
@@ -179,7 +188,7 @@
                         <li>
                             <a class="dropdown-item d-flex align-items-center" asp-action="Logout" asp-controller="Account">
                                 <i class="bi bi-box-arrow-right"></i>
-                                <span>Sign Out</span>
+                                <span>Đăng xuất</span>
                             </a>
                         </li>
 
@@ -187,13 +196,22 @@
                 </li><!-- End Profile Nav -->
 
             </ul>
-        </nav><!-- End Icons Navigation -->
+           
 
+        </nav><!-- End Icons Navigation -->
+       
     </header><!-- End Header -->
     @await Html.PartialAsync("_MenuPartialAdmin")
+    
     @RenderBody()
    @await Html.PartialAsync("_FooterAdmin")
+    <!-- Ô Alert -->
+    <div id="custom-alert" class="alert @TempData["AlertType"] alert-dismissible fade" role="alert" style="position:fixed;top:70px;right:20px">
+        <i class="@TempData["ClassIcon"]"></i>
+        @TempData["AlertMessage"]
 
+    </div>
+    <!-- End Ô Alert -->
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
     <!-- Vendor JS Files -->
@@ -208,5 +226,17 @@
 
     <!-- Template Main JS File -->
     <script src="~/assets/js/main.js"></script>
+    <script>
+        // Hiển thị ô alert trong 1 giây
+        setTimeout(function () {
+            document.getElementById("custom-alert").classList.add("show");
+        }, 100);
+        
+
+        // Tự động ẩn đi sau 2 giây
+        setTimeout(function () {
+            document.getElementById("custom-alert").classList.remove("show");
+        }, 2000);
+    </script>
 </body>
 </html>

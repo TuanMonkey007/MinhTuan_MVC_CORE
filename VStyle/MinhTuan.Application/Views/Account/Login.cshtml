@@ -1,10 +1,9 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using MinhTuan.Application.ViewModels.AccountViewModel;
 @{
     Layout = null;
 
 }
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,6 +15,9 @@
     <title>Pages / Login - NiceAdmin Bootstrap Template</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
+      <link href="~/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet">
+
 
     <!-- Favicons -->
     <link href="~/assets/img/favicon.png" rel="icon">
@@ -24,7 +26,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
+    @*  ~/ là đường dẫn tới wwwroot *@
     <!-- Vendor CSS Files -->
     <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
@@ -34,95 +36,367 @@
     <link href="~/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="~/assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
-    <!-- Template Main CSS File -->
-    <link href="~/assets/css/style.css" rel="stylesheet">
 
+
+
+
+
+
+
+
+
+    <style>
+        
+        /* Thêm hiệu ứng transition cho hiển thị và ẩn đi ô alert */
+        .alert {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            transform: translateX(20px); /* Di chuyển alert lên trên */
+        }
+
+            .alert.show {
+                opacity: 1;
+                transform: translateY(0); /* Di chuyển alert về vị trí ban đầu và bên phải */
+            }
+   
+      
+        * {
+    box-sizing: border-box;
+}
+
+body {
+    background: #f6f5f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: 'Montserrat', sans-serif;
+    height: 100vh;
+    margin: -20px 0 50px;
+}
+
+h1 {
+    font-weight: bold;
+    margin: 0;
+}
+
+h2 {
+    text-align: center;
+}
+
+p {
+    font-size: 14px;
+    font-weight: 100;
+    line-height: 20px;
+    letter-spacing: 0.5px;
+    margin: 20px 0 30px;
+}
+
+span {
+    font-size: 12px;
+}
+
+a {
+    color: #333;
+    font-size: 14px;
+    text-decoration: none;
+    margin: 15px 0;
+}
+
+button {
+    border-radius: 20px;
+    border: 1px solid #FF4B2B;
+    background-color: #FF4B2B;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+button:focus {
+    outline: none;
+}
+
+button.ghost {
+    background-color: transparent;
+    border-color: #FFFFFF;
+}
+
+form {
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 50px;
+    height: 100%;
+    text-align: center;
+}
+
+input {
+    background-color: #eee;
+    border: none;
+    border-radius:5px;
+    padding: 12px 15px;
+    margin: 8px 0;
+    width: 100%;
+}
+
+.container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+        0 10px 10px rgba(0, 0, 0, 0.22);
+    position: relative;
+    overflow: hidden;
+    width: 768px;
+    max-width: 100%;
+    min-height: 480px;
+}
+
+.form-container {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    transition: all 0.6s ease-in-out;
+}
+
+.sign-in-container {
+    left: 0;
+    width: 50%;
+    z-index: 2;
+}
+
+.container.right-panel-active .sign-in-container {
+    transform: translateX(100%);
+}
+
+.sign-up-container {
+    left: 0;
+    width: 50%;
+    opacity: 0;
+    z-index: 1;
+}
+
+.container.right-panel-active .sign-up-container {
+    transform: translateX(100%);
+    opacity: 1;
+    z-index: 5;
+    animation: show 0.6s;
+}
+
+@@keyframes show {
+
+    0%,
+    49.99% {
+        opacity: 0;
+        z-index: 1;
+    }
+
+    50%,
+    100% {
+        opacity: 1;
+        z-index: 5;
+    }
+}
+
+.overlay-container {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    transition: transform 0.6s ease-in-out;
+    z-index: 100;
+}
+
+.container.right-panel-active .overlay-container {
+    transform: translateX(-100%);
+}
+
+.overlay {
+    background: #FF416C;
+    background: -webkit-linear-gradient(to right, #FF4B2B, #FF416C);
+    background: linear-gradient(to right, #FF4B2B, #FF416C);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 0 0;
+    color: #FFFFFF;
+    position: relative;
+    left: -100%;
+    height: 100%;
+    width: 200%;
+    transform: translateX(0);
+    transition: transform 0.6s ease-in-out;
+}
+
+.container.right-panel-active .overlay {
+    transform: translateX(50%);
+}
+
+.overlay-panel {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 40px;
+    text-align: center;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    transform: translateX(0);
+    transition: transform 0.6s ease-in-out;
+}
+
+.overlay-left {
+    transform: translateX(-20%);
+}
+
+.container.right-panel-active .overlay-left {
+    transform: translateX(0);
+}
+
+.overlay-right {
+    right: 0;
+    transform: translateX(0);
+}
+
+.container.right-panel-active .overlay-right {
+    transform: translateX(20%);
+}
+
+.social-container {
+    margin: 20px 0;
+}
+
+.social-container a {
+    border: 1px solid #DDDDDD;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 5px;
+    height: 40px;
+    width: 40px;
+}
+
+footer {
+    background-color: #222;
+    color: #fff;
+    font-size: 14px;
+    bottom: 0;
+    position: fixed;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 999;
+}
+
+footer p {
+    margin: 10px 0;
+}
+
+footer i {
+    color: red;
+}
+
+footer a {
+    color: #3c97bf;
+    text-decoration: none;
+}
+
+    </style>
 </head>
 
 <body>
 
-    <main>
-        <div class="container">
-
-            <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
-
-                            <div class="d-flex justify-content-center py-4">
-                                <a href="index.html" class="logo d-flex align-items-center w-auto">
-                                    <img src="~/assets/img/logo.png" alt="">
-                                    <span class="d-none d-lg-block">NiceAdmin</span>
-                                </a>
-                            </div><!-- End Logo -->
-
-                            <div class="card mb-3">
-
-                                <div class="card-body">
-
-                                    <div class="pt-4 pb-2">
-                                        <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
-                                        <p class="text-center small">Enter your username & password to login</p>
-                                    </div>
-
-                                    <form class="row g-3 needs-validation" novalidate action="@Url.Action("Login", "Account")" method="post">
-                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                                        <div class="col-12">
-                                            <label for="PhoneOrEmail" class="form-label">SĐT/Email</label>
-                                            <div class="input-group has-validation">
-                                                <span class="input-group-text" id="inputGroupPrepend"></span>
-                                                <input type="text" name="PhoneOrEmail" class="form-control" id="yourUsername" required>
-                                                <div class="invalid-feedback">Please enter your username.</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <label for="yourPassword" class="form-label">Mật khẩu</label>
-                                            <input type="password" name="password" class="form-control" id="yourPassword" required>
-                                            <div class="invalid-feedback">Please enter your password!</div>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="rememberMe" value="true" id="rememberMe">
-                                                <label class="form-check-label" for="rememberMe">Ghi nhớ đăng nhập</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <button class="btn btn-primary w-100" type="submit">Đăng nhập</button>
-                                        </div>
-                                        <div class="col-12">
-                                            <p class="small mb-0">Bạn đã có tài khoản chưa? @Html.ActionLink("Tạo tài khoản", "ShowView_Register", "Account")</p>
-                                        </div>
-                                    </form>
-
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div>
-
-            </section>
-
+    <div id="custom-alert" class="alert @TempData["AlertType"] alert-dismissible fade" role="alert" style="position:fixed;top:70px;right:20px">
+        <i class="@TempData["ClassIcon"]"></i>
+        @TempData["AlertMessage"]
+       
+    </div>
+    <!-- End Ô Alert -->
+    <div class="container" id="container">
+        <div class="form-container sign-up-container">
+            <form asp-action="Register" asp-controller="Account">
+                <h1>Tạo tài khoản</h1>
+               
+                <input type="text" placeholder="Họ và tên" name="FullName" />
+                <input type="email" placeholder="Email" name="Email" />
+                <input type="tel" placeholder="Số điện thoại" name="PhoneNumber" />
+                <input type="password" placeholder="Mật khẩu" name="Password" />
+                <input type="password" placeholder="Xác nhận mật khẩu" />
+                <button>Đăng ký</button>
+            </form>
         </div>
-    </main><!-- End #main -->
+        <div class="form-container sign-in-container">
+            <form asp-action="Login" asp-controller="Account">
+                <h1>Đăng nhập</h1>
+                <div class="social-container">
+                    <a asp-action="LoginFacebook" asp-controller="Account" class="social"><i style="color: #1877f2" class="ri-facebook-fill"></i></a>
+                    <a asp-action="LoginGoogle" asp-controller="Account" class="social"><i style="color: #DB4437" class="ri-google-fill"></i></a>
+                   
+                </div>
+                <span>Đăng nhập nhanh bằng tài khoản mạng xã hội</span>
+                <input type="text" placeholder="Số điện thoại / Email" name="PhoneOrEmail" />
+                <input type="password" placeholder="Mật khẩu" / name="Password">
+                <span style="width: 100%;text-align:start">
+                    <input type="checkbox" name="RememberMe" value="true" placeholder="Password" style="max-width:5%" />
+                    <span>Ghi nhớ đăng nhập</span>
+                </span>
+                <button style="margin-top:5px">Đăng nhập</button>
+            </form>
+        </div>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>V-Style</h1>
+                    <h1>Chào mừng trở lại!</h1>
+                    <p>Đăng nhập để sử dụng dịch vụ của chúng tôi</p>
+                    <button class="ghost" id="signIn">Đăng nhập</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>V-Style</h1>
+                    <h1>Xin chào!</h1>
+                    <p>Nhập thông tin cá nhân và bắt đầu với chúng tôi</p>
+                    <button class="ghost" id="signUp">Đăng ký</button>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+       <script>
+        const signUpButton = document.getElementById('signUp');
+        const signInButton = document.getElementById('signIn');
+        const container = document.getElementById('container');
 
-    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+        signUpButton.addEventListener('click', () => {
+            container.classList.add('right-panel-active');
+        });
 
-    <!-- Vendor JS Files -->
-    <script src="~/assets/vendor/apexcharts/apexcharts.min.js"></script>
-    <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="~/assets/vendor/chart.js/chart.umd.js"></script>
-    <script src="~/assets/vendor/echarts/echarts.min.js"></script>
-    <script src="~/assets/vendor/quill/quill.min.js"></script>
-    <script src="~/assets/vendor/simple-datatables/simple-datatables.js"></script>
-    <script src="~/assets/vendor/tinymce/tinymce.min.js"></script>
-    <script src="~/assets/vendor/php-email-form/validate.js"></script>
+        signInButton.addEventListener('click', () => {
+            container.classList.remove('right-panel-active');
+        });
+   
+        setTimeout(function () {
+            document.getElementById("custom-alert").classList.add("show");
+        }, 100);
 
-    <!-- Template Main JS File -->
-    <script src="~/assets/js/main.js"></script>
+        // Tự động ẩn đi sau 2 giây
+        setTimeout(function () {
+            document.getElementById("custom-alert").classList.remove("show");
+        }, 2000);
+ 
+    </script>
 
 </body>
 

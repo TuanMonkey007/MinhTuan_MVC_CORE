@@ -13,4 +13,7 @@ public interface IAccountService
     public Task<string> LogInAsync(LogInDTO model);
     public Task<IdentityResult> RegisterAsync(RegisterDTO model);
     public Task LogOutAsync();
+    public Task<string> HandleGoogleLoginResponse();
+    public Task<string> HandleFacebookLoginResponse();
+
 }

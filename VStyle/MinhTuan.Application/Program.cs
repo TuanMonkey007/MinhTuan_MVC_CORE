@@ -1,7 +1,9 @@
-﻿
+﻿using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MinhTuan.Domain;
 
@@ -39,7 +41,20 @@ builder.Services.AddAuthentication(options =>
 		// Định nghĩa thuật toán mã hóa
 		ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha512Signature }
 	};
-});
+}).AddCookie().AddGoogle(options =>
+{
+    options.ClientId = builder.Configuration.GetSection("GoogleKeys:ClientID").Value;
+    options.ClientSecret = builder.Configuration.GetSection("GoogleKeys:ClientSecret").Value;
+}).AddFacebook(options=>
+{
+    options.ClientId = builder.Configuration.GetSection("FacebookKeys:ClientID").Value;
+    options.ClientSecret = builder.Configuration.GetSection("FacebookKeys:ClientSecret").Value;
+    // Yêu cầu các quyền cần thiết từ Facebook
+    options.Scope.Add("email");
+    options.Scope.Add("public_profile");
+ 
+   
+}); 
 //builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddAutoMapper(typeof(Program)); // đăng ký sử dụng AutoMaper
 //Cấu hình kết nói database
@@ -66,6 +81,12 @@ foreach (var intf in serviceTypes.Where(t => t.IsInterface))
     if (impl != null) builder.Services.AddScoped(intf, impl);//Tự động đăng ký Inject Service 
 }
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+//builder.Services.AddAuthentication().AddFacebook(options =>
+// {
+//     options.ClientId = builder.Configuration.GetSection("FacebookKeys:ClientID").Value;
+//	 options.ClientSecret = builder.Configuration.GetSection("FacebookKeys:ClientSecret").Value;
+// });
+
 
 var app = builder.Build();
 

@@ -1,14 +1,11 @@
-﻿
+﻿@using Microsoft.AspNetCore.Identity
+@using MinhTuan.Domain.Entities
+@using MinhTuan.Domain.Helper;
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
 <!DOCTYPE html>
 <html lang="en">
-@* <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MinhTuan.Application</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/MinhTuan.Application.styles.css" asp-append-version="true" />
-</head> *@
+
 <head>
 
 	<title>Home</title>
@@ -45,6 +42,25 @@
 	<link rel="stylesheet" type="text/css" href="~/css/main.css">
 	<!--===============================================================================================-->
 
+	<link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
+	<link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+	<link href="~/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+	<link href="~/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+	<style>
+		/* Thêm hiệu ứng transition cho hiển thị và ẩn đi ô alert */
+		.alert {
+			opacity: 0;
+			transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+			transform: translateX(20px); /* Di chuyển alert lên trên */
+		}
+
+			.alert.show {
+				opacity: 1;
+				transform: translateY(0); /* Di chuyển alert về vị trí ban đầu và bên phải */
+			}
+
+	</style>
 
 </head>
 <body>
@@ -52,23 +68,6 @@
 	<header>
 		<!-- Header desktop -->
 		<div class="container-menu-desktop">
-			<!-- Topbar -->
-			<div class="top-bar">
-				<div class="content-topbar flex-sb-m h-full container">
-					<div class="left-top-bar">
-						Free shipping for standard order over $100
-					</div>
-
-					<div class="right-top-bar flex-w h-full">
-						<a href="#" class="flex-c-m trans-04 p-lr-25">
-							Help & FAQs
-						</a>
-						<a asp-controller="Account" asp-action="ShowView_Login" class="flex-c-m trans-04 p-lr-25">
-							Đăng nhập
-						</a>
-					</div>
-				</div>
-			</div>
 
 			<div class="wrap-menu-desktop">
 				<nav class="limiter-menu-desktop container">
@@ -82,7 +81,7 @@
 					<div class="menu-desktop">
 						<ul class="main-menu">
 							<li class="active-menu">
-								<a href="index.html">Home</a>
+								<a href="index.html">Trang chủ</a>
 								<ul class="sub-menu">
 									<li><a href="index.html">Homepage 1</a></li>
 									<li><a href="home-02.html">Homepage 2</a></li>
@@ -91,11 +90,11 @@
 							</li>
 
 							<li>
-								<a href="product.html">Shop</a>
+								<a href="product.html">Mua sắm</a>
 							</li>
 
 							<li class="label1" data-label1="hot">
-								<a href="shoping-cart.html">Features</a>
+								<a href="shoping-cart.html">Khuyến mãi</a>
 							</li>
 
 							<li>
@@ -104,11 +103,11 @@
 							</li>
 
 							<li>
-								<a href="about.html">About</a>
+								<a href="about.html">Về chúng tôi</a>
 							</li>
 
 							<li>
-								<a href="contact.html">Contact</a>
+								<a href="contact.html">Liên hệ</a>
 							</li>
 						</ul>
 					</div>
@@ -123,9 +122,59 @@
 							<i class="zmdi zmdi-shopping-cart"></i>
 						</div>
 
-						<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
-							<i class="zmdi zmdi-favorite-outline"></i>
-						</a>
+						@* <a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11">
+							
+						</a> *@
+						<a class="nav-link nav-profile dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11" href="#" data-bs-toggle="dropdown">
+							<i class="zmdi zmdi-account-o"></i>
+							
+						</a><!-- End Profile Iamge Icon -->
+						<ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+							@if (!User.Identity.IsAuthenticated)
+							{
+								<li>
+									<a class="dropdown-item align-items-center" asp-action="ShowView_Login" asp-controller="Account">
+										<i class="ri-login-box-line"></i>
+										<span>Đăng nhập</span>
+									</a>
+								</li>
+								<li>
+									<hr class="dropdown-divider">
+								</li>
+								<li>
+									<a class="dropdown-item  align-items-center" asp-action="ShowView_Register" asp-controller="Account">
+										<i class="ri-user-add-line"></i>
+										<span>Đăng ký</span>
+									</a>
+								</li>
+							}
+							else
+							{
+
+							
+
+							<li>
+								<a class="dropdown-item  align-items-center" asp-action="UserProfile" asp-controller="Account">
+									<i class="bi bi-person"></i>
+									<span>Trang cá nhân</span>
+								</a>
+							</li>
+
+							<li>
+								<hr class="dropdown-divider">
+							</li>
+
+							<li>
+								<a class="dropdown-item  align-items-center" asp-action="Logout" asp-controller="Account">
+									<i class="bi bi-box-arrow-right"></i>
+									<span>Đăng xuất</span>
+								</a>
+							</li>
+							}
+
+
+						</ul><!-- End Profile Dropdown Items -->
+
 					</div>
 				</nav>
 			</div>
@@ -148,9 +197,55 @@
 					<i class="zmdi zmdi-shopping-cart"></i>
 				</div>
 
-				<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti" data-notify="0">
-					<i class="zmdi zmdi-favorite-outline"></i>
-				</a>
+				<a class="nav-link nav-profile dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11" href="#" data-bs-toggle="dropdown">
+					<i class="zmdi zmdi-account-o"></i>
+
+				</a><!-- End Profile Iamge Icon -->
+				<ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+					@if (!User.Identity.IsAuthenticated)
+					{
+						<li>
+							<a class="dropdown-item align-items-center" asp-action="ShowView_Login" asp-controller="Account">
+								<i class="ri-login-box-line"></i>
+								<span>Đăng nhập</span>
+							</a>
+						</li>
+						<li>
+							<hr class="dropdown-divider">
+						</li>
+						<li>
+							<a class="dropdown-item  align-items-center" asp-action="ShowView_Register" asp-controller="Account">
+								<i class="ri-user-add-line"></i>
+								<span>Đăng ký</span>
+							</a>
+						</li>
+					}
+					else
+					{
+
+
+
+						<li>
+							<a class="dropdown-item  align-items-center" asp-action="UserProfile" asp-controller="Account">
+								<i class="bi bi-person"></i>
+								<span>Trang cá nhân</span>
+							</a>
+						</li>
+
+						<li>
+							<hr class="dropdown-divider">
+						</li>
+
+						<li>
+							<a class="dropdown-item  align-items-center" asp-action="Logout" asp-controller="Account">
+								<i class="bi bi-box-arrow-right"></i>
+								<span>Đăng xuất</span>
+							</a>
+						</li>
+					}
+
+
+				</ul>
 			</div>
 
 			<!-- Button show menu -->
@@ -164,33 +259,7 @@
 
 		<!-- Menu Mobile -->
 		<div class="menu-mobile">
-			<ul class="topbar-mobile">
-				<li>
-					<div class="left-top-bar">
-						Free shipping for standard order over $100
-					</div>
-				</li>
-
-				<li>
-					<div class="right-top-bar flex-w h-full">
-						<a href="#" class="flex-c-m p-lr-10 trans-04">
-							Help & FAQs
-						</a>
-
-						<a href="#" class="flex-c-m p-lr-10 trans-04">
-							My Account
-						</a>
-
-						<a href="#" class="flex-c-m p-lr-10 trans-04">
-							EN
-						</a>
-
-						<a href="#" class="flex-c-m p-lr-10 trans-04">
-							USD
-						</a>
-					</div>
-				</li>
-			</ul>
+			
 
 			<ul class="main-menu-m">
 				<li>
@@ -198,10 +267,8 @@
 				</li>
 
 				<li>
-					<a href="shoping-cart.html" class="label1 rs1" data-label1="hot">Sản phẩm</a>
+					<a href="shoping-cart.html" class="label1 rs1" data-label1="hot">Khuyến mãi</a>
 				</li>
-
-				
 
 				<li>
 					<a href="about.html">Về chúng tôi</a>
@@ -237,7 +304,13 @@
 	</div>
            
 	@await Html.PartialAsync("_FooterCustomer")
+	<!-- Ô Alert -->
+	<div id="custom-alert" class="alert @TempData["AlertType"] alert-dismissible fade" role="alert" style="position:fixed;top:100px;right:20px;font-size:1.1em">
+		<i class="@TempData["ClassIcon"]"></i>
+		@TempData["AlertMessage"]
 
+	</div>
+	<!-- End Ô Alert -->
 	<!-- Back to top -->
 	<div class="btn-back-to-top" id="myBtn">
 		<span class="symbol-btn-back-to-top">
@@ -262,6 +335,16 @@
 				dropdownParent: $(this).next('.dropDownSelect2')
 			});
 		})
+		// Hiển thị ô alert trong 1 giây
+		setTimeout(function () {
+			document.getElementById("custom-alert").classList.add("show");
+		}, 100);
+
+
+		// Tự động ẩn đi sau 2 giây
+		setTimeout(function () {
+			document.getElementById("custom-alert").classList.remove("show");
+		}, 2000);
 	</script>
 	<!--===============================================================================================-->
 	<script src="vendor/daterangepicker/moment.min.js"></script>
@@ -347,5 +430,17 @@
 	</script>
 	<!--===============================================================================================-->
 	<script src="js/main.js"></script>
+	<!-- Vendor JS Files -->
+	<script src="~/assets/vendor/apexcharts/apexcharts.min.js"></script>
+	<script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="~/assets/vendor/chart.js/chart.umd.js"></script>
+	<script src="~/assets/vendor/echarts/echarts.min.js"></script>
+	<script src="~/assets/vendor/quill/quill.min.js"></script>
+	<script src="~/assets/vendor/simple-datatables/simple-datatables.js"></script>
+	<script src="~/assets/vendor/tinymce/tinymce.min.js"></script>
+	<script src="~/assets/vendor/php-email-form/validate.js"></script>
+
+	<!-- Template Main JS File -->
+	<script src="~/assets/js/main.js"></script>
 </body>
 </html>

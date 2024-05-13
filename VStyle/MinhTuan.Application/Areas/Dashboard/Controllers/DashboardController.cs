@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MinhTuan.Domain.Helper;
+using MinhTuan.Domain.Helper.Constants;
 
 namespace MinhTuan.Application.Areas.Admin.Controllers
 {
