@@ -17,6 +17,9 @@ public class AutoMapperProfile : Profile
         // Thêm các ánh xạ khác tại đây nếu cần
         CreateMap<Category, CategoryDTO>().ReverseMap();
         CreateMap<CategoryDTO, CategoryViewModel>().ReverseMap();
+        CreateMap<CategoryDTO, Category>();
+        CreateMap<Category, CategoryDTO>();
+
 
     }
 }

@@ -15,6 +15,9 @@ using MinhTuan.Service.Core.Services;
 using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.Extensions.Logging;
+using MinhTuan.Service.Core.Services;
+using MinhTuan.Service.Services.CategoryService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,8 +55,6 @@ builder.Services.AddAuthentication(options =>
     // Yêu cầu các quyền cần thiết từ Facebook
     options.Scope.Add("email");
     options.Scope.Add("public_profile");
- 
-   
 }); 
 //builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddAutoMapper(typeof(Program)); // đăng ký sử dụng AutoMaper
@@ -80,12 +81,11 @@ foreach (var intf in serviceTypes.Where(t => t.IsInterface))
     var impl = serviceTypes.FirstOrDefault(c => c.IsClass && intf.Name.Substring(1) == c.Name);
     if (impl != null) builder.Services.AddScoped(intf, impl);//Tự động đăng ký Inject Service 
 }
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+// Thêm logging vào container dịch vụ
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-//builder.Services.AddAuthentication().AddFacebook(options =>
-// {
-//     options.ClientId = builder.Configuration.GetSection("FacebookKeys:ClientID").Value;
-//	 options.ClientSecret = builder.Configuration.GetSection("FacebookKeys:ClientSecret").Value;
-// });
 
 
 var app = builder.Build();
@@ -114,10 +114,15 @@ app.UseEndpoints(endpoints =>
       pattern: "{controller=Home}/{action=Index}/{id?}"
     );
     endpoints.MapControllerRoute(
-      name: "areas",
+      name: "areasDashboard",
       pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}"
     );
-    
+    endpoints.MapControllerRoute(
+     name: "areasCategory",
+     pattern: "{area:exists}/{controller=Category}/{action=Index}/{id?}"
+   );
+
+
 });
 
 app.Run();

@@ -1,8 +1,20 @@
 {
   "Files": [
     {
+      "Id": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\wwwroot\\assets\\DataTable\\datatables.min.css",
+      "PackagePath": "staticwebassets\\assets\\DataTable\\datatables.min.css"
+    },
+    {
+      "Id": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\wwwroot\\assets\\DataTable\\datatables.min.js",
+      "PackagePath": "staticwebassets\\assets\\DataTable\\datatables.min.js"
+    },
+    {
       "Id": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\wwwroot\\assets\\css\\style.css",
       "PackagePath": "staticwebassets\\assets\\css\\style.css"
+    },
+    {
+      "Id": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\wwwroot\\assets\\img\\VStyleLogo_Option1.png",
+      "PackagePath": "staticwebassets\\assets\\img\\VStyleLogo_Option1.png"
     },
     {
       "Id": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\wwwroot\\assets\\img\\apple-touch-icon.png",
@@ -15,10 +27,6 @@
     {
       "Id": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\wwwroot\\assets\\img\\favicon.png",
       "PackagePath": "staticwebassets\\assets\\img\\favicon.png"
-    },
-    {
-      "Id": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\wwwroot\\assets\\img\\logo.png",
-      "PackagePath": "staticwebassets\\assets\\img\\logo.png"
     },
     {
       "Id": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\wwwroot\\assets\\img\\messages-1.jpg",
@@ -1103,14 +1111,6 @@
     {
       "Id": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\wwwroot\\assets\\vendor\\remixicon\\remixicon.woff2",
       "PackagePath": "staticwebassets\\assets\\vendor\\remixicon\\remixicon.woff2"
-    },
-    {
-      "Id": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\wwwroot\\assets\\vendor\\simple-datatables\\simple-datatables.js",
-      "PackagePath": "staticwebassets\\assets\\vendor\\simple-datatables\\simple-datatables.js"
-    },
-    {
-      "Id": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\wwwroot\\assets\\vendor\\simple-datatables\\style.css",
-      "PackagePath": "staticwebassets\\assets\\vendor\\simple-datatables\\style.css"
     },
     {
       "Id": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\wwwroot\\assets\\vendor\\tinymce\\CHANGELOG.md",

@@ -16,17 +16,24 @@ namespace MinhTuan.Service.Services.CategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CategoryService(IUnitOfWork unitOfWork,IMapper mapper, ICategoryRepository categoryRepository) : base(unitOfWork)
+        public CategoryService(IUnitOfWork unitOfWork, IMapper mapper, ICategoryRepository categoryRepository) : base(unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             _categoryRepository = categoryRepository;
             _mapper = mapper;
+        }
+
+        public List<CategoryDTO> GetAllCategory()
+        {
+            List<Category> result = _categoryRepository.GetAll().ToList();
+            return _mapper.Map<List<CategoryDTO>>(result);
         }
 
         public CategoryDTO GetById(Guid id)
         {
             Category objectEntity = _categoryRepository.GetById(id);
-           // var objectEntity = _categoryRepository.GetAll().FirstOrDefault();
             var objectDTO = _mapper.Map<CategoryDTO>(objectEntity);
             return objectDTO;
         }

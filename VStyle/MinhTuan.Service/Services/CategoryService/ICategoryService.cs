@@ -12,5 +12,6 @@ namespace MinhTuan.Service.Services.CategoryService
     public interface ICategoryService:IService<Category>
     {
         CategoryDTO GetById(Guid id);
+        List<CategoryDTO> GetAllCategory();
     }
 }

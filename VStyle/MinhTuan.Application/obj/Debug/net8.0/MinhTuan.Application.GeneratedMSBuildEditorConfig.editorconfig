@@ -26,6 +26,14 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application
 build_property._RazorSourceGeneratorDebug = 
 
+[E:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Areas/Category/Views/Category/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ2F0ZWdvcnlcVmlld3NcQ2F0ZWdvcnlcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Areas/Category/Views/Category/_CreatePartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ2F0ZWdvcnlcVmlld3NcQ2F0ZWdvcnlcX0NyZWF0ZVBhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [E:/BE_STUDYING/DATN/Code/MinhTuan_MVC_CORE/VStyle/MinhTuan.Application/Areas/Dashboard/Views/Dashboard/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcRGFzaGJvYXJkXFZpZXdzXERhc2hib2FyZFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

@@ -5,7 +5,7 @@ using MinhTuan.Domain.Entities;
 
 namespace MinhTuan.Domain.Core.UnitOfWork
 {
-    public class UnitOfWork : IUnitOfWork
+    public sealed class UnitOfWork : IUnitOfWork
     {
         private readonly VStyleContext _context;
 

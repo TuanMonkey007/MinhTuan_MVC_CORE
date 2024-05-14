@@ -3,32 +3,56 @@
   "WorkspaceRootPath": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}|MinhTuan.Application\\MinhTuan.Application.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.application\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}|MinhTuan.Application\\MinhTuan.Application.csproj|solutionrelative:minhtuan.application\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}|MinhTuan.Application\\MinhTuan.Application.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.application\\areas\\category\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}|MinhTuan.Application\\MinhTuan.Application.csproj|solutionrelative:minhtuan.application\\areas\\category\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}|MinhTuan.Application\\MinhTuan.Application.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.application\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}|MinhTuan.Application\\MinhTuan.Application.csproj|solutionrelative:minhtuan.application\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}|MinhTuan.Application\\MinhTuan.Application.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.application\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}|MinhTuan.Application\\MinhTuan.Application.csproj|solutionrelative:minhtuan.application\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DEBE580D-242F-4837-B819-CDA1B198B7A4}|MinhTuan.Service\\MinhTuan.Service.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.service\\services\\accountservice\\accountservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DEBE580D-242F-4837-B819-CDA1B198B7A4}|MinhTuan.Service\\MinhTuan.Service.csproj|solutionrelative:minhtuan.service\\services\\accountservice\\accountservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DEBE580D-242F-4837-B819-CDA1B198B7A4}|MinhTuan.Service\\MinhTuan.Service.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.service\\core\\services\\service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DEBE580D-242F-4837-B819-CDA1B198B7A4}|MinhTuan.Service\\MinhTuan.Service.csproj|solutionrelative:minhtuan.service\\core\\services\\service.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DEBE580D-242F-4837-B819-CDA1B198B7A4}|MinhTuan.Service\\MinhTuan.Service.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.service\\services\\accountservice\\iaccountservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DEBE580D-242F-4837-B819-CDA1B198B7A4}|MinhTuan.Service\\MinhTuan.Service.csproj|solutionrelative:minhtuan.service\\services\\accountservice\\iaccountservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{DEBE580D-242F-4837-B819-CDA1B198B7A4}|MinhTuan.Service\\MinhTuan.Service.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.service\\core\\services\\iservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DEBE580D-242F-4837-B819-CDA1B198B7A4}|MinhTuan.Service\\MinhTuan.Service.csproj|solutionrelative:minhtuan.service\\core\\services\\iservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}|MinhTuan.Application\\MinhTuan.Application.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.application\\views\\account\\userprofile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}|MinhTuan.Application\\MinhTuan.Application.csproj|solutionrelative:minhtuan.application\\views\\account\\userprofile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{D4B6DF77-9168-4480-BB17-FADCCFA5071B}|MinhTuan.Domain\\MinhTuan.Domain.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.domain\\entities\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D4B6DF77-9168-4480-BB17-FADCCFA5071B}|MinhTuan.Domain\\MinhTuan.Domain.csproj|solutionrelative:minhtuan.domain\\entities\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D4B6DF77-9168-4480-BB17-FADCCFA5071B}|MinhTuan.Domain\\MinhTuan.Domain.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.domain\\entities\\appuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D4B6DF77-9168-4480-BB17-FADCCFA5071B}|MinhTuan.Domain\\MinhTuan.Domain.csproj|solutionrelative:minhtuan.domain\\entities\\appuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}|MinhTuan.Application\\MinhTuan.Application.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.application\\helper\\automaperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}|MinhTuan.Application\\MinhTuan.Application.csproj|solutionrelative:minhtuan.application\\helper\\automaperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}|MinhTuan.Application\\MinhTuan.Application.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.application\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}|MinhTuan.Application\\MinhTuan.Application.csproj|solutionrelative:minhtuan.application\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{DEBE580D-242F-4837-B819-CDA1B198B7A4}|MinhTuan.Service\\MinhTuan.Service.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.service\\services\\categoryservice\\categoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DEBE580D-242F-4837-B819-CDA1B198B7A4}|MinhTuan.Service\\MinhTuan.Service.csproj|solutionrelative:minhtuan.service\\services\\categoryservice\\categoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D4B6DF77-9168-4480-BB17-FADCCFA5071B}|MinhTuan.Domain\\MinhTuan.Domain.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.domain\\core\\repository\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D4B6DF77-9168-4480-BB17-FADCCFA5071B}|MinhTuan.Domain\\MinhTuan.Domain.csproj|solutionrelative:minhtuan.domain\\core\\repository\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D4B6DF77-9168-4480-BB17-FADCCFA5071B}|MinhTuan.Domain\\MinhTuan.Domain.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.domain\\core\\unitofwork\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D4B6DF77-9168-4480-BB17-FADCCFA5071B}|MinhTuan.Domain\\MinhTuan.Domain.csproj|solutionrelative:minhtuan.domain\\core\\unitofwork\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D4B6DF77-9168-4480-BB17-FADCCFA5071B}|MinhTuan.Domain\\MinhTuan.Domain.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.domain\\core\\unitofwork\\iunitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D4B6DF77-9168-4480-BB17-FADCCFA5071B}|MinhTuan.Domain\\MinhTuan.Domain.csproj|solutionrelative:minhtuan.domain\\core\\unitofwork\\iunitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}|MinhTuan.Application\\MinhTuan.Application.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.application\\areas\\category\\views\\category\\_createpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}|MinhTuan.Application\\MinhTuan.Application.csproj|solutionrelative:minhtuan.application\\areas\\category\\views\\category\\_createpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}|MinhTuan.Application\\MinhTuan.Application.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.application\\areas\\category\\views\\category\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}|MinhTuan.Application\\MinhTuan.Application.csproj|solutionrelative:minhtuan.application\\areas\\category\\views\\category\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}|MinhTuan.Application\\MinhTuan.Application.csproj|E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\minhtuan.application\\views\\shared\\_layoutadmin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}|MinhTuan.Application\\MinhTuan.Application.csproj|solutionrelative:minhtuan.application\\views\\shared\\_layoutadmin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,102 +62,180 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 12,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "AccountService.cs",
-              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Service\\Services\\AccountService\\AccountService.cs",
-              "RelativeDocumentMoniker": "MinhTuan.Service\\Services\\AccountService\\AccountService.cs",
-              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Service\\Services\\AccountService\\AccountService.cs",
-              "RelativeToolTip": "MinhTuan.Service\\Services\\AccountService\\AccountService.cs",
-              "ViewState": "AQIAABwAAAAAAAAAAAA/wDAAAAAIAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-13T04:34:27.591Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "UserProfile.cshtml",
-              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\Views\\Account\\UserProfile.cshtml",
-              "RelativeDocumentMoniker": "MinhTuan.Application\\Views\\Account\\UserProfile.cshtml",
-              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\Views\\Account\\UserProfile.cshtml",
-              "RelativeToolTip": "MinhTuan.Application\\Views\\Account\\UserProfile.cshtml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAsAAAA",
+              "DocumentIndex": 11,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\Areas\\Category\\Views\\Category\\Index.cshtml",
+              "RelativeDocumentMoniker": "MinhTuan.Application\\Areas\\Category\\Views\\Category\\Index.cshtml",
+              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\Areas\\Category\\Views\\Category\\Index.cshtml",
+              "RelativeToolTip": "MinhTuan.Application\\Areas\\Category\\Views\\Category\\Index.cshtml",
+              "ViewState": "AQIAABUAAAAAAAAAAAAAACwAAABVAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-05-13T10:15:35.119Z",
+              "WhenOpened": "2024-05-13T13:37:49.528Z",
+              "IsPinned": true,
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "AppUser.cs",
-              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Domain\\Entities\\AppUser.cs",
-              "RelativeDocumentMoniker": "MinhTuan.Domain\\Entities\\AppUser.cs",
-              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Domain\\Entities\\AppUser.cs",
-              "RelativeToolTip": "MinhTuan.Domain\\Entities\\AppUser.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAdAAAA",
+              "DocumentIndex": 7,
+              "Title": "Repository.cs",
+              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Domain\\Core\\Repository\\Repository.cs",
+              "RelativeDocumentMoniker": "MinhTuan.Domain\\Core\\Repository\\Repository.cs",
+              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Domain\\Core\\Repository\\Repository.cs",
+              "RelativeToolTip": "MinhTuan.Domain\\Core\\Repository\\Repository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-13T09:54:33.704Z",
+              "WhenOpened": "2024-05-14T10:56:58.881Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "IAccountService.cs",
-              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Service\\Services\\AccountService\\IAccountService.cs",
-              "RelativeDocumentMoniker": "MinhTuan.Service\\Services\\AccountService\\IAccountService.cs",
-              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Service\\Services\\AccountService\\IAccountService.cs",
-              "RelativeToolTip": "MinhTuan.Service\\Services\\AccountService\\IAccountService.cs",
-              "ViewState": "AQIAAAgAAAAAAAAAAAAgwA8AAAAxAAAA",
+              "DocumentIndex": 9,
+              "Title": "IUnitOfWork.cs",
+              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Domain\\Core\\UnitOfWork\\IUnitOfWork.cs",
+              "RelativeDocumentMoniker": "MinhTuan.Domain\\Core\\UnitOfWork\\IUnitOfWork.cs",
+              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Domain\\Core\\UnitOfWork\\IUnitOfWork.cs",
+              "RelativeToolTip": "MinhTuan.Domain\\Core\\UnitOfWork\\IUnitOfWork.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-13T04:33:55.103Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "AccountController.cs",
-              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\Controllers\\AccountController.cs",
-              "RelativeDocumentMoniker": "MinhTuan.Application\\Controllers\\AccountController.cs",
-              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\Controllers\\AccountController.cs",
-              "RelativeToolTip": "MinhTuan.Application\\Controllers\\AccountController.cs",
-              "ViewState": "AQIAAIoAAAAAAAAAAAAqwJIAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-13T04:30:34.789Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Login.cshtml",
-              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\Views\\Account\\Login.cshtml",
-              "RelativeDocumentMoniker": "MinhTuan.Application\\Views\\Account\\Login.cshtml",
-              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\Views\\Account\\Login.cshtml",
-              "RelativeToolTip": "MinhTuan.Application\\Views\\Account\\Login.cshtml",
-              "ViewState": "AQIAADkBAAAAAAAAAAAAAEEBAAB5AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-05-13T04:30:28.88Z",
+              "WhenOpened": "2024-05-14T10:56:50.004Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 6,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\appsettings.json",
-              "RelativeDocumentMoniker": "MinhTuan.Application\\appsettings.json",
-              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\appsettings.json",
-              "RelativeToolTip": "MinhTuan.Application\\appsettings.json",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAkwBsAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-05-13T04:20:31.873Z",
+              "Title": "CategoryService.cs",
+              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Service\\Services\\CategoryService\\CategoryService.cs",
+              "RelativeDocumentMoniker": "MinhTuan.Service\\Services\\CategoryService\\CategoryService.cs",
+              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Service\\Services\\CategoryService\\CategoryService.cs",
+              "RelativeToolTip": "MinhTuan.Service\\Services\\CategoryService\\CategoryService.cs",
+              "ViewState": "AQIAABEAAAAAAAAAAAAlwBQAAACAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-14T10:55:32.063Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Service.cs",
+              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Service\\Core\\Services\\Service.cs",
+              "RelativeDocumentMoniker": "MinhTuan.Service\\Core\\Services\\Service.cs",
+              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Service\\Core\\Services\\Service.cs",
+              "RelativeToolTip": "MinhTuan.Service\\Core\\Services\\Service.cs",
+              "ViewState": "AQIAAAsAAAAAAAAAAAAswAsAAAALAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-14T10:52:08.425Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IService.cs",
+              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Service\\Core\\Services\\IService.cs",
+              "RelativeDocumentMoniker": "MinhTuan.Service\\Core\\Services\\IService.cs",
+              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Service\\Core\\Services\\IService.cs",
+              "RelativeToolTip": "MinhTuan.Service\\Core\\Services\\IService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-14T10:49:57.514Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "UnitOfWork.cs",
+              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Domain\\Core\\UnitOfWork\\UnitOfWork.cs",
+              "RelativeDocumentMoniker": "MinhTuan.Domain\\Core\\UnitOfWork\\UnitOfWork.cs",
+              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Domain\\Core\\UnitOfWork\\UnitOfWork.cs",
+              "RelativeToolTip": "MinhTuan.Domain\\Core\\UnitOfWork\\UnitOfWork.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAARAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-14T10:28:16.628Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Category.cs",
+              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Domain\\Entities\\Category.cs",
+              "RelativeDocumentMoniker": "MinhTuan.Domain\\Entities\\Category.cs",
+              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Domain\\Entities\\Category.cs",
+              "RelativeToolTip": "MinhTuan.Domain\\Entities\\Category.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-14T10:06:01.426Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AutoMaperProfile.cs",
+              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\Helper\\AutoMaperProfile.cs",
+              "RelativeDocumentMoniker": "MinhTuan.Application\\Helper\\AutoMaperProfile.cs",
+              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\Helper\\AutoMaperProfile.cs",
+              "RelativeToolTip": "MinhTuan.Application\\Helper\\AutoMaperProfile.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABUAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-14T10:04:22.826Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "_CreatePartial.cshtml",
+              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\Areas\\Category\\Views\\Category\\_CreatePartial.cshtml",
+              "RelativeDocumentMoniker": "MinhTuan.Application\\Areas\\Category\\Views\\Category\\_CreatePartial.cshtml",
+              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\Areas\\Category\\Views\\Category\\_CreatePartial.cshtml",
+              "RelativeToolTip": "MinhTuan.Application\\Areas\\Category\\Views\\Category\\_CreatePartial.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAAWAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-05-14T04:06:19.681Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\Program.cs",
+              "RelativeDocumentMoniker": "MinhTuan.Application\\Program.cs",
+              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\Program.cs",
+              "RelativeToolTip": "MinhTuan.Application\\Program.cs",
+              "ViewState": "AQIAAEcAAAAAAAAAAAArwFYAAAAdAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-14T03:54:11.045Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CategoryController.cs",
+              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\Areas\\Category\\Controllers\\CategoryController.cs",
+              "RelativeDocumentMoniker": "MinhTuan.Application\\Areas\\Category\\Controllers\\CategoryController.cs",
+              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\Areas\\Category\\Controllers\\CategoryController.cs",
+              "RelativeToolTip": "MinhTuan.Application\\Areas\\Category\\Controllers\\CategoryController.cs",
+              "ViewState": "AQIAACQAAAAAAAAAAAAiwDUAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-14T03:28:47.658Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "_LayoutAdmin.cshtml",
+              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\Views\\Shared\\_LayoutAdmin.cshtml",
+              "RelativeDocumentMoniker": "MinhTuan.Application\\Views\\Shared\\_LayoutAdmin.cshtml",
+              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Application\\Views\\Shared\\_LayoutAdmin.cshtml",
+              "RelativeToolTip": "MinhTuan.Application\\Views\\Shared\\_LayoutAdmin.cshtml",
+              "ViewState": "AQIAAFoAAAAAAAAAAAAiwBoAAAADAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-05-13T14:31:22.77Z",
               "EditorCaption": ""
             }
           ]
