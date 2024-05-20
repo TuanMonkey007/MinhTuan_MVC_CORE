@@ -22,7 +22,6 @@ using MinhTuan.Service.Services.CategoryService;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpContextAccessor(); // đăng ký để truy cập thông tin
-
 //Add service identity
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<VStyleContext>().AddDefaultTokenProviders();
 builder.Services.AddAuthentication(options =>

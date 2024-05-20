@@ -14,30 +14,56 @@ using System.Security.Claims;
 using System.Text;
 using Newtonsoft.Json;
 using MinhTuan.Domain.Helper.Constants;
+using MinhTuan.Domain.Core.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
+using MinhTuan.Service.Core.Services;
+using MinhTuan.Domain.Helper.EmailSender;
+using Microsoft.AspNetCore.Routing;
+using MinhTuan.Domain;
+using System.Net;
 
 namespace MinhTuan.Service.Services.AccountService;
 
 public class AccountService : IAccountService
 {
+    
+    private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<AppUser> _userManager;
     private readonly SignInManager<AppUser> _signInManager;
     private readonly IConfiguration _configuration;
     private readonly IMapper _mapper;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IEmailService _emailService;
+    private readonly LinkGenerator _linkGenerator;
 
-    public AccountService(UserManager<AppUser> userManager,
+    public AccountService(
+    
+        UserManager<AppUser> userManager,
         SignInManager<AppUser> signInManager, IConfiguration configuration,
         RoleManager<IdentityRole> roleManager,
         IHttpContextAccessor httpContextAccessor,
-        IMapper mapper)
+        IMapper mapper,
+        IUnitOfWork unitOfWork,
+        IEmailService emailService,
+        LinkGenerator linkGenerator
+        )
     {
+    
+        _unitOfWork = unitOfWork;
         _userManager = userManager;
         _signInManager = signInManager;
         _configuration = configuration;
         _mapper = mapper;
         _roleManager = roleManager;
         _httpContextAccessor = httpContextAccessor;
+        _emailService = emailService;
+        _linkGenerator = linkGenerator;
+    }
+    public async Task<List<UserDTO>> GetAllUserAsync()
+    {
+        var users = await _userManager.Users.ToListAsync(); // Sử dụng ToListAsync() nếu _userManager.Users là một loại không đồng bộ
+        return _mapper.Map<List<UserDTO>>(users);
     }
 
     public async Task<string> LogInAsync(LogInDTO model)
@@ -47,13 +73,14 @@ public class AccountService : IAccountService
 
         // Tìm người dùng theo số điện thoại hoặc email
         var user = isPhoneNumber ? await _userManager.FindByNameAsync(model.PhoneOrEmail) : await _userManager.FindByEmailAsync(model.PhoneOrEmail);
-
+        if(user == null) return string.Empty;
         var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
-        if (!result.Succeeded)
+       
+        if (!result.Succeeded && result.IsNotAllowed== false)
         {
             return string.Empty;
         }
-
+       
         var authClaims = new List<Claim>
             {
             new Claim(ClaimTypes.Name, user.FullName), // Thêm tên người dùng vào claim
@@ -90,7 +117,24 @@ public class AccountService : IAccountService
             {
                 await _roleManager.CreateAsync(new IdentityRole(AppRole.CUSTOMER));
             }
-            await _userManager.AddToRoleAsync(user, AppRole.CUSTOMER); //Role default when register = Customer
+         
+            //Tìm user đã tạo
+            var createdUser = await _userManager.FindByEmailAsync(user.Email);
+           
+            await _userManager.AddToRoleAsync(createdUser, AppRole.CUSTOMER); //Role default when register = Customer
+            //Gửi email chứa token xác thực tài khoản
+            var verifyToken = await _userManager.GenerateEmailConfirmationTokenAsync(createdUser);
+         
+            // Tạo confirmation link
+            var confirmationLink = _linkGenerator.GetUriByAction(
+               _httpContextAccessor.HttpContext.Request.HttpContext, // HttpContext hiện tại
+                "ConfirmEmail",  // Tên action
+                "Account",       // Tên controller
+                new { userId = createdUser.Id, token = verifyToken } // Các tham số
+            );
+            var message = new Message(new string[] { createdUser.Email! }, "Xác thực tài khoản", confirmationLink);
+             _emailService.SendEmail(message);
+
         }
         return result;
     }
@@ -319,5 +363,33 @@ public class AccountService : IAccountService
 
            
 
+    }
+
+    public async Task<string> ForgotPassword(ForgotPasswordDTO model)
+    {
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+        {
+            return string.Empty;
+        }
+        
+        var verifyToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+        // Tạo confirmation link
+        var confirmationLink = $"http://localhost:8080/reset-password?token={WebUtility.UrlEncode(verifyToken)}&email={WebUtility.UrlEncode(model.Email)}";
+     
+        var message = new Message(new string[] { user.Email! }, "Lấy lại mật khẩu", confirmationLink);
+        _emailService.SendForgotPasswordEmail(message);
+        return verifyToken;
+    }
+
+    public async Task<bool> ResetPassword(ChangePasswordDTO model)
+    {
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+        if(!result.Succeeded)
+        {
+            return false;
+        }
+        return true;
     }
 }

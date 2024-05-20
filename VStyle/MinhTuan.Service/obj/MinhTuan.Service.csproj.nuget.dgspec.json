@@ -53,6 +53,10 @@
               "target": "Package",
               "version": "[9.0.0, )"
             },
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.6.0, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[8.0.4, )"
@@ -170,6 +174,10 @@
             "Autofac": {
               "target": "Package",
               "version": "[8.0.0, )"
+            },
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.6.0, )"
             },
             "Microsoft.AspNetCore.Authentication.Facebook": {
               "target": "Package",
