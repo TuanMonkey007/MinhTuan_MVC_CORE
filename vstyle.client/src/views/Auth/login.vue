@@ -355,7 +355,14 @@
                 }
             },//end onFinishForgot
             async onFinishRegister() {
-
+                this.loading = true;
+                message.loading(
+                    {
+                        content: 'Đang xử lý...',
+                        key: 'loadingKey',
+                        duration: 0
+                    }
+                );
                 try {
                     const registerViewModel = {
                         FullName: this.formRegis.FullName,
@@ -366,13 +373,35 @@
                     };
                     const response = await APIService.post("account/register", registerViewModel);
                     // Tắt hiệu ứng chờ sau 2 giây
+                    if(response.data.message != 'Tạo tài khoản thành công'){
+                        const contentMessage = (response.data.message == 'DuplicateEmail') ? 'Email đã được đăng ký' : 'Số điện thoại đã được đăng ký';
+                       message.warning(
+                        {
+                            content: contentMessage,
+                            key: 'loadingKey',
+                            duration: 2
+                        }
+                       );
+                      
+                    }
+                    else{
+                        message.success(
+                            {
+                                content: response.data.message,
+                                key: 'loadingKey',
+                                duration: 2
+                            }
+                        );
+                        this.activeKey = 'LoginTab';
+                    }
+                   
+                  
 
-                    // Xử lý logic sau khi đăng ký thành công, ví dụ: lưu thông tin user vào localStorage, redirect đến trang chính...
-                    this.activeKey = 'LoginTab';
-
-                    message.success("Đăng ký thành công!");
+                  
                 } catch (error) {
                     message.error("Đăng ký thất bại!");
+                }finally{
+                    this.loading = false;
                 }
             },
 
@@ -394,8 +423,17 @@
 
                     const response = await APIService.post("account/login", loginViewModel);
                     // Parse the token to get user role and user name
-
-                    const decodedToken = jwtDecode(response.data.data);
+                    if(response.data.data.length < 100){
+                        message.warning(
+                            {
+                                content: response.data.data,
+                                key: 'loadingKey',
+                                duration: 2
+                            }
+                        );
+                        
+                    }else{
+                        const decodedToken = jwtDecode(response.data.data);
                     const role = decodedToken[ClaimTypes.Role];
                     const userName = decodedToken[ClaimTypes.Name];
                     // Save token to local storage  
@@ -418,11 +456,13 @@
                         duration: 2
 
                     });
+                    }
+                    
 
                 } catch (error) {
 
                     message.error({
-                        content: 'Sai thông tin đăng nhập',
+                        content: 'Lỗi server',
                         key: 'loadingKey',
                         duration: 2
 

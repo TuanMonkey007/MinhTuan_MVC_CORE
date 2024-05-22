@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MinhTuan.Domain.Core.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,10 +58,11 @@ namespace MinhTuan.Domain.Core.Repository
             }
 
             // Kiểm tra xem entity có thực sự implement SoftDelete không (nếu có)
-            var softDeletable = entity as ISoftDeletable;
+            var softDeletable = entity as IAuditableEntity;
             if (softDeletable != null)
             {
                 softDeletable.IsDelete = true; // Đánh dấu entity là đã bị xóa mềm
+                softDeletable.DeleteTime = DateTime.Now;
             }
             else
             {

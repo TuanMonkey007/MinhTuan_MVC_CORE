@@ -64,7 +64,7 @@ namespace MinhTuan.Domain
 		//Khai báo các thực thể cần sử dụng
 		//ví dụ:
 		// public DbSet<DanhMuc> DanhMucs { get; set; }
-		//public DbSet<Category> categories { get; set; }
+		public DbSet<Category> categories { get; set; }
        
      
 

@@ -17,6 +17,18 @@ const adminRouter=[
                 component:()=>import("../views/Administrator/Categories/index.vue"),
                 meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF] }
             },
+            {
+                path:"Account",
+                name:"AccountHome",
+                component:()=>import("../views/Administrator/Users/index.vue"),
+                meta: { 
+                    requiresAuth: true,
+                    roles: [Role.ADMIN, Role.STAFF],
+                    title: "Quản lý tài khoản"
+
+
+                }
+            },
            
         ]
     }

@@ -1,111 +1,238 @@
 <template lang="">
-   <div style=" padding: 30px, min-height:2000px">
-    <a-card :bordered="true" title="Quản lý danh mục dùng chung">
-        <template #extra>
-          <a-button @click="openModalAdd" type="primary">Thêm mới</a-button>
-        </template>
-        <a-table :columns="columns" :data-source="data">
-    <template #headerCell="{ column }">
-      <template v-if="column.key === 'name'">
-        <span>
-          <smile-outlined />
-          Name
-        </span>
-      </template>
+   <a-page-header
+    style="border: 1px solid rgb(235, 237, 240); height: min-content; background-color: #fff; margin-bottom: 16px;"
+    title="Quản lý danh mục" @back="goBack">
+    <template #extra>
+      <a-breadcrumb>
+        <a-breadcrumb-item href="">
+          <font-awesome-icon icon="fa-solid fa-house" />
+        </a-breadcrumb-item>
+        <a-breadcrumb-item href="">
+          <font-awesome-icon :icon="['fas', 'gear']" />
+          <span> Hệ thống</span>
+        </a-breadcrumb-item>
+        <a-breadcrumb-item>
+          <font-awesome-icon :icon="['fas', 'user']" />
+          <span> Danh mục dùng chung</span>
+        </a-breadcrumb-item>
+      </a-breadcrumb>
     </template>
+</a-page-header>
+<transition name="route" mode="out-in" appear>
+  <a-card :bordered="true" title="Danh sách danh mục" style=" margin: 30px;height:600px">
+    <template #extra>
 
-    <template #bodyCell="{ column, record }">
-      <template v-if="column.key === 'name'">
-        <a>
-          {{ record.name }}
-        </a>
+        <a-button @click="openModalCreate" type="primary"><font-awesome-icon icon="fa-solid fa-plus" />  Thêm mới</a-button>
       </template>
-      <template v-else-if="column.key === 'tags'">
-        <span>
-          <a-tag
-            v-for="tag in record.tags"
-            :key="tag"
-            :color="tag === 'loser' ? 'volcano' : tag.length > 5 ? 'geekblue' : 'green'"
-          >
-            {{ tag.toUpperCase() }}
-          </a-tag>
-        </span>
+
+
+
+    <a-row style="margin-bottom: 20px;" :gutter="24">
+      <a-col :span="3" >
+        <a-button @click="SearchData"  class="btnSearch" style="background-color:rgb(229 127 123) "  >
+         <font-awesome-icon :icon="['fas', 'magnifying-glass']" ></font-awesome-icon>
+         Tìm kiếm
+        </a-button>
+      </a-col>
+      <a-col :span="10">
+        <a-input v-model:value="formSearch.code_Filter" placeholder="Mã danh mục">
+        
+        </a-input>
+      </a-col>
+      <a-col :span="10">
+        <a-input v-model:value="formSearch.name_Filter" placeholder="Tên danh mục">
+          
+        </a-input>
+      </a-col>
+     
+    </a-row>
+    <a-table :columns="tableColumns" :dataSource="dataSourceTable" :pagination="false" :loading="loadingTable"
+      @change="handleTableChange">
+      <template #bodyCell="{ column, record }">
+          <template v-if="column.key === 'action'">
+            <a-space>
+              <a-tooltip title="Cấu hình" placement="leftTop">
+
+                <a-button type="link" shape="circle" @click="openModalDetail(record.id)">
+                  <template #icon><font-awesome-icon icon="fa-solid fa-list-check" style="color: #01a214;" /></template>
+      </a-button>
+      </a-tooltip>
+
+      <a-tooltip title="Chỉnh sửa">
+        <a-button type="link" shape="circle" @click="openModalUpdate(record.id)">
+          <template #icon><font-awesome-icon icon="fa-solid fa-pen-to-square"
+                      style="color: #FFD43B;" /></template>
+        </a-button>
+      </a-tooltip>
+
+      <a-popconfirm title="Xác nhận xóa?" ok-text="Xóa" cancel-text="Hủy" @confirm="deleteObj(record.id)">
+        <a-tooltip title="Xóa" placement="rightBottom">
+          <a-button type="link" shape="circle">
+            <template #icon><font-awesome-icon icon="fa-solid fa-trash-alt"
+                        style="color: #ff4d4f;" /></template>
+          </a-button>
+        </a-tooltip>
+      </a-popconfirm>
+      </a-space>
       </template>
-      <template v-else-if="column.key === 'action'">
-        <span>
-          <a>Invite 一 {{ record.name }}</a>
-          <a-divider type="vertical" />
-          <a>Delete</a>
-          <a-divider type="vertical" />
-          <a class="ant-dropdown-link">
-            More actions
-            <down-outlined />
-          </a>
-        </span>
+
+
+
       </template>
-    </template>
-  </a-table>
+    </a-table>
+    <a-pagination v-if="pagination.total > 0" style="margin-top: 20px; text-align: center;"
+      v-model:current="pagination.current" :pageSize="pagination.pageSize" :total="pagination.total"
+      :showSizeChanger="false" :show-total="total => `Tổng ${total} bản ghi`" @change="handlePaginationChange" />
+  </a-card>
 
-      </a-card>
-
-    </div>
-
+</transition>
+<ModalCreate @addSuccess="fetchData(pagination.current,pagination.pageSize)" ref="modalCreate" />
+<ModalUpdate @updateSuccess="fetchData(pagination.current,pagination.pageSize)" ref="modalUpdate" />
 </template>
 <script>
-import { SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
-import { defineComponent } from 'vue';
-const columns = [{
-  name: 'Name',
-  dataIndex: 'name',
-  key: 'name',
-}, {
-  title: 'Age',
-  dataIndex: 'age',
-  key: 'age',
-}, {
-  title: 'Address',
-  dataIndex: 'address',
-  key: 'address',
-}, {
-  title: 'Tags',
-  key: 'tags',
-  dataIndex: 'tags',
-}, {
-  title: 'Action',
-  key: 'action',
-}];
-const data = [{
-  key: '1',
-  name: 'John Brown',
-  age: 32,
-  address: 'New York No. 1 Lake Park',
-  tags: ['nice', 'developer'],
-}, {
-  key: '2',
-  name: 'Jim Green',
-  age: 42,
-  address: 'London No. 1 Lake Park',
-  tags: ['loser'],
-}, {
-  key: '3',
-  name: 'Joe Black',
-  age: 32,
-  address: 'Sidney No. 1 Lake Park',
-  tags: ['cool', 'teacher'],
-}];
-export default defineComponent({
-  components: {
-    SmileOutlined,
-    DownOutlined,
-  },
-  setup() {
-    return {
-      data,
-      columns,
-    };
-  },
-});
-</script>
-<style lang="">
+  import ModalCreate from './ModalCreate.vue';
+  import ModalUpdate from './ModalUpdate.vue';
+  import { Modal, Pagination, message } from 'ant-design-vue';
+  import { SmileOutlined, DownOutlined, CompassOutlined } from '@ant-design/icons-vue';
+  import APIService from '@/helpers/APIService';
+  import { inject } from 'vue';
+  export default {
+    components: {
+      SmileOutlined,
+      DownOutlined,
+      Pagination,
+      ModalCreate,
+      ModalUpdate,
+    },
 
+    data() {
+      return {
+        tableColumns: [
+
+          {
+            title: 'Mã danh mục',
+            dataIndex: 'code',
+            key: 'code',
+            width: '15%',
+            sorter: false,
+          },
+          {
+            title: 'Tên danh mục',
+            dataIndex: 'name',
+            key: 'name',
+            width: '15%',
+            sorter: false,
+          },
+          {
+            title: 'Mô tả',
+            dataIndex: 'description',
+            key: 'description',
+            width: '30%',
+          },
+
+
+          {
+            title: 'Hành động',
+            dataIndex: 'action',
+            key: 'action',
+            width: '10%',
+
+          },
+        ],
+        dataSourceTable: [],
+        loadingTable: false,
+        pagination: {
+          current: 1,
+          pageSize: 5,
+          total: 0
+        },
+        formSearch: {
+          code_Filter: '',
+          name_Filter: '',
+        },
+
+
+
+      }
+    },
+    mounted() {
+      const selectedMenu = inject('selectedMenu');
+      const changeSelectedMenu = inject('changeSelectedMenu');
+      if (this.$route.name === 'CategoryHome') {
+        changeSelectedMenu('Category');
+      }
+      this.fetchData(this.pagination.current, this.pagination.pageSize);
+
+
+    },//end mounted
+    methods: {
+      goBack() {
+        this.$router.go(-1); // Điều hướng trở lại trang trước
+      },
+      openModalCreate() {
+        this.$refs.modalCreate.showModal();
+      },
+      async deleteObj(id) {
+        try {
+          const response = await APIService.delete(`category/soft-delete/${id}`);
+          if (response.data.message == "Xóa thành công") {
+            message.success('Xóa thành công');
+            if (this.dataSourceTable.length === 1) {
+              // Nếu chỉ còn 1 bản ghi (bản ghi vừa bị xóa), quay lại trang trước
+              this.pagination.current = Math.max(1, this.pagination.current - 1);
+            }
+
+            this.fetchData(this.pagination.current, this.pagination.pageSize); // Tải lại dữ liệu
+          } else {
+            message.error('Xóa thất bại');
+          }
+        } catch (error) {
+
+          message.error('Xóa thất bại');
+        }
+      },
+      handlePaginationChange() {
+        
+        this.fetchData(this.pagination.current, this.pagination.pageSize);
+
+      },
+      SearchData() {
+       
+       this.fetchData(this.pagination.current, this.pagination.pageSize, this.formSearch);
+      },
+      async fetchData(pageIndex, pageSize, params) {
+        this.loadingTable = true;
+        var searchParam = {
+          ...params,
+          pageIndex: pageIndex,
+          pageSize: pageSize,
+          
+        };
+
+
+        try {
+          const response = await APIService.post('/category/get-data-by-page', searchParam);
+          this.dataSourceTable = response.data.data.items;
+          this.pagination.total = response.data.data.totalCount;
+          this.pagination.current = response.data.data.pageIndex;
+          this.pagination.pageSize = response.data.data.pageSize;
+
+        } catch (error) {
+          message.error(error);
+        }
+        this.loadingTable = false;
+      },//end fetchData
+      openModalUpdate(id) {
+        this.$refs.modalUpdate.showModal(id);
+      },
+
+
+    },
+  };
+</script>
+<style scoped>
+.btnSearch:hover {
+  background-color: rgb(229 127 123);
+  color: white;
+}
 </style>

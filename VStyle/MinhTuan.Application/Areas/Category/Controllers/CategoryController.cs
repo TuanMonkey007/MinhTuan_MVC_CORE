@@ -46,7 +46,7 @@ public class CategoryController : BaseController
             //Check trùng
             var EntityDTO =_mapper.Map<CategoryDTO>(model);
             var EntityModel = _mapper.Map<MinhTuan.Domain.Entities.Category>(EntityDTO);
-            _categoryService.Create(EntityModel);
+           // _categoryService.Create(EntityModel);
         }
         else
         {

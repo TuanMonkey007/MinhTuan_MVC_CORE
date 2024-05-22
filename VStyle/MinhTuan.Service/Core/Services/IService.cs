@@ -7,12 +7,13 @@ namespace MinhTuan.Service.Core.Services
 {
     public interface IService<T> where T : class
     {
-        T? GetById(Guid? id);
-        void Create(T entity);
-        void Update(T entity);
-        void Delete(T entity);
-        void SoftDelete(T entity);
-        IQueryable<T> GetQueryable();
-        IEnumerable<T> FindBy(Expression<Func<T, bool>> predicate);
+        Task<T?> GetByIdAsync(Guid? id);
+        Task CreateAsync(T entity);
+        Task UpdateAsync(T entity);
+        Task DeleteAsync(T entity);
+        Task SoftDeleteAsync(T entity);
+        IQueryable<T> GetQueryable(); // Không cần đổi vì không phải async
+        Task<IEnumerable<T>> FindByAsync(Expression<Func<T, bool>> predicate);
     }
+
 }

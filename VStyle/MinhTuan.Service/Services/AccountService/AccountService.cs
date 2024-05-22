@@ -21,6 +21,10 @@ using MinhTuan.Domain.Helper.EmailSender;
 using Microsoft.AspNetCore.Routing;
 using MinhTuan.Domain;
 using System.Net;
+using MinhTuan.Domain.Helper.Pagination;
+
+using MinhTuan.Domain.Core.DTO;
+using MinhTuan.Service.SearchDTO;
 
 namespace MinhTuan.Service.Services.AccountService;
 
@@ -60,10 +64,51 @@ public class AccountService : IAccountService
         _emailService = emailService;
         _linkGenerator = linkGenerator;
     }
-    public async Task<List<UserDTO>> GetAllUserAsync()
+    public ResponseWithDataDto<PagedList<UserDTO>> GetDataByPage(AccountSearchDTO searchDTO)
     {
-        var users = await _userManager.Users.ToListAsync(); // Sử dụng ToListAsync() nếu _userManager.Users là một loại không đồng bộ
-        return _mapper.Map<List<UserDTO>>(users);
+        try
+        {
+            var query = from entityTbl in _userManager.Users.AsQueryable()
+                        select new UserDTO
+                        {
+                            Id = entityTbl.Id,
+                            FullName = entityTbl.FullName,
+                            Email = entityTbl.Email,
+                            PhoneNumber = entityTbl.PhoneNumber,
+                            LockoutEnd = entityTbl.LockoutEnd,
+                            PhoneNumberConfirmed = entityTbl.PhoneNumberConfirmed
+                        };
+
+
+            if (searchDTO != null)
+            {
+                if (!string.IsNullOrEmpty(searchDTO.FullName_Filter))
+                {
+                    var idSearch = searchDTO.FullName_Filter.ToString();
+                    var isNormal = searchDTO.FullName_Filter.ToString().ToLower() != idSearch.ToLower();
+                    var list = _userManager.Users.AsQueryable().Select(x => x.FullName).ToList().Where(x => x.ToString().ToLower().Contains(idSearch.ToLower()));
+                    query = query.Where(x => list.Contains(x.FullName));
+                }
+            }
+            var result = PagedList<UserDTO>.Create(query, searchDTO);
+            return new ResponseWithDataDto<PagedList<UserDTO>>()
+            {
+                Data = result,
+            
+                Message = "Lấy thành công"
+            };
+
+        }
+        catch (Exception ex)
+        {
+            return new ResponseWithDataDto<PagedList<UserDTO>>()
+            {
+                Data = null,
+             
+                Message = ex.Message
+
+            };
+        }
     }
 
     public async Task<string> LogInAsync(LogInDTO model)
@@ -73,14 +118,48 @@ public class AccountService : IAccountService
 
         // Tìm người dùng theo số điện thoại hoặc email
         var user = isPhoneNumber ? await _userManager.FindByNameAsync(model.PhoneOrEmail) : await _userManager.FindByEmailAsync(model.PhoneOrEmail);
-        if(user == null) return string.Empty;
-        var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
+        if(user == null) return "Sai thông tin đăng nhập"; // không thấy người dùng
+        
        
-        if (!result.Succeeded && result.IsNotAllowed== false)
+        var isLockout = await _userManager.IsLockedOutAsync(user);
+
+        if (isLockout)
         {
-            return string.Empty;
+            DateTimeOffset? lockoutEndDate = await _userManager.GetLockoutEndDateAsync(user);
+
+            // Kiểm tra xem lockoutEndDate có giá trị hay không (null khi không bị khóa)
+            if (lockoutEndDate.HasValue)
+            {
+                // Tính thời gian còn lại đến khi hết khóa
+                TimeSpan remainingLockout = lockoutEndDate.Value - DateTimeOffset.Now;
+
+                // Kiểm tra xem thời gian còn lại có lớn hơn 10 phút hay không
+                if (remainingLockout.TotalMinutes > 10)
+                {
+                    return "Tài khoản đã bị khóa bởi quản trị viên";
+                }
+                else
+                {
+                    return "Tài khoản đã bị tạm khóa do đăng nhập sai nhiều lần";
+                }
+            }
         }
-       
+        else
+        {
+            var isCorrectPassword = await _userManager.CheckPasswordAsync(user, model.Password);
+            if (!isCorrectPassword)
+            {
+                await _userManager.AccessFailedAsync(user);
+                var FailureTime = await _userManager.GetAccessFailedCountAsync(user);
+                return "Số lần đăng nhập sai: " + FailureTime + "/5";
+
+            }
+            
+        }
+
+
+
+        await _userManager.ResetAccessFailedCountAsync(user);
         var authClaims = new List<Claim>
             {
             new Claim(ClaimTypes.Name, user.FullName), // Thêm tên người dùng vào claim
@@ -124,14 +203,9 @@ public class AccountService : IAccountService
             await _userManager.AddToRoleAsync(createdUser, AppRole.CUSTOMER); //Role default when register = Customer
             //Gửi email chứa token xác thực tài khoản
             var verifyToken = await _userManager.GenerateEmailConfirmationTokenAsync(createdUser);
-         
-            // Tạo confirmation link
-            var confirmationLink = _linkGenerator.GetUriByAction(
-               _httpContextAccessor.HttpContext.Request.HttpContext, // HttpContext hiện tại
-                "ConfirmEmail",  // Tên action
-                "Account",       // Tên controller
-                new { userId = createdUser.Id, token = verifyToken } // Các tham số
-            );
+
+            var confirmationLink = $"http://localhost:8080/confirm-email?token={WebUtility.UrlEncode(verifyToken)}&email={WebUtility.UrlEncode(model.Email)}";
+
             var message = new Message(new string[] { createdUser.Email! }, "Xác thực tài khoản", confirmationLink);
              _emailService.SendEmail(message);
 

@@ -18,6 +18,10 @@ using MinhTuan.Domain.Helper.EmailSender;
 using MinhTuan.Service.Core.Services;
 using MinhTuan.Domain;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Bcpg;
+using MinhTuan.Domain.Helper.Pagination;
+using MinhTuan.Service.SearchDTO;
+using Newtonsoft.Json;
 
 namespace MinhTuan.API.Controllers
 {
@@ -27,7 +31,6 @@ namespace MinhTuan.API.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly IEmailService _emailService;
-       
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<AppUser> _userManager;
@@ -51,32 +54,63 @@ namespace MinhTuan.API.Controllers
             _signInManager = signInManager;
             _emailService = emailService;
         }
-        [HttpGet]
-        [Route("GetAllUser")]
-        public async Task<IActionResult> GetAllUser()
+        
+
+        [HttpPost]
+        [Route("get-all-user")]
+        public async Task<IActionResult> GetDataByPage([FromBody] AccountSearchDTO searchDTO)
         {
-            var response = new ResponseWithDataDto<List<UserDTO>>();
             try
             {
-                var users = await _accountService.GetAllUserAsync();
-                if (users.Any())
+                var sessionKey = $"searchAccount_{typeof(UserDTO).Name}_{JsonConvert.SerializeObject(searchDTO)}";
+                var jsonData = _httpContextAccessor.HttpContext.Session.GetString(sessionKey);
+
+                if (!string.IsNullOrEmpty(jsonData)) // Kiểm tra jsonData có null hoặc rỗng không
                 {
-                    response.Data = users;
-                    response.Message = "Thành công";
-                    return Ok(response);
+                    try
+                    {
+                        var usersFromSession = JsonConvert.DeserializeObject<PagedList<UserDTO>>(jsonData);
+
+                        // Kiểm tra tính hợp lệ của usersFromSession
+                        if (usersFromSession != null && usersFromSession.Items != null && usersFromSession.Items.Any())
+                        {
+                            var resultSession = new ResponseWithDataDto<PagedList<UserDTO>>()
+                            {
+                                Data = usersFromSession,
+                            };
+                            return Ok(resultSession);
+                        }
+                        else
+                        {
+                           
+                            _httpContextAccessor.HttpContext.Session.Remove(sessionKey); // Xóa session không hợp lệ
+                        }
+                    }
+                    catch (JsonException ex)
+                    {
+                       
+                        _httpContextAccessor.HttpContext.Session.Remove(sessionKey);
+                    }
                 }
 
-                return NoContent();
+                var resultGetted =  _accountService.GetDataByPage(searchDTO);
 
+                // Kiểm tra resultGetted.Data trước khi serialize
+                if (resultGetted != null && resultGetted.Data != null && resultGetted.Data.Items != null)
+                {
+                    jsonData = JsonConvert.SerializeObject(resultGetted.Data);
+                    HttpContext.Session.SetString(sessionKey, jsonData);
+                }
 
+                return Ok(resultGetted); // Trả về resultGetted dù có hay không có dữ liệu
             }
             catch (Exception ex)
             {
-                response.Message = ex.Message;
-                response.Code = StatusCodes.Status500InternalServerError;
-                return StatusCode(StatusCodes.Status500InternalServerError, response);  // Trả về lỗi nếu có lỗi xảy ra
+                
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseWithMessageDto { Status = "Lỗi", Message = "Đã có lỗi xảy ra." });
             }
         }
+
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
@@ -92,6 +126,8 @@ namespace MinhTuan.API.Controllers
                     //Gửi email chứa token xác thực khi đã đăng ký 
                     return Ok(response);
                 }
+                response.Message = result.Errors.FirstOrDefault().Code.ToString();
+                return Ok(response);
             }
             response.Message = "Lỗi tạo tài khoản";
             return BadRequest(response);
@@ -104,29 +140,32 @@ namespace MinhTuan.API.Controllers
             var response = new ResponseWithDataDto<string> { Message = "Đăng nhập thành công" };
             var modelDTO = _mapper.Map<LogInDTO>(model);
             var token = await _accountService.LogInAsync(modelDTO); // Chuỗi token
-            if (!string.IsNullOrEmpty(token))
-            {
-                response.Data = token;
-                return Ok(response);
-            }
-            return Unauthorized();  
+             response.Data = token;
+           return Ok(response);
+           
+            
         }
 
       
 
-        [HttpGet]
-        [Route("ConfirmEmail")]
-        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        [HttpPost]
+        [Route("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(ChangePasswordViewModel model)
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            var userEmail = model.Email;
+            var token = model.Token;
+            var user = await _userManager.FindByEmailAsync(userEmail);
             if (user == null)
+            {
                 return BadRequest("Invalid user");
-
+            }
+        
             var result = await _userManager.ConfirmEmailAsync(user, token);
-           
             if (result.Succeeded)
+            {
                 return Ok("Email confirmed successfully!");
-
+            }
+                
             return BadRequest("Invalid token");
         }
         [HttpPost]
@@ -139,7 +178,7 @@ namespace MinhTuan.API.Controllers
            if(string.IsNullOrEmpty(result))
             {
                 response.Data = "";
-                response.Message = "Email chưa được đăng ký hoặc xác thực";
+                response.Message = "Email chưa được đăng ký hoặc chưa xác thực";
                 return Ok(response);
             }
             response.Data = "Hoàn thành";

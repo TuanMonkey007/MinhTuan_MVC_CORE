@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -80,6 +83,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Lockout.MaxFailedAccessAttempts = 5; // Tối đa 5 lần nhập sai
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); // Khóa trong 5 phút
     options.Lockout.AllowedForNewUsers = true; // Áp dụng lockout cho cả người dùng mới
+    options.User.RequireUniqueEmail = true; // Yêu cầu chỉ nhập 1 email
     
 
 });
@@ -123,11 +127,35 @@ var emailConfiguration = configuration.GetSection("EmailConfiguration")
     .Get<EmailConfiguration>();
 builder.Services.AddSingleton(emailConfiguration);
 builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddDataProtection(); // Đăng ký Data Protection
+
+
+// Đăng ký Data Protection
+builder.Services.AddDataProtection()
+    .SetApplicationName("VStyle")
+    .PersistKeysToFileSystem(new DirectoryInfo(@"C:\VStyleKeys"))//Lưu ý khóa nằm ở ổ C/keys nhớ check khi build
+    .SetDefaultKeyLifetime(TimeSpan.FromDays(30))
+    .UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration()
+    {
+        EncryptionAlgorithm = EncryptionAlgorithm.AES_256_GCM,
+        ValidationAlgorithm = ValidationAlgorithm.HMACSHA512 // Sử dụng HMACSHA512 để xác thực
+    });
+     
 builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
 {
     options.TokenLifespan = TimeSpan.FromMinutes(15);
 });
+builder.Services.AddDistributedMemoryCache(); // Thêm bộ nhớ đệm phân tán để lưu trữ session
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Thời gian timeout của session (tùy chỉnh theo nhu cầu)
+    options.Cookie.HttpOnly = true; // Chỉ cho phép truy cập cookie qua HTTP (tăng tính bảo mật)
+    options.Cookie.IsEssential = true; // Đánh dấu cookie là cần thiết
+});
+
+
+
+
 builder.Services.AddControllers();
 var app = builder.Build();
 
@@ -138,7 +166,7 @@ app.UseCors(x => x
        .AllowAnyHeader()
        .AllowCredentials()
        .SetIsOriginAllowed(origin => true));  // CORS configuration
-
+app.UseSession();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
+using MinhTuan.Domain.Core.DTO;
 using MinhTuan.Domain.DTOs.AccountDTO;
+using MinhTuan.Domain.Helper.Pagination;
+using MinhTuan.Service.SearchDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +14,7 @@ namespace MinhTuan.Service.Services.AccountService;
 
 public interface IAccountService
 {
-    public Task<List<UserDTO>> GetAllUserAsync();
+    public ResponseWithDataDto<PagedList<UserDTO>> GetDataByPage(AccountSearchDTO search);
     public Task<string> LogInAsync(LogInDTO model);
     public Task<IdentityResult> RegisterAsync(RegisterDTO model);
     public Task LogOutAsync();

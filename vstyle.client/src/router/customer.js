@@ -11,7 +11,13 @@ const customerRouter=[
             { 
                 path: "/reset-password", 
                   name: "ResetPassword",
-                  component: ()=> import("../views/Customer/Home/resetPassword.vue"),
+                  component: ()=> import("../views/Auth/resetPassword.vue"),
+                  props: (route) => ({ token: route.query.token, email: route.query.email }) 
+              },
+              { 
+                path: "/confirm-email", 
+                  name: "ConfirmEmail",
+                  component: ()=> import("../views/Auth/ConfirmEmail.vue"),
                   props: (route) => ({ token: route.query.token, email: route.query.email }) 
               },
            

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MinhTuan.API.ViewModels;
 using MinhTuan.API.ViewModels.AccountViewModel;
+using MinhTuan.API.ViewModels.CategoryViewModel;
 using MinhTuan.Domain.DTOs.AccountDTO;
 using MinhTuan.Domain.Entities;
 using MinhTuan.Service.DTOs.CategoryDTO;
@@ -17,5 +18,7 @@ public class AutoMapperProfile : Profile
         CreateMap<UserDTO, AppUser>().ReverseMap();
         CreateMap<ForgotPasswordViewModel, ForgotPasswordDTO>().ReverseMap();
         CreateMap<ChangePasswordDTO, ChangePasswordViewModel>().ReverseMap();
+        CreateMap<CategoryDTO, CreateCategoryViewModel>().ReverseMap();
+        CreateMap<Category, CategoryDTO>().ReverseMap();
     }
 }

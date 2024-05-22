@@ -10,7 +10,7 @@ const routes=[
     { 
       path: "/Login",
       name: "Login",
-      component: ()=> import("../views/Customer/Home/login.vue"),
+      component: ()=> import("../views/Auth/login.vue"),
       beforeEnter(to, from, next) { //Chặn khi đã đăng nhập
         const isAuthenticated = localStorage.getItem('accessToken');
         if (isAuthenticated) {//Nếu đã đăng nhập thì không cho chuyển hướng
@@ -32,7 +32,7 @@ const routes=[
     {
         path: '/unauthorized',
         name: 'Unauthorized',
-        component:()=> import("../views/Unauthorized.vue"),
+        component:()=> import("../views/Auth/Unauthorized.vue"),
     },
     // Tuyến đường cuối cùng chuyển hướng tất cả các đường dẫn không xác định về trang chủ
     // {
@@ -48,7 +48,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const isAuthenticated = localStorage.getItem('accessToken');
     const userRole = localStorage.getItem('role');
-  
+    document.title = to.meta.title || 'VStyle - Thời trang Việt'; // Nếu route không có meta.title, sử dụng title mặc định
     if (to.matched.some(record => record.meta.requiresAuth)) {
       if (!isAuthenticated) {
         next({ name: 'Login' });

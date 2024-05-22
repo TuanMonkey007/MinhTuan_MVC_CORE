@@ -1,8 +1,8 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks; // Thêm namespace này
 using MinhTuan.Domain.Core.Repository;
 using MinhTuan.Domain.Core.UnitOfWork;
 using MinhTuan.Service.Core.Services;
@@ -11,61 +11,57 @@ namespace MinhTuan.Service.Core
 {
     public class Service<T> : IService<T> where T : class
     {
-        private  readonly IUnitOfWork _unitOfWork;
-      
+        private readonly IUnitOfWork _unitOfWork;
 
         public Service(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-           
         }
 
-        public void Create(T entity)
+        public async Task CreateAsync(T entity) // Đổi thành async Task
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException("entity");
-            }
+            if (entity == null) throw new ArgumentNullException("entity");
             _unitOfWork.GetRepository<T>().Add(entity);
-            _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(); // Sử dụng await
         }
 
-        public void Delete(T entity)
+        public async Task DeleteAsync(T entity) // Đổi thành async Task
         {
             if (entity == null) throw new ArgumentNullException("entity");
             _unitOfWork.GetRepository<T>().Delete(entity);
-          
-            _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(); // Sử dụng await
         }
 
-        public IEnumerable<T> FindBy(Expression<Func<T, bool>> predicate)
+        public async Task<IEnumerable<T>> FindByAsync(Expression<Func<T, bool>> predicate) // Đổi thành async Task<IEnumerable<T>>
         {
-            return _unitOfWork.GetRepository<T>().FindBy(predicate);
+            // Kiểm tra xem phương thức FindBy trong Repository đã hỗ trợ async chưa
+            // Nếu chưa, bạn có thể chuyển đổi hoặc sử dụng Task.Run để bọc phương thức đồng bộ
+            return await Task.Run(() => _unitOfWork.GetRepository<T>().FindBy(predicate));
         }
 
-        public T? GetById(Guid? id)
+        public async Task<T?> GetByIdAsync(Guid? id) // Đổi thành async Task<T?>
         {
-            return _unitOfWork.GetRepository<T>().GetById(id);
+            // Tương tự như FindByAsync, kiểm tra xem GetById đã hỗ trợ async chưa
+            return await Task.Run(() => _unitOfWork.GetRepository<T>().GetById(id));
         }
 
-        public IQueryable<T> GetQueryable()
+        public IQueryable<T> GetQueryable() // Không cần đổi vì không có tác vụ bất đồng bộ
         {
             return _unitOfWork.GetRepository<T>().GetQueryable();
         }
 
-        public void SoftDelete(T entity)
+        public async Task SoftDeleteAsync(T entity) // Đổi thành async Task
         {
-
             if (entity == null) throw new ArgumentNullException("entity");
             _unitOfWork.GetRepository<T>().SoftDelete(entity);
-            _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(); // Sử dụng await
         }
 
-        public void Update(T entity)
+        public async Task UpdateAsync(T entity) // Đổi thành async Task
         {
             if (entity == null) throw new ArgumentNullException("entity");
             _unitOfWork.GetRepository<T>().Update(entity);
-            _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(); // Sử dụng await
         }
     }
 }
