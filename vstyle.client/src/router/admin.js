@@ -15,7 +15,13 @@ const adminRouter=[
                 path:"Category",
                 name:"CategoryHome",
                 component:()=>import("../views/Administrator/Categories/index.vue"),
-                meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF] }
+                meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF], title: "Quản lý danh mục" }
+            },
+            {
+                path:"DataCategory/:id?",
+                name:"DataCategoryHome",
+                component:()=>import("../views/Administrator/DataCategories/index.vue"),
+                meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF], title: "Quản lý dữ liệu danh mục", }
             },
             {
                 path:"Account",

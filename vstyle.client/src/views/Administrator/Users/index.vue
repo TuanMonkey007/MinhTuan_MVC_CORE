@@ -3,7 +3,7 @@
     style="border: 1px solid rgb(235, 237, 240); height: max-content; background-color: #fff; margin-bottom: 16px; align-items: center;"
     title="Quản lý tài khoản" @back="goBack">
     <template #extra>
-      <a-breadcrumb>
+      <a-breadcrumb separator=">">
         <a-breadcrumb-item href="">
           <font-awesome-icon icon="fa-solid fa-house" />
         </a-breadcrumb-item>
@@ -32,13 +32,14 @@
             <a-space>
               <a-tooltip title="Xem chi tiết" placement="leftTop">
 
-                <a-button type="link" shape="circle" @click="openModalDetail(record.id)">
-                  <template #icon><font-awesome-icon :icon="['fas', 'circle-info']" style="color: #74C0FC;" /></template>
+                <a-button type="link" shape="circle">
+                  <template #icon><font-awesome-icon :icon="['fas', 'circle-info']"
+                      style="color: #74C0FC;" /></template>
                 </a-button>
               </a-tooltip>
 
               <a-tooltip title="Chỉnh sửa">
-                <a-button type="link" shape="circle" @click="openModalDetail(record.id)">
+                <a-button type="link" shape="circle" @click="openModalUpdate(record.id)">
                   <template #icon><font-awesome-icon icon="fa-solid fa-pen-to-square"
                       style="color: #FFD43B;" /></template>
                 </a-button>
@@ -58,9 +59,22 @@
           <template v-if="column.key === 'status'">
             <a-space style="justify-content: center;">
 
-              <font-awesome-icon :icon="['fas', 'circle']"
-                :style="{ color: getLockoutIconColor(record.lockoutEnd) }" />
-              
+
+              <a-tooltip v-if="getLockoutIconColor(record.lockoutEnd, record.emailConfirmed) == '#e2e4e9'"
+                title="Chưa xác nhận" placement="right"> <font-awesome-icon :icon="['fas', 'circle']"
+                  :style="{ color:'#e2e4e9' }" /></a-tooltip>
+              <a-tooltip v-if="getLockoutIconColor(record.lockoutEnd, record.emailConfirmed) == '#06c646'" title="Tốt"
+                placement="right">
+                <font-awesome-icon :icon="['fas', 'circle']"
+                  :style="{ color:  '#06c646'}" /></a-tooltip>
+              <a-tooltip v-if="getLockoutIconColor(record.lockoutEnd, record.emailConfirmed) == '#ffa500'"
+                title="Tạm khóa" placement="right">
+                <font-awesome-icon :icon="['fas', 'circle']"
+                  :style="{ color:'#ffa500' }" /></a-tooltip>
+              <a-tooltip v-if="getLockoutIconColor(record.lockoutEnd, record.emailConfirmed) == '#fe0101'"
+                title="Khóa dài hạn" placement="right">
+                <font-awesome-icon :icon="['fas', 'circle']"
+                  :style="{ color: '#fe0101' }" /></a-tooltip>
             </a-space>
 
           </template>
@@ -74,25 +88,34 @@
 
 
   </transition>
+
+  <ModalCreate @addSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalCreate" />
+  <ModalUpdate @updateSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalUpdate" />
 </template>
 <script>
+  import { message } from 'ant-design-vue';
+  import ModalCreate from './ModalCreate.vue';
+  import ModalUpdate from './ModalUpdate.vue';
   import { Pagination } from 'ant-design-vue';
   import APIService from '@/helpers/APIService';
   import { inject } from 'vue';
   export default {
     components: {
-      APagination: Pagination
+      ModalCreate,
+      ModalUpdate,
+      APagination: Pagination,
+
     },
     data() {
       return {
         tableColumns: [
-        {
+          {
             title: 'Trạng thái',
             dataIndex: 'lockoutEnd',
             key: 'status',
             width: '10%',
           },
-        {
+          {
             title: 'Avatar',
             dataIndex: 'avatar',
             key: 'avatar',
@@ -126,7 +149,7 @@
             key: 'phone',
             width: '15%',
           },
-         
+
 
           {
             title: 'Hành động',
@@ -140,12 +163,12 @@
         loadingTable: false,
         pagination: {
           current: 1,
-          pageSize: 10,
+          pageSize: 5,
           total: 0
         },
         searchParams: {
           PageIndex: 1,
-          PageSize: 10,
+          PageSize: 5,
         },
 
 
@@ -186,17 +209,47 @@
         }
         this.loadingTable = false;
       },
-      getLockoutIconColor(lockoutEnd) {
+      getLockoutIconColor(lockoutEnd, emailConfirmed) {
         const now = new Date();
+        console.log(emailConfirmed)
         const lockoutEndDate = new Date(lockoutEnd);
         const remainingLockout = lockoutEndDate - now;
-
+       
         if (remainingLockout > 10 * 60 * 1000) { // Hơn 10 phút
           return '#fe0101'; // Màu đỏ
         } else if (remainingLockout > 0) { // Dưới 10 phút
           return '#ffa500'; // Màu cam
         } else { // Đã hết thời gian khóa
+          if (emailConfirmed == false) {
+          return '#e2e4e9'; // Màu xám
+          }
           return '#06c646'; // Màu xanh
+        }
+      },//end getLockoutIconColor
+      openModalAdd() {
+        this.$refs.modalCreate.showModal();
+      },
+      openModalUpdate(id) {
+        this.$refs.modalUpdate.showModal(id);
+      },
+      async deleteObj(id) {
+        try {
+          const response = await APIService.delete(`account/delete/${id}`);
+
+          if (response.data.message == "Xóa thành công") {
+            message.success('Xóa thành công');
+            if (this.dataSourceTable.length === 1) {
+              // Nếu chỉ còn 1 bản ghi (bản ghi vừa bị xóa), quay lại trang trước
+              this.pagination.current = Math.max(1, this.pagination.current - 1);
+            }
+
+            this.fetchData(this.pagination.current, this.pagination.pageSize); // Tải lại dữ liệu
+          } else {
+            message.error('Xóa thất bại');
+          }
+        } catch (error) {
+
+          message.error('Xóa thất bại');
         }
       },
     },//end methods

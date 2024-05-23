@@ -4,7 +4,8 @@ using MinhTuan.Application.Areas.Category.Models;
 using MinhTuan.Application.Controllers;
 using MinhTuan.Service.Services.CategoryService;
 using MinhTuan.Domain.Entities;
-using MinhTuan.Service.DTOs.CategoryDTO;
+
+using MinhTuan.Domain.DTOs.CategoryDTO;
 namespace MinhTuan.Application.Areas.Category.Controllers;
 
 [Area("Category")]

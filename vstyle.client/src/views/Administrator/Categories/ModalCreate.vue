@@ -2,8 +2,7 @@
     <div>
         <a-modal v-model:open="open" title="Thêm danh mục" :footer="null">
             <a-form ref="formRef" :model="category" layout="vertical">
-                <a-form-item ref="code" label="Mã danh mục" name="code">
-                    <a-input v-model:value="category.code" @input="formatInput" :rules=" [
+                <a-form-item ref="code" label="Mã danh mục" name="code" :rules=" [
                         {
                             required: true,
                             message: 'Mã danh mục là bắt buộc',
@@ -15,10 +14,10 @@
                             message: 'Độ dài từ 5-20',
                             trigger: 'blur',
                         },
-                    ]"/>
+                    ]">
+                    <a-input v-model:value="category.code" @input="formatInput" />
                 </a-form-item>
-                <a-form-item ref="name" label="Tên danh mục" name="name">
-                    <a-input v-model:value="category.name" :rules="[{
+                <a-form-item ref="name" label="Tên danh mục" name="name"  :rules="[{
                         required: true,
                         message: 'Tên danh mục là bắt buộc',
                         trigger: 'change'
@@ -27,7 +26,8 @@
                         max: 50,
                         message: 'Độ dài từ 5-50',
                         trigger: 'blur',
-                    }]" />
+                    }]">
+                    <a-input v-model:value="category.name" />
                 </a-form-item>
 
                
@@ -107,6 +107,7 @@
                 console.log(this.category)
             },
             async handleSubmitAsync() {
+                this.$refs.formRef.validate().then(async () => {
                 this.isLoading = true
                 console.log(this.category)
                 const serverResponse = await APIService.post('category/create', this.category)
@@ -120,6 +121,11 @@
                     this.isLoading = false
                     this.$message.error(serverResponse.data.message)
                 }
+            }).catch(error => {
+                    console.log('error', error);
+                }).finally(() => {
+                    this.isLoading = false;
+                })
                
                 
             }

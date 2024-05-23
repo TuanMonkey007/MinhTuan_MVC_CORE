@@ -62,7 +62,7 @@ namespace MinhTuan.Domain.Core.Repository
             if (softDeletable != null)
             {
                 softDeletable.IsDelete = true; // Đánh dấu entity là đã bị xóa mềm
-                softDeletable.DeleteTime = DateTime.Now;
+                
             }
             else
             {

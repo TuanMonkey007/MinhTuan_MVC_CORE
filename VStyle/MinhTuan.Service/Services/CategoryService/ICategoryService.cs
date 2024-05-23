@@ -1,8 +1,9 @@
 ﻿using MinhTuan.Domain.Core.DTO;
+using MinhTuan.Domain.DTOs.CategoryDTO;
 using MinhTuan.Domain.Entities;
 using MinhTuan.Domain.Helper.Pagination;
 using MinhTuan.Service.Core.Services;
-using MinhTuan.Service.DTOs.CategoryDTO;
+
 using MinhTuan.Service.SearchDTO;
 using System;
 using System.Collections.Generic;

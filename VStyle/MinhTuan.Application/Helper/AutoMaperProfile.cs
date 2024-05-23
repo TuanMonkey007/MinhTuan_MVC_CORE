@@ -2,8 +2,9 @@
 using MinhTuan.Application.ViewModels;
 using MinhTuan.Application.ViewModels.AccountViewModel;
 using MinhTuan.Domain.DTOs.AccountDTO;
+using MinhTuan.Domain.DTOs.CategoryDTO;
 using MinhTuan.Domain.Entities;
-using MinhTuan.Service.DTOs.CategoryDTO;
+
 namespace MinhTuan.Application.Helper;
 
 public class AutoMapperProfile : Profile

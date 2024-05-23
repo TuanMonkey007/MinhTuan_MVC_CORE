@@ -2,32 +2,32 @@
     <div>
         <a-modal v-model:open="open" title="Cập nhật danh mục" :footer="null">
             <a-form ref="formRef" :model="category" layout="vertical">
-                <a-form-item ref="code" label="Mã danh mục" name="code">
-                    <a-input v-model:value="category.code" @input="formatInput" :rules="[
-                        {
-                            required: true,
-                            message: 'Mã danh mục là bắt buộc',
-                            trigger: 'change',
-                        },
-                        {
-                            min: 5,
-                            max: 20,
-                            message: 'Độ dài từ 5-20',
-                            trigger: 'blur',
-                        },
-                    ]" />
-                </a-form-item>
-                <a-form-item ref="name" label="Tên danh mục" name="name">
-                    <a-input v-model:value="category.name" :rules="[{
+                <a-form-item ref="code" label="Mã danh mục" name="code" :rules="[
+                    {
                         required: true,
-                        message: 'Tên danh mục là bắt buộc',
-                        trigger: 'change'
-                    }, {
+                        message: 'Mã danh mục là bắt buộc',
+                        trigger: 'change',
+                    },
+                    {
                         min: 5,
-                        max: 50,
-                        message: 'Độ dài từ 5-50',
+                        max: 20,
+                        message: 'Độ dài từ 5-20',
                         trigger: 'blur',
-                    }]" />
+                    },
+                ]">
+                    <a-input v-model:value="category.code" @input="formatInput" />
+                </a-form-item>
+                <a-form-item ref="name" label="Tên danh mục" name="name" :rules="[{
+                    required: true,
+                    message: 'Tên danh mục là bắt buộc',
+                    trigger: 'change'
+                }, {
+                    min: 5,
+                    max: 50,
+                    message: 'Độ dài từ 5-50',
+                    trigger: 'blur',
+                }]">
+                    <a-input v-model:value="category.name" />
                 </a-form-item>
 
 
@@ -57,9 +57,7 @@
     import { ref, reactive } from "vue";
 
     export default {
-        setup() {
-
-        },// end setup
+     
         data() {
 
             const category = reactive({
@@ -110,17 +108,23 @@
                 console.log(this.category)
             },
             async handleSubmitAsync() {
-                this.isLoading = true
-               
-               const serverResponse = await APIService.put(`category/update/${this.id}`, this.category)
-               if (serverResponse.data.message == "Cập nhật thành công") {
-                    this.$message.success(serverResponse.data.message)
-                    this.closeModal()
-                } else {
-                    this.$message.error(serverResponse.data.message)
-                }
-                this.isLoading = false
-                this.$emit('updateSuccess')
+                this.$refs.formRef.validate().then(async () => {
+                    this.isLoading = true
+
+                    const serverResponse = await APIService.put(`category/update/${this.id}`, this.category)
+                    if (serverResponse.data.message == "Cập nhật thành công") {
+                        this.$message.success(serverResponse.data.message)
+                        this.closeModal()
+                    } else {
+                        this.$message.error(serverResponse.data.message)
+                    }
+                    this.isLoading = false
+                    this.$emit('updateSuccess')
+                }).catch(error => {
+                    console.log('error', error);
+                }).finally(() => {
+                    this.isLoading = false;
+                })
             }
 
         }

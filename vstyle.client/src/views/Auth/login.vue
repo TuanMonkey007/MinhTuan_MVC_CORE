@@ -43,7 +43,7 @@
 
                             <a-form-item>
                                 <a-form-item name="remember" no-style>
-                                    <a-checkbox>Ghi nhớ đăng nhập</a-checkbox>
+                                    <a-checkbox v-model:checked="formLogin.remember">Ghi nhớ đăng nhập</a-checkbox>
                                 </a-form-item>
                                 <a class="login-form-forgot" @click="handleBtnForgot">Quên mật khẩu?</a>
                             </a-form-item>
@@ -253,12 +253,20 @@
             const formLogin = reactive({
                 phoneOrEmail: '',
                 password: '',
-                // remember: true,
+                remember: true,
             });
             const formForgot = reactive({
                 Email: ''
             });
-
+            // Watch sự thay đổi của formRegis.Password
+            watch(
+                () => formRegis.Password,
+                (newVal, oldVal) => {
+                    if (newVal !== oldVal) {
+                        formRegis.ConfirmPassword = ''; // Reset giá trị của ConfirmPassword
+                    }
+                }
+            );
             const checkConfirmPassword = (rule, value, callback) => {
                 if (value !== formRegis.Password) {
                     callback(new Error('Mật khẩu không khớp'));
@@ -302,7 +310,7 @@
                 this.activeKey = 'ForgotTab';
             },  //end handleBtnForgot
             async onFinishForgot() {
-                this.loading=true;
+                this.loading = true;
                 message.loading(
                     {
                         content: 'Đang xử lý...',
@@ -315,34 +323,34 @@
                         Email: this.formForgot.Email
                     };
                     const response = await APIService.post("account/forgot-password", forgotPasswordViewModel);
-                 
-                    if(response.data.data != ''){
+
+                    if (response.data.data != '') {
                         message.success(
                             {
-                            content: response.data.message,
-                            key: 'loadingKey',
-                            duration: 2
-                        }
+                                content: response.data.message,
+                                key: 'loadingKey',
+                                duration: 2
+                            }
                         );
-                    }else{
+                    } else {
                         message.warning(
                             {
-                            content: response.data.message,
-                            key: 'loadingKey',
-                            duration: 2
-                        }
+                                content: response.data.message,
+                                key: 'loadingKey',
+                                duration: 2
+                            }
                         );
                     }
-                   
+
                 }
                 catch {
 
                     message.error(
                         {
-                        content: "Lấy lại mật khẩu thất bại!",
-                        key: 'loadingKey',
-                        duration: 2
-                    }
+                            content: "Lấy lại mật khẩu thất bại!",
+                            key: 'loadingKey',
+                            duration: 2
+                        }
                     );
                 }
                 finally {
@@ -350,8 +358,8 @@
                         message.destroy('loadingKey');
                         this.loading = false;
                     }, 2000);
-                 
-                   this.loading = false;
+
+                    this.loading = false;
                 }
             },//end onFinishForgot
             async onFinishRegister() {
@@ -373,18 +381,18 @@
                     };
                     const response = await APIService.post("account/register", registerViewModel);
                     // Tắt hiệu ứng chờ sau 2 giây
-                    if(response.data.message != 'Tạo tài khoản thành công'){
+                    if (response.data.message != 'Tạo tài khoản thành công') {
                         const contentMessage = (response.data.message == 'DuplicateEmail') ? 'Email đã được đăng ký' : 'Số điện thoại đã được đăng ký';
-                       message.warning(
-                        {
-                            content: contentMessage,
-                            key: 'loadingKey',
-                            duration: 2
-                        }
-                       );
-                      
+                        message.warning(
+                            {
+                                content: contentMessage,
+                                key: 'loadingKey',
+                                duration: 2
+                            }
+                        );
+
                     }
-                    else{
+                    else {
                         message.success(
                             {
                                 content: response.data.message,
@@ -394,13 +402,13 @@
                         );
                         this.activeKey = 'LoginTab';
                     }
-                   
-                  
 
-                  
+
+
+
                 } catch (error) {
                     message.error("Đăng ký thất bại!");
-                }finally{
+                } finally {
                     this.loading = false;
                 }
             },
@@ -423,7 +431,7 @@
 
                     const response = await APIService.post("account/login", loginViewModel);
                     // Parse the token to get user role and user name
-                    if(response.data.data.length < 100){
+                    if (response.data.data.length < 100) {
                         message.warning(
                             {
                                 content: response.data.data,
@@ -431,33 +439,33 @@
                                 duration: 2
                             }
                         );
-                        
-                    }else{
-                        const decodedToken = jwtDecode(response.data.data);
-                    const role = decodedToken[ClaimTypes.Role];
-                    const userName = decodedToken[ClaimTypes.Name];
-                    // Save token to local storage  
-                    localStorage.setItem("accessToken", response.data.data);
-                    // Save user role and user name to local storage
-                    localStorage.setItem("role", role);
-                    localStorage.setItem("userName", userName);
-
-                    //check role and redirect to the corresponding page
-                    if (role === Role.ADMIN || role === Role.STAFF) {
-                        router.push({ name: "AdminHome" });
 
                     } else {
-                        router.push({ name: "CustomerHome" });
+                        const decodedToken = jwtDecode(response.data.data);
+                        const role = decodedToken[ClaimTypes.Role];
+                        const userName = decodedToken[ClaimTypes.Name];
+                        // Save token to local storage  
+                        localStorage.setItem("accessToken", response.data.data);
+                        // Save user role and user name to local storage
+                        localStorage.setItem("role", role);
+                        localStorage.setItem("userName", userName);
+
+                        //check role and redirect to the corresponding page
+                        if (role === Role.ADMIN || role === Role.STAFF) {
+                            router.push({ name: "AdminHome" });
+
+                        } else {
+                            router.push({ name: "CustomerHome" });
+                        }
+
+                        message.success({
+                            content: 'Đăng nhập thành công!',
+                            key: 'loadingKey',
+                            duration: 2
+
+                        });
                     }
 
-                    message.success({
-                        content: 'Đăng nhập thành công!',
-                        key: 'loadingKey',
-                        duration: 2
-
-                    });
-                    }
-                    
 
                 } catch (error) {
 
@@ -480,7 +488,6 @@
 
 
         }//end methods
-
 
     });//end export default
 </script>

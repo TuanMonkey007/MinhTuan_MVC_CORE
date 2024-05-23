@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MinhTuan.Service.DTOs.CategoryDTO;
+namespace MinhTuan.Domain.DTOs.CategoryDTO;
 
 public class CategoryDTO
 {

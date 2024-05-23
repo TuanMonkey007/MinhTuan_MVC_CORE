@@ -76,7 +76,9 @@ public class AccountService : IAccountService
                             Email = entityTbl.Email,
                             PhoneNumber = entityTbl.PhoneNumber,
                             LockoutEnd = entityTbl.LockoutEnd,
-                            PhoneNumberConfirmed = entityTbl.PhoneNumberConfirmed
+                           // PhoneNumberConfirmed = entityTbl.PhoneNumberConfirmed,
+                            EmailConfirmed = entityTbl.EmailConfirmed
+
                         };
 
 

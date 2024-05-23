@@ -34,23 +34,38 @@ namespace MinhTuan.Domain
 				if (item.Entity is IAuditableEntity entity)
 				{
 					var userName = _httpContextAccessor.HttpContext?.User?.Identity?.Name;
-					var _user = this.Users.Where(x => x.UserName == userName).FirstOrDefault();
-					switch (item.State)
+
+                    var _user = this.Users.Where(x => x.FullName == userName).FirstOrDefault();
+                 
+               
+                    switch (item.State)
 					{
 						case EntityState.Modified:
-							entity.UpdatedDate = DateTime.Now;
+							
 
-							if (_user != null && _user.Id  != string.Empty)
+							if (_user != null)
 							{
-								entity.CreatedBy = _user.UserName;
-								entity.CreatedID = Guid.Parse(_user.Id);
-							}
+                                if (entity.IsDelete == true)
+                                {
+                                    // Nếu là soft delete, cập nhật thông tin xóa
+                                    entity.DeleteBy = _user.FullName;
+                                    entity.DeleteId = Guid.Parse(_user.Id);
+                                    entity.DeleteTime = DateTime.Now;
+                                }
+                                else
+                                {
+                                    // Nếu không phải soft delete, cập nhật thông tin sửa đổi
+                                    entity.UpdatedDate = DateTime.Now;
+                                    entity.UpdatedBy = _user.FullName;
+                                    entity.UpdatedID = Guid.Parse(_user.Id);
+                                }
+                            }
 							break;
 						case EntityState.Added:
 							entity.CreatedDate = DateTime.Now;
-							if (_user != null && _user.Id != string.Empty)
+							if (_user != null)
 							{
-								entity.CreatedBy = _user.UserName;
+								entity.CreatedBy = _user.FullName;
 								entity.CreatedID = Guid.Parse(_user.Id);
 							}
 							break;
@@ -65,7 +80,7 @@ namespace MinhTuan.Domain
 		//ví dụ:
 		// public DbSet<DanhMuc> DanhMucs { get; set; }
 		public DbSet<Category> categories { get; set; }
-       
+		public DbSet<DataCategory> dataCategories { get; set; }
      
 
     }

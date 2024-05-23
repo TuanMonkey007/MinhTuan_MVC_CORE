@@ -3,7 +3,7 @@
     style="border: 1px solid rgb(235, 237, 240); height: min-content; background-color: #fff; margin-bottom: 16px;"
     title="Quản lý danh mục" @back="goBack">
     <template #extra>
-      <a-breadcrumb>
+      <a-breadcrumb separator=">">
         <a-breadcrumb-item href="">
           <font-awesome-icon icon="fa-solid fa-house" />
         </a-breadcrumb-item>
@@ -12,7 +12,7 @@
           <span> Hệ thống</span>
         </a-breadcrumb-item>
         <a-breadcrumb-item>
-          <font-awesome-icon :icon="['fas', 'user']" />
+          <font-awesome-icon icon="fa-solid fa-list" />
           <span> Danh mục dùng chung</span>
         </a-breadcrumb-item>
       </a-breadcrumb>
@@ -28,23 +28,23 @@
 
 
     <a-row style="margin-bottom: 20px;" :gutter="24">
-      <a-col :span="3" >
-        <a-button @click="SearchData"  class="btnSearch" style="background-color:rgb(229 127 123) "  >
-         <font-awesome-icon :icon="['fas', 'magnifying-glass']" ></font-awesome-icon>
-         Tìm kiếm
+      <a-col :span="3">
+        <a-button @click="SearchData" class="btnSearch" style="background-color:rgb(229 127 123) ">
+          <font-awesome-icon :icon="['fas', 'magnifying-glass']"></font-awesome-icon>
+          Tìm kiếm
         </a-button>
       </a-col>
       <a-col :span="10">
         <a-input v-model:value="formSearch.code_Filter" placeholder="Mã danh mục">
-        
+
         </a-input>
       </a-col>
       <a-col :span="10">
         <a-input v-model:value="formSearch.name_Filter" placeholder="Tên danh mục">
-          
+
         </a-input>
       </a-col>
-     
+
     </a-row>
     <a-table :columns="tableColumns" :dataSource="dataSourceTable" :pagination="false" :loading="loadingTable"
       @change="handleTableChange">
@@ -53,8 +53,11 @@
             <a-space>
               <a-tooltip title="Cấu hình" placement="leftTop">
 
-                <a-button type="link" shape="circle" @click="openModalDetail(record.id)">
-                  <template #icon><font-awesome-icon icon="fa-solid fa-list-check" style="color: #01a214;" /></template>
+                <a-button type="link" shape="circle">
+                  <router-link :to="{ name: 'DataCategoryHome', params: { id: record.id } }">
+                    <font-awesome-icon icon="fa-solid fa-list-check" style="color: #01a214;" />
+                    </router-link>
+                  <template #icon></template>
       </a-button>
       </a-tooltip>
 
@@ -192,13 +195,13 @@
         }
       },
       handlePaginationChange() {
-        
+
         this.fetchData(this.pagination.current, this.pagination.pageSize);
 
       },
       SearchData() {
-       
-       this.fetchData(this.pagination.current, this.pagination.pageSize, this.formSearch);
+
+        this.fetchData(this.pagination.current, this.pagination.pageSize, this.formSearch);
       },
       async fetchData(pageIndex, pageSize, params) {
         this.loadingTable = true;
@@ -206,7 +209,7 @@
           ...params,
           pageIndex: pageIndex,
           pageSize: pageSize,
-          
+
         };
 
 
@@ -231,8 +234,8 @@
   };
 </script>
 <style scoped>
-.btnSearch:hover {
-  background-color: rgb(229 127 123);
-  color: white;
-}
+  .btnSearch:hover {
+    background-color: rgb(229 127 123);
+    color: white;
+  }
 </style>

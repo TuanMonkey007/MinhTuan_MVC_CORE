@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Identity;
 using MinhTuan.Domain.Core.DTO;
 using MinhTuan.Domain.Core.UnitOfWork;
 using MinhTuan.Domain.DTOs.AccountDTO;
+using MinhTuan.Domain.DTOs.CategoryDTO;
 using MinhTuan.Domain.Entities;
 using MinhTuan.Domain.Helper.Pagination;
 using MinhTuan.Domain.Repository.CategoryRepositoy;
 using MinhTuan.Service.Core;
-using MinhTuan.Service.DTOs.CategoryDTO;
+
 using MinhTuan.Service.SearchDTO;
 using System;
 using System.Collections.Generic;
