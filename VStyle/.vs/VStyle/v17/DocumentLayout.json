@@ -3,23 +3,31 @@
   "WorkspaceRootPath": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{DEBE580D-242F-4837-B819-CDA1B198B7A4}|MinhTuan.Service\\MinhTuan.Service.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.service\\services\\categoryservice\\categoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DEBE580D-242F-4837-B819-CDA1B198B7A4}|MinhTuan.Service\\MinhTuan.Service.csproj|solutionrelative:minhtuan.service\\services\\categoryservice\\categoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2BF5BFBC-67E6-4C16-9095-FE4C8B98522A}|MinhTuan.API\\MinhTuan.API.csproj|E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\minhtuan.api\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2BF5BFBC-67E6-4C16-9095-FE4C8B98522A}|MinhTuan.API\\MinhTuan.API.csproj|solutionrelative:minhtuan.api\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D4B6DF77-9168-4480-BB17-FADCCFA5071B}|MinhTuan.Domain\\MinhTuan.Domain.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.domain\\helper\\pagination\\removeaccents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D4B6DF77-9168-4480-BB17-FADCCFA5071B}|MinhTuan.Domain\\MinhTuan.Domain.csproj|solutionrelative:minhtuan.domain\\helper\\pagination\\removeaccents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2BF5BFBC-67E6-4C16-9095-FE4C8B98522A}|MinhTuan.API\\MinhTuan.API.csproj|E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\minhtuan.api\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2BF5BFBC-67E6-4C16-9095-FE4C8B98522A}|MinhTuan.API\\MinhTuan.API.csproj|solutionrelative:minhtuan.api\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{DEBE580D-242F-4837-B819-CDA1B198B7A4}|MinhTuan.Service\\MinhTuan.Service.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.service\\services\\accountservice\\accountservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DEBE580D-242F-4837-B819-CDA1B198B7A4}|MinhTuan.Service\\MinhTuan.Service.csproj|solutionrelative:minhtuan.service\\services\\accountservice\\accountservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2BF5BFBC-67E6-4C16-9095-FE4C8B98522A}|MinhTuan.API\\MinhTuan.API.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.api\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2BF5BFBC-67E6-4C16-9095-FE4C8B98522A}|MinhTuan.API\\MinhTuan.API.csproj|solutionrelative:minhtuan.api\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2BF5BFBC-67E6-4C16-9095-FE4C8B98522A}|MinhTuan.API\\MinhTuan.API.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.api\\helper\\automaperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{2BF5BFBC-67E6-4C16-9095-FE4C8B98522A}|MinhTuan.API\\MinhTuan.API.csproj|E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\minhtuan.api\\helper\\automaperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2BF5BFBC-67E6-4C16-9095-FE4C8B98522A}|MinhTuan.API\\MinhTuan.API.csproj|solutionrelative:minhtuan.api\\helper\\automaperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2BF5BFBC-67E6-4C16-9095-FE4C8B98522A}|MinhTuan.API\\MinhTuan.API.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.api\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2BF5BFBC-67E6-4C16-9095-FE4C8B98522A}|MinhTuan.API\\MinhTuan.API.csproj|solutionrelative:minhtuan.api\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D4B6DF77-9168-4480-BB17-FADCCFA5071B}|MinhTuan.Domain\\MinhTuan.Domain.csproj|e:\\be_studying\\datn\\code\\minhtuan_mvc_core\\vstyle\\minhtuan.domain\\dtos\\accountdto\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{D4B6DF77-9168-4480-BB17-FADCCFA5071B}|MinhTuan.Domain\\MinhTuan.Domain.csproj|E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\minhtuan.domain\\dtos\\accountdto\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D4B6DF77-9168-4480-BB17-FADCCFA5071B}|MinhTuan.Domain\\MinhTuan.Domain.csproj|solutionrelative:minhtuan.domain\\dtos\\accountdto\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -30,7 +38,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -38,20 +46,46 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "RemoveAccents.cs",
+              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Domain\\Helper\\Pagination\\RemoveAccents.cs",
+              "RelativeDocumentMoniker": "MinhTuan.Domain\\Helper\\Pagination\\RemoveAccents.cs",
+              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Domain\\Helper\\Pagination\\RemoveAccents.cs",
+              "RelativeToolTip": "MinhTuan.Domain\\Helper\\Pagination\\RemoveAccents.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAlAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-24T05:28:44.676Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "CategoryService.cs",
+              "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Service\\Services\\CategoryService\\CategoryService.cs",
+              "RelativeDocumentMoniker": "MinhTuan.Service\\Services\\CategoryService\\CategoryService.cs",
+              "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Service\\Services\\CategoryService\\CategoryService.cs",
+              "RelativeToolTip": "MinhTuan.Service\\Services\\CategoryService\\CategoryService.cs",
+              "ViewState": "AQIAAEoAAAAAAAAAAAAIwFYAAABeAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-24T05:15:02.957Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "AccountService.cs",
               "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Service\\Services\\AccountService\\AccountService.cs",
               "RelativeDocumentMoniker": "MinhTuan.Service\\Services\\AccountService\\AccountService.cs",
               "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Service\\Services\\AccountService\\AccountService.cs",
               "RelativeToolTip": "MinhTuan.Service\\Services\\AccountService\\AccountService.cs",
-              "ViewState": "AQIAADAAAAAAAAAAAAAcwE4AAAAdAAAA",
+              "ViewState": "AQIAAC4AAAAAAAAAAAAAAE4AAAAdAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-23T16:21:10.851Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "AutoMaperProfile.cs",
               "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.API\\Helper\\AutoMaperProfile.cs",
               "RelativeDocumentMoniker": "MinhTuan.API\\Helper\\AutoMaperProfile.cs",
@@ -64,7 +98,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "UserDTO.cs",
               "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.Domain\\DTOs\\AccountDTO\\UserDTO.cs",
               "RelativeDocumentMoniker": "MinhTuan.Domain\\DTOs\\AccountDTO\\UserDTO.cs",
@@ -77,26 +111,26 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "CategoryController.cs",
               "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.API\\Controllers\\CategoryController.cs",
               "RelativeDocumentMoniker": "MinhTuan.API\\Controllers\\CategoryController.cs",
               "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.API\\Controllers\\CategoryController.cs",
               "RelativeToolTip": "MinhTuan.API\\Controllers\\CategoryController.cs",
-              "ViewState": "AQIAAK0AAAAAAAAAAADwv7AAAABbAAAA",
+              "ViewState": "AQIAAEAAAAAAAAAAAAAcwFkAAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-23T13:33:10.278Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "AccountController.cs",
               "DocumentMoniker": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.API\\Controllers\\AccountController.cs",
               "RelativeDocumentMoniker": "MinhTuan.API\\Controllers\\AccountController.cs",
               "ToolTip": "E:\\BE_STUDYING\\DATN\\Code\\MinhTuan_MVC_CORE\\VStyle\\MinhTuan.API\\Controllers\\AccountController.cs",
               "RelativeToolTip": "MinhTuan.API\\Controllers\\AccountController.cs",
-              "ViewState": "AQIAAE0AAAAAAAAAAAAIwGEAAABBAAAA",
+              "ViewState": "AQIAAFkAAAAAAAAAAAAmwGEAAABBAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-23T04:32:13.463Z",
               "EditorCaption": ""

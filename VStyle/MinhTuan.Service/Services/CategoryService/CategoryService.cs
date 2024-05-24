@@ -84,10 +84,11 @@ namespace MinhTuan.Service.Services.CategoryService
                 {
                     if (!string.IsNullOrEmpty(searchDTO.Name_Filter))
                     {
-                        var idSearch = searchDTO.Name_Filter.ToString();
+                        var idSearch = searchDTO.Name_Filter.ToString().RemoveAccentsUnicode();
                         var isNormal = searchDTO.Name_Filter.ToString().ToLower() != idSearch.ToLower();
-                        var list = _categoryRepository.GetQueryable().Select(x => x.Name).ToList().Where(x => x.ToString().ToLower().Contains(idSearch.ToLower()));
+                        var list = _categoryRepository.GetQueryable().Select(x => x.Name).ToList().Where(x => x.ToString().ToLower().RemoveAccentsUnicode().Contains(idSearch.ToLower()));
                         query = query.Where(x => list.Contains(x.Name));
+
                     }
                     if (!string.IsNullOrEmpty(searchDTO.Code_Filter))
                     {

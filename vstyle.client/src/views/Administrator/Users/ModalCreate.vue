@@ -71,7 +71,7 @@
                             </a-radio-group>
                         </a-form-item>
                         <a-form-item label="Ngày sinh" name="birthDay">
-                            <a-date-picker v-model:value="account.birthDay" format="DD/MM/YYYY"
+                            <a-date-picker v-model:value="account.birthDay" format="YYYY-MM-DD"
                                 placeholder="Chọn ngày sinh" />
                         </a-form-item>
                     </a-col>
@@ -131,7 +131,7 @@
     import { message } from "ant-design-vue";
     import APIService from "@/helpers/APIService"
     import { ref, reactive } from "vue";
-
+    import dayjs from 'dayjs';
     export default {
         setup() {
             const account = reactive({
@@ -206,22 +206,22 @@
             async handleSubmitAsync() {
                 this.$refs.formRef.validate().then(async () => {
                     message.loading(
-                    {
-                        content: 'Đang xử lý...',
-                        key: 'loadingKey',
-                        duration: 0
-                    }
-                );
+                        {
+                            content: 'Đang xử lý...',
+                            key: 'loadingKey',
+                            duration: 0
+                        }
+                    );
                     this.isLoading = true
                     // Loại bỏ các trường rỗng
                     const payload = Object.fromEntries(
                         Object.entries(this.account).filter(([_, v]) => v !== null && v !== undefined && v !== '')
                     );
+                        payload.birthDay = dayjs(payload.birthDay).format('YYYY-MM-DD');
 
-                  
-                        const response = await APIService.post('account/create', payload);
-                        
-                        // Tắt hiệu ứng chờ sau 2 giây
+                    const response = await APIService.post('account/create', payload);
+
+                    // Tắt hiệu ứng chờ sau 2 giây
                     if (response.data.message != 'Tạo tài khoản thành công') {
                         const contentMessage = (response.data.message == 'DuplicateEmail') ? 'Email đã được đăng ký' : 'Số điện thoại đã được đăng ký';
                         message.warning(
@@ -231,7 +231,8 @@
                                 duration: 2
                             }
                         );
-                       
+                        this.isLoading = false;
+
 
                     }
                     else {
@@ -244,13 +245,20 @@
                         );
                         this.closeModal();
                         this.$emit('addSuccess')
-                        
+
                     }
-                    }).catch(error => {
-                        console.log('error', error);
-                    }).finally(() => {
-                        this.isLoading = false;
-                    })
+                }).catch(error => {
+                    console.log('error', error);
+                    message.error(
+                            {
+                                content: 'Có lỗi xảy ra',
+                                key: 'loadingKey',
+                                duration: 2
+                            }
+                        );
+                }).finally(() => {
+                    this.isLoading = false;
+                })
 
 
             }
