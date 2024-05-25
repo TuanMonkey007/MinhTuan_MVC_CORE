@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkVStyle"]=self["webpackChunkVStyle"]||[]).push([[822],{1822:function(n,e,u){u.r(e),u.d(e,{default:function(){return o}});var r=u(6768);function t(n,e,u,t,a,c){return(0,r.uX)(),(0,r.CE)("div",null," Bạn không có quyền ")}var a={name:"Unauthorized",setup(){return{}}};console.log("Unauthorized");var c=u(1241);const l=(0,c.A)(a,[["render",t]]);var o=l}}]);
+//# sourceMappingURL=822.15f62b6f.js.map
