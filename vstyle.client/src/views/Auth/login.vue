@@ -1,16 +1,14 @@
 <template>
-    <a-row class="containerPage" >
-        <a-col  :xs="0" :sm="0" :md="0" :lg="12" :xl="14"> </a-col>
-        <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="10">
+    <a-row class="containerPage" justify="center">
+        <a-col :span="24" style="display: flex; justify-content: center">
             <a-card class="login-card" style="
-            background: white;
-            margin-top: 30%;
-            max-width: fit-content;
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: rgba(150, 150, 150, 0.5) 0px 1px 20px 20px;
-          "  >
-         
+          background: white;
+          margin-top: 20px;
+          max-width: fit-content;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: rgba(150, 150, 150, 0.5) 0px 1px 20px 1px;
+        ">
                 <a-tabs v-model:activeKey="activeKey" centered size="large">
                     <a-tab-pane key="LoginTab" force-render>
                         <template #tab>
@@ -229,7 +227,7 @@
         FacebookOutlined,
         GoogleOutlined,
     } from "@ant-design/icons-vue";
-    import EventBus from "@/helpers/EventBus";
+
 
     export default defineComponent({
         components: {
@@ -429,19 +427,30 @@
                         });
                     } else {
                         const decodedToken = jwtDecode(response.data.data);
-                        const role = decodedToken[ClaimTypes.Role];
+                        var role = decodedToken[ClaimTypes.Role];
                         const userName = decodedToken[ClaimTypes.Name];
+                        const userPhone = decodedToken[ClaimTypes.MobilePhone];
+                        const userEmail = decodedToken[ClaimTypes.Email];
+                        // Kiểm tra và chuyển đổi nếu cần
+                        if (typeof role === 'string') {
+                            role = [role]; // Chuyển chuỗi thành mảng
+                        }
+                        const defaultRole = role[0];
                         // Save token to local storage
                         localStorage.setItem("accessToken", response.data.data);
                         // Save user role and user name to local storage
-                        localStorage.setItem("role", role);
+                        localStorage.setItem("role", defaultRole);
                         localStorage.setItem("userName", userName);
+                        localStorage.setItem("userPhone", userPhone);
+                        localStorage.setItem("userEmail", userEmail);
 
                         //check role and redirect to the corresponding page
-                        if (role === Role.ADMIN || role === Role.STAFF) {
+                        if (defaultRole === Role.ADMIN || defaultRole === Role.STAFF) {
                             router.push({ name: "AdminHome" });
                         } else {
-                            router.push({ name: "CustomerHome" });
+                            router.push({ name: "CustomerHome" }).then(() => {
+                                window.location.reload();
+                            });
                         }
 
                         message.success({
@@ -466,34 +475,4 @@
         }, //end methods
     }); //end export default
 </script>
-<style scoped>
-
-.containerPage {
-        background-image: url("@/assets/image/background_login.jpg") !important;
-        background-size: cover !important;
-        min-height: 100vh;
-        min-width: 100%
-    }
-
-    .full-screen-spin {
-        align-items: center;
-    }
-
-    .custom-spin-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        /* Chiều cao 100% của màn hình */
-        width: 100%;
-        /* Chiều rộng 100% của màn hình */
-    }
-
-    .login-form-forgot {
-        float: right;
-    }
-
-    .login-form-button {
-        width: 100%;
-    }
-</style>
+<style scoped></style>

@@ -26,6 +26,8 @@ using MinhTuan.Domain.Helper.Pagination;
 using MinhTuan.Domain.Core.DTO;
 using MinhTuan.Service.SearchDTO;
 
+using System.Data.Entity;
+
 namespace MinhTuan.Service.Services.AccountService;
 
 public class AccountService : IAccountService
@@ -77,8 +79,9 @@ public class AccountService : IAccountService
                             PhoneNumber = entityTbl.PhoneNumber,
                             LockoutEnd = entityTbl.LockoutEnd,
                            // PhoneNumberConfirmed = entityTbl.PhoneNumberConfirmed,
-                            EmailConfirmed = entityTbl.EmailConfirmed
-
+                            EmailConfirmed = entityTbl.EmailConfirmed,
+                            Gender = entityTbl.Gender
+                            
                         };
 
 
@@ -206,7 +209,7 @@ public class AccountService : IAccountService
             //Gửi email chứa token xác thực tài khoản
             var verifyToken = await _userManager.GenerateEmailConfirmationTokenAsync(createdUser);
 
-            var confirmationLink = $"http://localhost:8080/confirm-email?token={WebUtility.UrlEncode(verifyToken)}&email={WebUtility.UrlEncode(model.Email)}";
+            var confirmationLink = $"http://nguyenminhtuan.id.vn/confirm-email?token={WebUtility.UrlEncode(verifyToken)}&email={WebUtility.UrlEncode(model.Email)}";
 
             var message = new Message(new string[] { createdUser.Email! }, "Xác thực tài khoản", confirmationLink);
              _emailService.SendEmail(message);
@@ -451,7 +454,7 @@ public class AccountService : IAccountService
         
         var verifyToken = await _userManager.GeneratePasswordResetTokenAsync(user);
         // Tạo confirmation link
-        var confirmationLink = $"http://localhost:8080/reset-password?token={WebUtility.UrlEncode(verifyToken)}&email={WebUtility.UrlEncode(model.Email)}";
+        var confirmationLink = $"http://nguyenminhtuan.id.vn/reset-password?token={WebUtility.UrlEncode(verifyToken)}&email={WebUtility.UrlEncode(model.Email)}";
      
         var message = new Message(new string[] { user.Email! }, "Lấy lại mật khẩu", confirmationLink);
         _emailService.SendForgotPasswordEmail(message);
@@ -468,4 +471,39 @@ public class AccountService : IAccountService
         }
         return true;
     }
+
+    public async Task<ResponseWithDataDto<List<string>>> GetRoleByIdAsync(Guid id)
+    {
+        var response = new ResponseWithDataDto<List<string>>() { Message = "Lấy danh sách quyền thành công" };
+
+        try
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                response.Message = "Không tìm thấy người dùng";
+                response.Status = "Fail";
+                return response;
+            }
+            var userRoles = await _userManager.GetRolesAsync(user);
+            if (userRoles == null || !userRoles.Any())
+            {
+                response.Message = "Không tìm thấy quyền";
+                response.Status = "Fail";
+                return response;
+            }
+            response.Data = (List<string>?)userRoles;
+            response.Status = "Success";
+
+            return response;
+        }
+        catch (Exception ex)
+        {
+            response.Message = "Lỗi khi lấy danh sách quyền: " + ex.Message;
+            response.Status = "Fail";
+            return response;
+        }
+    }
+
+   
 }

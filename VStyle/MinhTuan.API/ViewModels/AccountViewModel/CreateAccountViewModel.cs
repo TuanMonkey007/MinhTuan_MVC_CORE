@@ -10,5 +10,6 @@
         public  Guid? Gender { get; set; }
         public string? Address { get; set; }
         public DateOnly? BirthDay { get; set; }
+        public IFormFile? AvatarFile { get; set; }
     }
 }

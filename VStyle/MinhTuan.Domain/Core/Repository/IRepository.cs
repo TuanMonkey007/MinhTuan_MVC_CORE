@@ -16,6 +16,7 @@ public interface IRepository<T> where T : class
     Task Save();
     T? GetById(object id);
     void DeleteRange(IEnumerable<T> entities);
+    void SoftDeleteRange(IEnumerable<T> entities);
     void AddRange(IEnumerable<T> entities);
     void UpdateRange(IEnumerable<T> entities);
     void SoftDelete(T entity);

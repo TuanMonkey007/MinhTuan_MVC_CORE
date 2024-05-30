@@ -11,9 +11,8 @@ module.exports = defineConfig({
       }
     }
   },
-  publicPath:
-  process.env.NODE_ENV === "production"
-    ? "/MinhTuan_MVC_CORE/" // Thay tên repository của bạn trên muốn deploy
-    : "/", // Nếu chạy ở chế độ development thì publicPath là '/'
+  publicPath: '/',
+
+  
 })
 

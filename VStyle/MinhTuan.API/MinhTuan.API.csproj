@@ -30,4 +30,9 @@
     <ProjectReference Include="..\MinhTuan.Service\MinhTuan.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Uploads\Avatar\" />
+    <Folder Include="Uploads\Product\" />
+  </ItemGroup>
+
 </Project>

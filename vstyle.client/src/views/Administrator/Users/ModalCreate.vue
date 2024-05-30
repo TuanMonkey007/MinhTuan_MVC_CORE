@@ -1,7 +1,44 @@
 <template>
     <div>
-        <a-modal v-model:open="open" title="Thêm tài khoản" :footer="null" width="700px">
+        <a-modal v-model:open="open" title="Thêm tài khoản" :footer="null" width="700px" :afterClose="closeModal"
+            style="top: 20px;">
+            <a-divider />
             <a-form ref="formRef" :model="account" layout="vertical">
+                <a-row :gutter="70">
+                    <a-col :span="12">
+
+                        <a-form-item label="Avatar" name="avatar">
+                            <a-upload list-type="picture-card" :showUploadList="true" accept=".jpg,.jpeg,.png"
+                                maxCount="1" :fileList="fileList" :before-upload="beforeUpload"
+                                :action="apiUrl" @change="handleChangeAvatar">
+
+
+                                <template #default>
+                                    <div>
+                                        <font-awesome-icon icon="fa-regular fa-image" />
+                                        <div class="ant-upload-text">Tải ảnh lên</div>
+                                    </div>
+                                </template>
+                            </a-upload>
+                        </a-form-item>
+                    </a-col>
+                    <a-col :span="12">
+                        <a-form-item label="Giới tính" name="gender"   :rules="[{ required: true, message: 'Vui lòng chọn giới tính' }]">
+                            <a-radio-group v-model:value="account.gender" >
+                                <a-radio v-for="item in listGender" :key="item.id"
+                                    :value="item.id">{{ item.name }}</a-radio>
+                            </a-radio-group>
+                        </a-form-item>
+                        <a-form-item label="Ngày sinh" name="birthDay" :rules="[{ validator: validateBirthDay }]">
+                            <a-date-picker v-model:value="account.birthDay" format="YYYY-MM-DD"
+                                placeholder="Chọn ngày sinh" />
+                        </a-form-item>
+                    </a-col>
+
+
+
+                </a-row>
+
                 <a-row>
                     <a-col :span="24">
                         <a-form-item label="Họ và tên" name="fullName"
@@ -9,6 +46,7 @@
                             <a-input type="text" v-model:value="account.fullName" />
                         </a-form-item>
                     </a-col>
+                    
 
                 </a-row>
                 <a-row :gutter="30">
@@ -62,38 +100,6 @@
                         </a-form-item>
                     </a-col>
                 </a-row>
-                <a-row :gutter="70">
-                    <a-col :span="12">
-                        <a-form-item label="Giới tính" name="gender">
-                            <a-radio-group v-model:value="account.gender">
-                                <a-radio value="1">Nam</a-radio>
-                                <a-radio value="2">Nữ</a-radio>
-                            </a-radio-group>
-                        </a-form-item>
-                        <a-form-item label="Ngày sinh" name="birthDay">
-                            <a-date-picker v-model:value="account.birthDay" format="YYYY-MM-DD"
-                                placeholder="Chọn ngày sinh" />
-                        </a-form-item>
-                    </a-col>
-                    <a-col :span="12">
-
-                        <a-form-item label="Avatar" name="avatar">
-                            <a-upload action="https://www.mocky.io/v2/5cc8019d300000980a055e76" list-type="picture-card"
-                                :defaultFileList="[{ url: account.avatar }]" :showUploadList="false"
-                                :beforeUpload="beforeUpload" :customRequest="customRequest">
-                                <template #default>
-                                    <div>
-
-                                        <font-awesome-icon v-if="!account.avatar" icon="fa-regular fa-image" />
-                                        <img v-else :src="account.avatar" style="width: 100%" />
-                                    </div>
-                                </template>
-                            </a-upload>
-                        </a-form-item>
-                    </a-col>
-
-
-                </a-row>
 
 
 
@@ -134,6 +140,18 @@
     import dayjs from 'dayjs';
     export default {
         setup() {
+            const beforeUpload = file => {
+                const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg';
+                if (!isJpgOrPng) {
+                    message.error('Định dạng ảnh không hợp lệ');
+                }
+                const isLt2M = file.size / 1024 / 1024 < 10;
+                if (!isLt2M) {
+                    message.error('Ảnh tối đa 10MB');
+                }
+
+                return isJpgOrPng && isLt2M;
+            };
             const account = reactive({
                 fullname: '',
                 phoneNumber: '',
@@ -141,7 +159,6 @@
                 gender: '',
                 birthDay: '',
                 address: '',
-                avatar: '',
                 password: '',
                 confirmPassword: ''
 
@@ -162,8 +179,19 @@
                     }
                 }
             );
+            const validateBirthDay = (rule, value) => {
+
+
+                // Kiểm tra xem ngày sinh có hợp lệ không (ví dụ: không được lớn hơn ngày hiện tại)
+                if (dayjs(value).isAfter(dayjs(), 'day')) {
+                    return Promise.reject('Ngày sinh không hợp lệ');
+                }
+
+                return Promise.resolve();
+            };
             return {
                 account,
+
                 isLoading: ref(false),
 
                 labelCol: {
@@ -173,6 +201,8 @@
                     span: 14,
                 },
                 checkConfirmPassword,
+                beforeUpload,
+                validateBirthDay
 
 
             }
@@ -180,10 +210,36 @@
         data() {
             return {
                 open: false,
+
+                fileList: [],
+                listGender: [],
+                apiUrl: '',
             }
+        },
+        mounted() {
+            this.apiUrl = process.env.VUE_APP_URL + 'Account/valid-upload'; // Truy cập trong mounted
         },
 
         methods: {
+
+            handleChangeAvatar(info) {
+                this.fileList = [...info.fileList];
+
+                if (info.file.status == 'done') {
+                    this.fileList = [...info.file];
+                } else if (info.file.status == 'error') {
+                    message.error(`${info.file.name} Lỗi .`);
+                    this.fileList = [];
+                    info.file = null
+
+                } else if (info.file.status == null) {
+                    this.fileList = [];
+                    info.file = null
+
+                }
+            },
+
+
             formatInput(event) {
                 // Chuyển đổi thành chữ in hoa
                 let inputValue = event.target.value.toUpperCase();
@@ -192,17 +248,17 @@
                 inputValue = inputValue.replace(/[^A-Z0-9_-]/g, '');
                 this.category.code = inputValue;
             },
-            showModal() {
+            async showModal() {
                 this.open = true
+                const response = await APIService.get('datacategory/get-list-by-parent-code/GIOI_TINH');
+                this.listGender = response.data.data;
             },
             closeModal() {
                 this.open = false
-
+                this.fileList = [];
                 this.$refs.formRef.resetFields();
             },
-            handleOk() {
-                console.log("jajaja")
-            },
+           
             async handleSubmitAsync() {
                 this.$refs.formRef.validate().then(async () => {
                     message.loading(
@@ -217,9 +273,25 @@
                     const payload = Object.fromEntries(
                         Object.entries(this.account).filter(([_, v]) => v !== null && v !== undefined && v !== '')
                     );
+                    if (payload.birthDay != null && payload.birthDay != '') {
                         payload.birthDay = dayjs(payload.birthDay).format('YYYY-MM-DD');
+                    }
 
-                    const response = await APIService.post('account/create', payload);
+                    const formData = new FormData();
+                    for (const key in payload) {
+                        formData.append(key, payload[key]);
+                    }
+
+                    if (this.fileList.length > 0 && this.fileList[0].originFileObj != null) {
+                        formData.append('avatarFile', this.fileList[0].originFileObj);
+                    }
+
+                    // for (const [key, value] of formData.entries()) {
+                    //     console.log(key, value);
+                    // }
+
+
+                    const response = await APIService.post('account/create', formData);
 
                     // Tắt hiệu ứng chờ sau 2 giây
                     if (response.data.message != 'Tạo tài khoản thành công') {
@@ -250,12 +322,12 @@
                 }).catch(error => {
                     console.log('error', error);
                     message.error(
-                            {
-                                content: 'Có lỗi xảy ra',
-                                key: 'loadingKey',
-                                duration: 2
-                            }
-                        );
+                        {
+                            content: 'Vui long kiểm tra lại thông tin',
+                            key: 'loadingKey',
+                            duration: 2
+                        }
+                    );
                 }).finally(() => {
                     this.isLoading = false;
                 })

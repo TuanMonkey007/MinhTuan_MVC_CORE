@@ -6,7 +6,7 @@
           height: min-content;
           background-color: #fff;
           margin-bottom: 16px;
-        " title="Dữ liệu danh mục" @back="goBack">
+        " title="Dữ liệu danh mục" >
         <template #extra>
           <a-breadcrumb separator=">">
             <a-breadcrumb-item href="">

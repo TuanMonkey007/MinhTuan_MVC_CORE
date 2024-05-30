@@ -14,15 +14,14 @@
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/vue-fontawesome": "^3.0.6",
-
     "ant-design-vue": "^4.2.1",
     "axios": "^1.6.8",
     "core-js": "^3.8.3",
+    "dotenv": "^16.4.5",
     "jwt-decode": "^4.0.0",
     "mitt": "^3.0.1",
     "vue": "^3.2.13",
     "vue-router": "^4.3.2"
-  
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

@@ -109,7 +109,7 @@
             async handleSubmitAsync() {
                 this.$refs.formRef.validate().then(async () => {
                 this.isLoading = true
-                console.log(this.category)
+               
                 const serverResponse = await APIService.post('category/create', this.category)
                 if (serverResponse.data.message == "Tạo danh mục mới thành công") {
                     this.$message.success(serverResponse.data.message)

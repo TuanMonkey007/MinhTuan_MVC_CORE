@@ -7,27 +7,7 @@ import { Role } from "@/helpers/Constants";
 const routes=[
     ...adminRouter,
     ...customerRouter,
-    { 
-      path: "/Login",
-      name: "Login",
-      component: ()=> import("../views/Auth/login.vue"),
-      beforeEnter(to, from, next) { //Chặn khi đã đăng nhập
-        const isAuthenticated = localStorage.getItem('accessToken');
-        if (isAuthenticated) {//Nếu đã đăng nhập thì không cho chuyển hướng
-           //stay on the same page
-           if(localStorage.getItem('role')==Role.ADMIN || localStorage.getItem('role')==Role.STAFF){
-            next({ name: 'AdminHome' });
-          }
-          else{
-            next({ name: 'CustomerHome' });
-            }
-        }else{
-            next();
-       }
-      }//beforeEnter
-
-      
-  },
+   
  
     {
         path: '/unauthorized',
@@ -48,7 +28,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const isAuthenticated = localStorage.getItem('accessToken');
     const userRole = localStorage.getItem('role');
-    document.title = to.meta.title || 'VStyle - Thời trang Việt'; // Nếu route không có meta.title, sử dụng title mặc định
+    document.title = to.meta.title + " | VStyle - Thời trang Việt" || 'VStyle - Thời trang Việt'; // Nếu route không có meta.title, sử dụng title mặc định
     if (to.matched.some(record => record.meta.requiresAuth)) {
       if (!isAuthenticated) {
         next({ name: 'Login' });

@@ -1,4 +1,8 @@
 <template>
+    <ModalCreate @addSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalCreate" />
+  <ModalUpdate @updateSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalUpdate" />
+  <ModalDetail ref="modalDetail" />
+  <ModalRole ref="modalRole" />
   <a-row>
     <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
       <a-page-header style="
@@ -7,7 +11,7 @@
           background-color: #fff;
           margin-bottom: 16px;
           align-items: center;
-        " title="Quản lý tài khoản" @back="goBack">
+        " title="Quản lý tài khoản">
         <template #extra>
           <a-breadcrumb separator=">">
             <a-breadcrumb-item href="">
@@ -44,8 +48,13 @@
                 <template #bodyCell="{ column, record }">
                   <template v-if="column.key === 'action'">
                     <a-space>
+                      <a-tooltip title="Phân quyền" placement="leftTop">
+                        <a-button type="link" shape="circle" @click="openModalRole(record.id)">
+                          <template #icon><font-awesome-icon icon="fa-solid fa-gears" style="color: #1f8f00;" /></template>
+                        </a-button>
+                      </a-tooltip>
                       <a-tooltip title="Xem chi tiết" placement="leftTop">
-                        <a-button type="link" shape="circle">
+                        <a-button type="link" shape="circle" @click="openModalDetail(record.id)">
                           <template #icon><font-awesome-icon :icon="['fas', 'circle-info']"
                               style="color: #74c0fc" /></template>
                         </a-button>
@@ -105,13 +114,14 @@
     </a-row>
   </transition>
 
-  <ModalCreate @addSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalCreate" />
-  <ModalUpdate @updateSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalUpdate" />
+
 </template>
 <script>
   import { message } from "ant-design-vue";
   import ModalCreate from "./ModalCreate.vue";
+  import ModalDetail from "./ModalDetail.vue";
   import ModalUpdate from "./ModalUpdate.vue";
+  import ModalRole from "./ModalRole.vue";
   import { Pagination } from "ant-design-vue";
   import APIService from "@/helpers/APIService";
   import { inject } from "vue";
@@ -119,6 +129,8 @@
     components: {
       ModalCreate,
       ModalUpdate,
+      ModalDetail,
+      ModalRole,
       APagination: Pagination,
     },
     data() {
@@ -130,13 +142,7 @@
             key: "status",
             width: "10%",
           },
-          {
-            title: "Avatar",
-            dataIndex: "avatar",
-            key: "avatar",
-            width: "15%",
-            sorter: false,
-          },
+          
           {
             title: "Họ và tên",
             dataIndex: "fullName",
@@ -146,8 +152,8 @@
           },
           {
             title: "Giới tính",
-            dataIndex: "gender",
-            key: "gender",
+            dataIndex: "nameGender",
+            key: "nameGender",
             width: "15%",
             sorter: false,
           },
@@ -216,7 +222,7 @@
           });
           this.dataSourceTable = response.data.data.items;
           this.pagination.total = response.data.data.totalCount;
-          console.log(this.dataSourceTable);
+         
         } catch (error) {
           console.log(error);
         }
@@ -224,7 +230,7 @@
       },
       getLockoutIconColor(lockoutEnd, emailConfirmed) {
         const now = new Date();
-        console.log(emailConfirmed);
+        
         const lockoutEndDate = new Date(lockoutEnd);
         const remainingLockout = lockoutEndDate - now;
 
@@ -248,6 +254,12 @@
       },
       openModalUpdate(id) {
         this.$refs.modalUpdate.showModal(id);
+      },
+      openModalDetail(id) {
+        this.$refs.modalDetail.showModal(id);
+      },
+      openModalRole(id) {
+        this.$refs.modalRole.showModal(id);
       },
       async deleteObj(id) {
         try {

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>E:\BE_STUDYING\DATN\Code\Deploy_Ubuntu\backend</_PublishTargetUrl>
+    <History>True|2024-05-29T16:17:31.8513992Z;True|2024-05-29T22:43:37.6346267+07:00;True|2024-05-28T15:13:47.9910271+07:00;True|2024-05-27T23:31:11.2159520+07:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="VStyleContext">
+      <Value>Data Source=35.232.220.151%3bInitial Catalog=VStyle%3bPersist Security Info=True%3bUser ID=sa%3bPassword=Tuandeptrai%40123%3bTrust Server Certificate=True</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using MinhTuan.Domain.Core.DTO;
 using MinhTuan.Domain.DTOs.AccountDTO;
@@ -15,6 +16,7 @@ namespace MinhTuan.Service.Services.AccountService;
 public interface IAccountService
 {
     public ResponseWithDataDto<PagedList<UserDTO>> GetDataByPage(AccountSearchDTO search);
+    public Task<ResponseWithDataDto<List<string>>> GetRoleByIdAsync(Guid id);
     public Task<string> LogInAsync(LogInDTO model);
     public Task<IdentityResult> RegisterAsync(RegisterDTO model);
     public Task LogOutAsync();

@@ -3,9 +3,11 @@ using MinhTuan.API.ViewModels;
 using MinhTuan.API.ViewModels.AccountViewModel;
 using MinhTuan.API.ViewModels.CategoryViewModel;
 using MinhTuan.API.ViewModels.DataCategoryViewModel;
+using MinhTuan.API.ViewModels.ProductViewModel;
 using MinhTuan.Domain.DTOs.AccountDTO;
 using MinhTuan.Domain.DTOs.CategoryDTO;
 using MinhTuan.Domain.DTOs.DataCategoryDTO;
+using MinhTuan.Domain.DTOs.ProductDTO;
 using MinhTuan.Domain.Entities;
 
 namespace MinhTuan.Application.Helper;
@@ -32,6 +34,9 @@ public class AutoMapperProfile : Profile
         //Tạo maper dữ liệu danh mục
         CreateMap<DataCategory, DataCategoryDTO>().ReverseMap();
         CreateMap<DataCategoryDTO, CreateDataCategoryViewModel>().ReverseMap();
-
+        //Tạo mapper sản phẩm
+        CreateMap<Product, ProductDTO>().ReverseMap();
+        CreateMap<CreateProductViewModel, ProductDTO>().ReverseMap();
+        CreateMap<CreateProductViewModel, Product>().ReverseMap();
     }
 }

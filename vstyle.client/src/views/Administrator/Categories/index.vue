@@ -9,7 +9,7 @@
           margin-bottom: 16px;
         "
         title="Quản lý danh mục"
-        @back="goBack"
+       
       >
         <template #extra>
           <a-breadcrumb separator=">">

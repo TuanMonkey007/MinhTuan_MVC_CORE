@@ -132,14 +132,14 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 // Đăng ký Data Protection
 builder.Services.AddDataProtection()
     .SetApplicationName("VStyle")
-    .PersistKeysToFileSystem(new DirectoryInfo(@"C:\VStyleKeys"))//Lưu ý khóa nằm ở ổ C/keys nhớ check khi build
+  //  .PersistKeysToFileSystem(new DirectoryInfo(@"C:\VStyleKeys"))//Lưu ý khóa nằm ở ổ C/keys nhớ check khi build
     .SetDefaultKeyLifetime(TimeSpan.FromDays(30))
     .UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration()
     {
         EncryptionAlgorithm = EncryptionAlgorithm.AES_256_GCM,
         ValidationAlgorithm = ValidationAlgorithm.HMACSHA512 // Sử dụng HMACSHA512 để xác thực
     });
-     
+
 builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
 {
     options.TokenLifespan = TimeSpan.FromMinutes(15);
@@ -157,21 +157,31 @@ builder.Services.AddSession(options =>
 
 
 builder.Services.AddControllers();
+builder.Services.AddCors(p => p.AddPolicy("MyCors", build =>
+{
+    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 10 * 1024 * 1024; // 10MB
+});
+
 var app = builder.Build();
 
 // Thêm middleware xử lý lỗi
 app.UseMiddleware<ErrorHandlingMiddleware>();
-app.UseCors(x => x
-       .AllowAnyMethod()
-       .AllowAnyHeader()
-       .AllowCredentials()
-       .SetIsOriginAllowed(origin => true));  // CORS configuration
+app.UseCors("MyCors");  // CORS configuration
 app.UseSession();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
 }
 //
 app.UseHttpsRedirection();

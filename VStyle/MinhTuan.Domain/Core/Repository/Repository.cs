@@ -87,26 +87,40 @@ namespace MinhTuan.Domain.Core.Repository
 
         public void DeleteRange(IEnumerable<T> entities)
         {
-            foreach (var item in entities)
+            _dbSet.RemoveRange(entities);
+            //foreach (var item in entities)
+            //{
+            //    if (_context.Entry(item).State == EntityState.Detached)
+            //    {
+            //        _dbSet.Remove(item);
+            //    }
+            //    _dbSet.Remove(item);
+            //}
+        }
+        public void SoftDeleteRange(IEnumerable<T> entities)
+        {
+            foreach (var entity in entities)
             {
-                if (_context.Entry(item).State == EntityState.Detached)
+                var softDeletable = entity as IAuditableEntity;
+                if (softDeletable != null)
                 {
-                    _dbSet.Remove(item);
+                    softDeletable.IsDelete = true; // Đánh dấu entity là đã bị xóa mềm
+
                 }
-                _dbSet.Remove(item);
             }
         }
 
         public void AddRange(IEnumerable<T> entities)
         {
-            foreach (var item in entities)
-            {
-                if (_context.Entry(item).State == EntityState.Detached)
-                {
-                    _dbSet.Attach(item);
-                }
-                _dbSet.Add(item);
-            }
+            _dbSet.AddRange(entities);
+            //foreach (var item in entities)
+            //{
+            //    if (_context.Entry(item).State == EntityState.Detached)
+            //    {
+            //        _dbSet.Attach(item);
+            //    }
+            //    _dbSet.Add(item);
+            //}
         }
 
         public void UpdateRange(IEnumerable<T> entities)
@@ -120,5 +134,6 @@ namespace MinhTuan.Domain.Core.Repository
                 _dbSet.Update(item);
             }
         }
+       
     }
 }

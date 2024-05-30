@@ -5,9 +5,9 @@
       theme="dark"
       collapsible
       :width="250"
-      breakpoint="xxl"
+      breakpoint="xl"
       collapsed-width="0"
-      :trigger="null"
+      style="position: fixed; height: 100vh; top: 0; left: 0; z-index: 9999"
     >
       <a-menu v-model:selectedKeys="selectedMenu" theme="dark" mode="inline">
         <a-menu-item key="Dashboard">
@@ -15,8 +15,12 @@
           <span>Trang chủ</span>
         </a-menu-item>
         <a-menu-item key="Product">
-          <skin-outlined />
+          <router-link :to="{ name: 'ProductHome' }">
+            <skin-outlined />
           <span>Sản phẩm</span>
+              </router-link>
+            
+          
         </a-menu-item>
         <a-menu-item key="Cart">
           <shopping-cart-outlined />
@@ -29,7 +33,7 @@
               <span>Hệ thống</span>
             </span>
           </template>
-          <a-menu-item key="Account"
+          <a-menu-item v-if="isAdmin" key="Account"
             ><router-link :to="{ name: 'AccountHome' }"
               >Tài khoản người dùng</router-link
             ></a-menu-item
@@ -43,36 +47,33 @@
       </a-menu>
     </a-layout-sider>
     <a-layout>
-      <a-layout-header style="background: #fff; padding-left: 10px">
-        <a-row justify="space-between" style="width:100%">
-          <a-col :span="2">
-            <menu-unfold-outlined
-              :style="{ fontSize: '24px' }"
-              v-if="collapsed"
-              class="trigger"
-              @click="() => (collapsed = !collapsed)"
-            />
-            <menu-fold-outlined
-              :style="{ fontSize: '24px' }"
-              v-else
-              class="trigger"
-              @click="() => (collapsed = !collapsed)"
-            />
-          </a-col>
-          <!-- Profile -->
-          <a-col  :xs="13" :sm="10" :md="6" :lg="6" :xl="4" >
+      <a-layout-header style="background: #fff; padding: 0">
+        <a-row justify="space-between" style="width: 100%">
+          <a-col :span="2"></a-col>
+
+          <a-col :span="22" style="justify-content: flex-end; display: flex">
+            {{ userName }}
             <a-dropdown>
-              <a class="ant-dropdown-link" style="color: black">
-                <a-avatar></a-avatar>
-                {{ userName }} <caret-down-outlined />
+              <a
+                class="ant-dropdown-link"
+                style="color: black; margin-left: 5px"
+              >
+                <a-avatar
+                  v-if="avatarBase64"
+                  :src="'data:' + avatarContentType + ';base64,' + avatarBase64"
+                  :size="32"
+                ></a-avatar>
+                <a-avatar v-else :size="32"></a-avatar>
               </a>
               <template #overlay>
-                <a-menu style="margin-top:20px">
+                <a-menu style="margin-top: 20px; min-width: 150px">
                   <a-menu-item>
                     <UserOutlined />
                     <a href="javascript:;"> Trang cá nhân</a>
                   </a-menu-item>
+
                   <a-menu-item>
+                    <a-divider style="margin: 0px 0px 5px; padding: 0px" />
                     <logout-outlined />
                     <a @click="logOut"> Đăng xuất</a>
                   </a-menu-item>
@@ -115,7 +116,9 @@ import {
   LogoutOutlined,
   CaretDownOutlined,
 } from "@ant-design/icons-vue";
+import { Role } from "@/helpers/Constants.js";
 import { message } from "ant-design-vue";
+import APIService from "@/helpers/APIService";
 export default {
   name: "LayoutAdmin",
   components: {
@@ -147,14 +150,39 @@ export default {
       selectedMenu,
       collapsed: ref(false),
       userName,
+      isAdmin: localStorage.getItem("role") === Role.ADMIN ? true : false,
     };
   },
+  data() {
+    return {
+      avatarBase64: null,
+      avatarContentType: null,
+    };
+  }, //end data
+  async mounted() {
+    try {
+      const userPhone = localStorage.getItem("userPhone"); // Lấy userId từ localStorage
+      const response = await APIService.get(
+        `account/get-by-phone/${userPhone}`
+      ); // Thay userId bằng ID người dùng
+      this.userData = response.data.data;
+
+      // Gán giá trị cho avatarBase64 và avatarContentType
+      this.avatarBase64 = this.userData.avatarBase64;
+      this.avatarContentType = this.userData.avatarContentType;
+    } catch (error) {
+      console.error(error);
+      // Xử lý lỗi nếu có
+    }
+  }, //end mounted
   methods: {
     logOut() {
       try {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("role");
         localStorage.removeItem("userName");
+        localStorage.removeItem("userPhone");
+        localStorage.removeItem("userEmail");
         this.$router.push("/login");
         message.success("Đăng xuất thành công!");
       } catch {

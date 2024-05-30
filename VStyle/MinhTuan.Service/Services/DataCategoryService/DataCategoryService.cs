@@ -20,12 +20,16 @@ namespace MinhTuan.Service.Services.DataCategoryService
     public class DataCategoryService : Service<DataCategory>, IDataCategoryService
     {
         private readonly IDataCategoryRepository _dataCategoryRepository;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public DataCategoryService(IUnitOfWork unitOfWork, IMapper mapper, IDataCategoryRepository dataCategoryRepository) : base(unitOfWork)
+        public DataCategoryService(IUnitOfWork unitOfWork, IMapper mapper,
+            ICategoryRepository categoryRepository,
+            IDataCategoryRepository dataCategoryRepository) : base(unitOfWork)
         {
             _mapper = mapper;
             _dataCategoryRepository = dataCategoryRepository;
+            _categoryRepository = categoryRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -46,6 +50,68 @@ namespace MinhTuan.Service.Services.DataCategoryService
             }
             return _dataCategoryRepository.FindBy(x => x.Name == name && x.IsDelete != true && x.Id != id && x.ParentId == parentId).Any();
         }
+
+        public ResponseWithDataDto<List<DataCategoryDTO>> GetByParentCode(string parentCode)
+        {
+            var serverResponse = new ResponseWithDataDto<List<DataCategoryDTO>>() { Message = "Lấy danh mục con thành công" };
+
+            try
+            {
+                Guid parentId = _categoryRepository.FindBy(x => x.Code.Contains(parentCode) && x.IsDelete != true).FirstOrDefault().Id;
+                var dataCategories = _dataCategoryRepository.FindBy(x => x.ParentId.Equals(parentId) && x.IsDelete != true).ToList(); // Lấy danh sách danh mục con
+
+                if (dataCategories == null || !dataCategories.Any()) // Kiểm tra xem có danh mục con nào không
+                {
+                    serverResponse.Message = "Không tìm thấy danh mục con";
+                    return serverResponse;
+                }
+
+                // Sử dụng AutoMapper để chuyển đổi danh sách DataCategory thành DataCategoryDTO
+                var dataCategoryDTOs = _mapper.Map<List<DataCategoryDTO>>(dataCategories);
+                serverResponse.Data = dataCategoryDTOs;
+                serverResponse.Status = "Success"; // Đặt trạng thái thành công
+
+                return serverResponse;
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi nếu có
+                serverResponse.Status = "Fail";
+                serverResponse.Message = "Lỗi khi lấy danh mục con: " + ex.Message;
+                return serverResponse;
+            }
+        }
+
+        public ResponseWithDataDto<List<DataCategoryDTO>> GetByParentId(Guid parentId)
+        {
+            var serverResponse = new ResponseWithDataDto<List<DataCategoryDTO>>() { Message = "Lấy danh mục con thành công" };
+
+            try
+            {
+                var dataCategories = _dataCategoryRepository.FindBy(x => x.ParentId == parentId && x.IsDelete != true).ToList(); // Lấy danh sách danh mục con
+
+                if (dataCategories == null || !dataCategories.Any()) // Kiểm tra xem có danh mục con nào không
+                {
+                    serverResponse.Message = "Không tìm thấy danh mục con";
+                    return serverResponse;
+                }
+
+                // Sử dụng AutoMapper để chuyển đổi danh sách DataCategory thành DataCategoryDTO
+                var dataCategoryDTOs = _mapper.Map<List<DataCategoryDTO>>(dataCategories);
+                serverResponse.Data = dataCategoryDTOs;
+                serverResponse.Status = "Success"; // Đặt trạng thái thành công
+
+                return serverResponse;
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi nếu có
+                serverResponse.Status = "Fail";
+                serverResponse.Message = "Lỗi khi lấy danh mục con: " + ex.Message;
+                return serverResponse;
+            }
+        }
+
 
         public ResponseWithDataDto<PagedList<DataCategoryDTO>> GetDataByPage(DataCategorySearchDTO searchDTO)
         {
@@ -107,5 +173,9 @@ namespace MinhTuan.Service.Services.DataCategoryService
             }
         }
 
+        public string GetNameById(Guid id)
+        {
+           return  _dataCategoryRepository.GetById(id).Name;
+        }
     }
 }

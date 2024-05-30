@@ -9,7 +9,13 @@ const adminRouter=[
                 path:"",
                 name:"AdminHome",
                 component:()=>import("../views/Administrator/Statistics/index.vue"),
-                meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF] } //Thêm meta để kiểm tra quyền truy cập
+                meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF], title:"Trang quản trị" } //Thêm meta để kiểm tra quyền truy cập
+            },
+            {
+                path:"Product",
+                name:"ProductHome",
+                component:()=>import("../views/Administrator/Products/index.vue"),
+                meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF], title: "Quản lý sản phẩm" }
             },
             {
                 path:"Category",
@@ -28,8 +34,8 @@ const adminRouter=[
                 name:"AccountHome",
                 component:()=>import("../views/Administrator/Users/index.vue"),
                 meta: { 
-                    // requiresAuth: true,
-                    // roles: [Role.ADMIN, Role.STAFF],
+                    requiresAuth: true,
+                    roles: [Role.ADMIN],
                     title: "Quản lý tài khoản"
 
 

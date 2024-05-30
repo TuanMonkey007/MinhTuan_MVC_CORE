@@ -155,8 +155,12 @@ E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\bin\Debug
 E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\bin\Debug\net8.0\Azure.Core.dll
 E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\bin\Debug\net8.0\Azure.Identity.dll
 E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\bin\Debug\net8.0\EntityFramework.SqlServer.dll
+E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\bin\Debug\net8.0\EntityFramework.dll
 E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\bin\Debug\net8.0\Humanizer.dll
 E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\bin\Debug\net8.0\MailKit.dll
+E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\bin\Debug\net8.0\Microsoft.AspNet.Identity.Core.dll
+E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\bin\Debug\net8.0\Microsoft.AspNet.Identity.EntityFramework.dll
 E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.Facebook.dll
 E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.Google.dll
 E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
@@ -393,7 +397,6 @@ E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\obj\Debug
 E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\obj\Debug\net8.0\MinhTuan.Application.AssemblyInfoInputs.cache
 E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\obj\Debug\net8.0\MinhTuan.Application.AssemblyInfo.cs
 E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\obj\Debug\net8.0\MinhTuan.Application.csproj.CoreCompileInputs.cache
-E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\obj\Debug\net8.0\MinhTuan.Application.MvcApplicationPartsAssemblyInfo.cs
 E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\obj\Debug\net8.0\MinhTuan.Application.MvcApplicationPartsAssemblyInfo.cache
 E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\obj\Debug\net8.0\MinhTuan.Application.RazorAssemblyInfo.cache
 E:\BE_STUDYING\DATN\Code\MinhTuan_MVC_CORE\VStyle\MinhTuan.Application\obj\Debug\net8.0\MinhTuan.Application.RazorAssemblyInfo.cs

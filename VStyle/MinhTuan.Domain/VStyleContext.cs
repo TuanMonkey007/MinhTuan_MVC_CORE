@@ -81,7 +81,11 @@ namespace MinhTuan.Domain
 		// public DbSet<DanhMuc> DanhMucs { get; set; }
 		public DbSet<Category> categories { get; set; }
 		public DbSet<DataCategory> dataCategories { get; set; }
-     
+		public DbSet<Product> Products { get; set; }
+        public DbSet<Product_Variant> Product_Variants { get; set; }
 
-    }
-    }
+		public DbSet<Product_Image> Product_Images { get; set; }
+		public DbSet<Product_Category> Product_Categories { get; set; }
+
+	}
+}
