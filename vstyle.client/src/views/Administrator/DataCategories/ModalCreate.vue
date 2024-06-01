@@ -22,9 +22,9 @@
                     message: 'Vui lòng nhập thông tin này',
                     trigger: 'change'
                 }, {
-                    min: 2,
+                    min: 1,
                     max: 50,
-                    message: 'Độ dài từ 2-50',
+                    message: 'Độ dài từ 1-50',
                     trigger: 'blur',
                 }]">
                     <a-input v-model:value="category.name" />

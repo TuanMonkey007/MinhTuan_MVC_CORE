@@ -29,7 +29,9 @@ namespace MinhTuan.Domain
 
 		public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 		{
-			foreach (var item in ChangeTracker.Entries())
+            // Tạo một bản sao của ChangeTracker.Entries() để tránh sửa đổi tập hợp gốc trong khi duyệt
+            var entries = ChangeTracker.Entries().ToList();
+            foreach (var item in entries)
 			{
 				if (item.Entity is IAuditableEntity entity)
 				{

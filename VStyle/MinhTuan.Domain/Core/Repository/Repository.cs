@@ -31,7 +31,7 @@ namespace MinhTuan.Domain.Core.Repository
 
         public virtual IQueryable<T> GetQueryable()
         {
-            return _dbSet.AsQueryable();
+            return _dbSet; //.AsQueryable() sửa tạm cái này
         }
 
         public IEnumerable<T> FindBy(Expression<Func<T, bool>> predicate)
@@ -39,6 +39,13 @@ namespace MinhTuan.Domain.Core.Repository
             IEnumerable<T> query = _dbSet.Where(predicate).AsEnumerable();
             return query;
         }
+        public async Task<IEnumerable<T>> FindByAsync(Expression<Func<T, bool>> predicate)
+        {
+            // Sử dụng ToListAsync để lấy dữ liệu một cách bất đồng bộ
+            var query = await _dbSet.Where(predicate).ToListAsync();
+            return query;
+        }
+
 
         public virtual T Add(T entity)
         {
@@ -84,6 +91,11 @@ namespace MinhTuan.Domain.Core.Repository
         {
             return _dbSet.Find(id);
         }
+        public async Task<T?> GetByIdAsync(object id)
+        {
+            return await _dbSet.FindAsync(id);
+        }
+
 
         public void DeleteRange(IEnumerable<T> entities)
         {
@@ -134,6 +146,7 @@ namespace MinhTuan.Domain.Core.Repository
                 _dbSet.Update(item);
             }
         }
-       
+
+        
     }
 }

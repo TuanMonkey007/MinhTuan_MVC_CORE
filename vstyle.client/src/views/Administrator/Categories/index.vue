@@ -1,32 +1,34 @@
 <template >
   <a-row>
     <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-      <a-page-header
-        style="
-          border: 1px solid rgb(235, 237, 240);
-          height: min-content;
-          background-color: #fff;
-          margin-bottom: 16px;
-        "
-        title="Quản lý danh mục"
-       
-      >
+      <a-page-header style="
+         border: 1px solid rgb(235, 237, 240);
+          background-color: #c21f24;
+        " @back="goBack">
+        <template #backIcon>
+          <font-awesome-icon :icon="['fas', 'backward']" style="color: white; margin-left: 30px" />
+        </template>
+        <template #title>
+          <span style="color: white; font-size: 16px; margin-bottom: auto;display: block;">Quản lý danh mục</span>
+        </template>
         <template #extra>
-          <a-breadcrumb separator=">">
+          <a-breadcrumb separator=">" style="margin-right:30px;">
             <a-breadcrumb-item href="">
-              <font-awesome-icon icon="fa-solid fa-house" />
+              <font-awesome-icon icon="fa-solid fa-house" style="color: #fff;" />
+              <span style="color: #fff;"> Trang quản trị</span>
             </a-breadcrumb-item>
             <a-breadcrumb-item href="">
-              <font-awesome-icon :icon="['fas', 'gear']" />
-              <span> Hệ thống</span>
+              <font-awesome-icon :icon="['fas', 'gear']" style="color: #fff;" />
+              <span style="color: #fff;"> Hệ thống</span>
             </a-breadcrumb-item>
-            <a-breadcrumb-item>
-              <font-awesome-icon icon="fa-solid fa-list" />
-              <span> Danh mục dùng chung</span>
+            <a-breadcrumb-item href="">
+              <font-awesome-icon :icon="['fas', 'fa-list']" style="color: #fff;" />
+              <span style="color: #fff;"> Danh mục</span>
             </a-breadcrumb-item>
+
           </a-breadcrumb>
         </template>
-</a-page-header>
+      </a-page-header>
 </a-col>
 </a-row>
 <transition name="route" mode="out-in" appear>
@@ -52,7 +54,7 @@
         </a-row>
         <a-row>
           <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-            <a-table :columns="tableColumns" :dataSource="dataSourceTable" :pagination="false" :loading="loadingTable"
+            <a-table bordered :columns="tableColumns" :dataSource="dataSourceTable" :pagination="false" :loading="loadingTable"
             :scroll="{ x: 1000 }"   :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : null)"
               @change="handleTableChange">
               <template #bodyCell="{ column, record }">
@@ -256,14 +258,35 @@
     color: white;
   }
 
-  :deep(.table-striped) td {
-    background-color: #fafafa;
-  }
+
 
   /* Ẩn chữ trên màn hình nhỏ hơn hoặc bằng 768px */
   @media (max-width: 767px) {
     .ant-breadcrumb-link>span {
       display: none;
     }
+  }
+  .ant-page-header {
+    padding: 0px;
+    /* Giảm padding */
+    margin-bottom: 8px;
+    /* Giảm margin dưới */
+  }
+
+  .ant-page-header {
+    height: 35px;
+    /* Tự động điều chỉnh chiều cao */
+  }
+
+  :deep(.ant-breadcrumb-separator) {
+    color: #fff;
+    /* Đặt màu chữ cho breadcrumb */
+  }
+
+  .ant-page-header-heading-title {
+    line-height: normal;
+    /* Đặt màu chữ cho tiêu đề */
+    display: flex;
+    /* Hiển thị theo chiều ngang */
   }
 </style>

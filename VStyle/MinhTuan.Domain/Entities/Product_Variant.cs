@@ -16,6 +16,14 @@ namespace MinhTuan.Domain.Entities
         public Guid ColorId { get; set; }
         public float Price { get; set; }
         public int StockQuantity { get; set; }
+        // Navigation property
+        [ForeignKey("ProductId")]
+        public virtual Product Product { get; set; }
+        // Navigation property
+        [ForeignKey("SizeId")]
+        public virtual DataCategory Size { get; set; }
+        [ForeignKey("ColorId")]
+        public virtual DataCategory Color { get; set; }
 
     }
 }

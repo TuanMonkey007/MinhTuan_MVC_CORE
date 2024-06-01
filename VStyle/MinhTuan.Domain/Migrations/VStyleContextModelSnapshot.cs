@@ -574,6 +574,12 @@ namespace MinhTuan.Domain.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ColorId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("SizeId");
+
                     b.ToTable("ProductVariants");
                 });
 
@@ -656,6 +662,33 @@ namespace MinhTuan.Domain.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("MinhTuan.Domain.Entities.Product_Variant", b =>
+                {
+                    b.HasOne("MinhTuan.Domain.Entities.DataCategory", "Color")
+                        .WithMany()
+                        .HasForeignKey("ColorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MinhTuan.Domain.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MinhTuan.Domain.Entities.DataCategory", "Size")
+                        .WithMany()
+                        .HasForeignKey("SizeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Color");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Size");
                 });
 #pragma warning restore 612, 618
         }

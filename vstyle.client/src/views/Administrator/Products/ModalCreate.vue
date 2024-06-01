@@ -99,7 +99,7 @@
                                 style="margin-right: 20px;" class="login-form-button">
                                 Hoàn thành
                             </a-button>
-                            <a-button type="normal" @click="closeModal" style="margin-right: 20px;"
+                            <a-button  @click="closeModal" style="margin-right: 20px;"
                                 class="login-form-button">
                                 Đóng
                             </a-button>
@@ -254,7 +254,7 @@
                     formData.append('name', this.product.name);
                     formData.append('description', this.product.description);
                     formData.append('price', this.product.price);
-                    formData.append('listCategory', this.product.listCategory);
+                   
                     if (this.fileListThumbnail.length > 0 && this.fileListThumbnail[0].originFileObj != null) {
                         formData.append('thumbnailFile', this.fileListThumbnail[0].originFileObj);
                     }
@@ -264,7 +264,9 @@
                         });
                     }
                     
-
+                    this.product.listCategory.forEach(item => {
+                        formData.append('listCategory', item);
+                    });
 
                     const serverResponse = await APIService.post('product/create', formData)
                     if (serverResponse.data.message == "Tạo mới thành công") {

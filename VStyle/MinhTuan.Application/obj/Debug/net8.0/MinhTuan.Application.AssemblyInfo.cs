@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MinhTuan.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+799375a8478cc577987310109cb4976d5d826363")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+462ba60f0dda8d2683b4d8b9b863b7d1337e8721")]
 [assembly: System.Reflection.AssemblyProductAttribute("MinhTuan.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MinhTuan.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

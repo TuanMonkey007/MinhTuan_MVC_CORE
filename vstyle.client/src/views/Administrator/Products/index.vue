@@ -1,104 +1,163 @@
 <template>
-     <a-row>
-    <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-      <a-page-header
-        style="
-          border: 1px solid rgb(235, 237, 240);
-          height: min-content;
-          background-color: #fff;
-          margin-bottom: 16px;
-        "
-        title="Quản lý sản phẩm"
-       
-      >
-        <template #extra>
-          <a-breadcrumb separator=">">
-            <a-breadcrumb-item href="">
-              <font-awesome-icon icon="fa-solid fa-house" />
-              <span> Trang quản trị</span>
-            </a-breadcrumb-item>
-            <a-breadcrumb-item href="">
-                <font-awesome-icon :icon="['fas', 'shirt']" />
-              <span> Sản phẩm</span>
-            </a-breadcrumb-item>
-            
-          </a-breadcrumb>
-        </template>
-</a-page-header>
-</a-col>
-</a-row>
-<transition name="route" mode="out-in" appear>
   <a-row>
     <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-      <a-card :bordered="true" title="Danh sách sản phẩm" style="margin: 30px; height: 600px">
+      <a-page-header style="
+         border: 1px solid rgb(235, 237, 240);
+          background-color: #c21f24;
+        " @back="goBack">
+        <template #backIcon>
+          <font-awesome-icon :icon="['fas', 'backward']" style="color: white; margin-left: 30px" />
+        </template>
+        <template #title>
+          <span style="color: white; font-size: 16px; margin-bottom: auto;display: block;">Quản lý sản phẩm</span>
+        </template>
         <template #extra>
-        <a-button @click="openModalCreate" type="primary"
-          ><font-awesome-icon icon="fa-solid fa-plus" /> Thêm mới</a-button
-        >
-      </template>
+          <a-breadcrumb separator=">" style="margin-right:30px;">
+            <a-breadcrumb-item href="">
+              <font-awesome-icon icon="fa-solid fa-house" style="color: #fff;" />
+              <span style="color: #fff;"> Trang quản trị</span>
+            </a-breadcrumb-item>
+            <a-breadcrumb-item href="">
+              <font-awesome-icon :icon="['fas', 'shirt']" style="color: #fff;" />
+              <span style="color: #fff;"> Sản phẩm</span>
+            </a-breadcrumb-item>
 
-        <a-row style="margin-bottom: 20px" :gutter="24">
-          
-          <a-col :span="12">
-            <a-input v-model:value="formSearch.code_Filter"  @keyup.enter="SearchData" placeholder="Mã sản phẩm">
-            </a-input>
-          </a-col>
-          <a-col :span="12">
-            <a-input v-model:value="formSearch.name_Filter"  @keyup.enter="SearchData" placeholder="Tên sản phẩm">
-            </a-input>
-          </a-col>
-        </a-row>
-        <a-row>
-          <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-            <a-table :columns="tableColumns" :dataSource="dataSourceTable" :pagination="false" :loading="loadingTable"
-            :scroll="{ x: 1000 }"   :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : null)"
-              @change="handleTableChange">
-              <template #bodyCell="{ column, record }">
-          <template v-if="column.key === 'action'">
-            <a-space>
-              
-
-              <a-tooltip title="Chỉnh sửa">
-                <a-button type="link" shape="circle" @click="openModalUpdate(record.id)">
-                  <template #icon><font-awesome-icon
-                      icon="fa-solid fa-pen-to-square"
-                      style="color: #ffd43b"
-                  /></template>
-                </a-button>
-              </a-tooltip>
-
-              <a-popconfirm title="Xác nhận xóa?" ok-text="Xóa" cancel-text="Hủy" @confirm="deleteObj(record.id)">
-                <a-tooltip title="Xóa" placement="rightBottom">
-                  <a-button type="link" shape="circle">
-                    <template #icon><font-awesome-icon
-                        icon="fa-solid fa-trash-alt"
-                        style="color: #ff4d4f"
-                    /></template>
-                  </a-button>
-                </a-tooltip>
-              </a-popconfirm>
-              </a-space>
-              </template>
-              </template>
-            </a-table>
-          </a-col>
-        </a-row>
-        <a-row>
-          <a-col :span="24">
-            <a-pagination v-if="pagination.total > 0" style="margin-top: 20px; text-align: center"
-              v-model:current="pagination.current" :pageSize="pagination.pageSize" :total="pagination.total"
-              :showSizeChanger="false" :show-total="(total) => `Tổng ${total} bản ghi`"
-              @change="handlePaginationChange" />
-          </a-col>
-        </a-row>
-      </a-card>
+          </a-breadcrumb>
+        </template>
+      </a-page-header>
     </a-col>
-        </a-row>
-</transition>
-<ModalCreate @addSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalCreate" />
+  </a-row>
+  <transition name="route" mode="out-in" appear>
+    <a-row>
+      <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+        <a-card :bordered="true" title="Danh sách sản phẩm" style="margin: 30px;">
+          <template #extra>
+
+            <a-button @click="openModalCreate" class="btnSearch" type="primary"><font-awesome-icon
+                icon="fa-solid fa-plus" /> Thêm
+              mới</a-button>
+          </template>
+
+
+          <a-row style="margin-bottom: 20px" :gutter="24">
+            <a-col :span="24">
+              <a-collapse v-model:activateKey="activateKey" :accordion="true" :bordered="false" style="background-color:rgb(206 213 225)" >
+                <a-collapse-panel key="1" :show-arrow="false" ref="searchCollapse" >
+                  <template #header>
+                    <a-row>
+                      <a-col :span="24">
+                        <a-space>
+                          <font-awesome-icon icon="fa-solid fa-filter" />
+                          <span>Bộ lọc</span>
+                        </a-space>
+                      </a-col>
+                    </a-row>
+                  </template>
+                  <a-row style="margin-bottom: 20px" :gutter="24">
+
+                    <a-col :span="12">
+                      <a-input v-model:value="formSearch.code_Filter" @keyup.enter="SearchData"
+                        placeholder="Mã sản phẩm">
+                      </a-input>
+                    </a-col>
+                    <a-col :span="12">
+                      <a-input v-model:value="formSearch.name_Filter" @keyup.enter="SearchData"
+                        placeholder="Tên sản phẩm">
+                      </a-input>
+                    </a-col>
+                  </a-row>
+                  <a-row>
+                  
+                    <a-col :span="12">
+                      <span>Chọn khoảng giá</span>
+                      <a-slider  style="max-width: 70%" v-model:value="formSearch.price_Filter" range :min="0" :max="1000000" placeholder="Chọn khoảng giá" />
+                    </a-col>
+                    <a-col :span="12">
+                      <span>Chọn danh mục</span>
+                      <a-select style="min-width: 100%" v-model:value="formSearch.category_Filter" mode="multiple" :options="categoryOptions" placeholder="Chọn danh mục" />  
+                    </a-col> 
+                  </a-row>
+
+                  <a-row style="justify-content: contents;margin-top: 10px">
+                    <a-col :span="24" style="justify-items: center; display: grid;">
+                      <a-button type="primary" @click="SearchData" class="btnSearch">
+                        <font-awesome-icon icon="fa-solid fa-search" />
+                        Tìm kiếm
+                      </a-button>
+                    </a-col>
+                  </a-row>
+                </a-collapse-panel>
+              </a-collapse>
+            </a-col>
+          </a-row>
+
+
+
+          <a-row>
+            <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+              <a-table :columns="tableColumns" :dataSource="dataSourceTable" :pagination="false" :loading="loadingTable"
+                :scroll="{ x: 1000 }" :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : null)"
+                @change="handleTableChange" bordered>
+                <template #bodyCell="{ column, record }">
+                  <template v-if="column.key === 'action'">
+                    <a-space>
+                      <a-tooltip title="Cấu hình mẫu mã" placement="leftTop">
+                        <a-button type="link" shape="circle" @click="openModalVariant(record.id)">
+
+                          <font-awesome-icon icon="fa-solid fa-wand-magic-sparkles" style="color: #033996;" />
+
+                          <template #icon></template>
+                        </a-button>
+                      </a-tooltip>
+
+                      <a-tooltip title="Chỉnh sửa">
+                        <a-button type="link" shape="circle" @click="openModalUpdate(record.id)">
+                          <template #icon><font-awesome-icon icon="fa-solid fa-pen-to-square"
+                              style="color: #ffd43b" /></template>
+                        </a-button>
+                      </a-tooltip>
+
+                      <a-popconfirm title="Xác nhận xóa?" ok-text="Xóa" cancel-text="Hủy"
+                        @confirm="deleteObj(record.id)">
+                        <a-tooltip title="Xóa" placement="rightBottom">
+                          <a-button type="link" shape="circle">
+                            <template #icon><font-awesome-icon icon="fa-solid fa-trash-alt"
+                                style="color: #ff4d4f" /></template>
+                          </a-button>
+                        </a-tooltip>
+                      </a-popconfirm>
+                    </a-space>
+                  </template>
+                  <template v-else-if="column.key === 'thumbnail'">
+                    <img v-if="record.thumbnailBase64"
+                      :src="'data:' + record.thumbnailContentType + ';base64,' + record.thumbnailBase64"
+                      style="max-width: 100px; max-height: 100px; object-fit: contain;" />
+                    <span v-else>Chưa cập nhật</span>
+                  </template>
+                </template>
+              </a-table>
+            </a-col>
+          </a-row>
+          <a-row>
+            <a-col :span="24">
+              <a-pagination v-if="pagination.total > 0" style="margin-top: 20px; text-align: center"
+                v-model:current="pagination.current" :pageSize="pagination.pageSize" :total="pagination.total"
+                :showSizeChanger="false" :show-total="(total) => `Tổng ${total} bản ghi`"
+                @change="handlePaginationChange" />
+            </a-col>
+          </a-row>
+        </a-card>
+      </a-col>
+    </a-row>
+  </transition>
+  <ModalCreate @addSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalCreate" />
+  <ModalVariant @addSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalVariant" />
+  <ModalUpdate @updateSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalUpdate" />
 </template>
 <script>
-    import ModalCreate from "@/views/Administrator/Products/ModalCreate.vue";
+  import ModalVariant from "@/views/Administrator/Products/ModalVariant.vue";
+  import ModalUpdate from "@/views/Administrator/Products/ModalUpdate.vue";
+  import ModalCreate from "@/views/Administrator/Products/ModalCreate.vue";
   import { Modal, Pagination, message } from "ant-design-vue";
   import {
     SmileOutlined,
@@ -106,23 +165,25 @@
     CompassOutlined,
   } from "@ant-design/icons-vue";
   import APIService from "@/helpers/APIService";
-  import { inject } from "vue";
+  import { inject, ref } from "vue";
   export default {
     components: {
       SmileOutlined,
       DownOutlined,
       Pagination,
-      ModalCreate
+      ModalCreate,
+      ModalVariant,
+      ModalUpdate
 
     },
-
     data() {
       return {
+        categoryOptions:[],
         tableColumns: [
-        {
+          {
             title: "Hình ảnh",
-            dataIndex: "imageThumbnail",
-            key: "imageThumbnail",
+            dataIndex: "thumbnail",
+            key: "thumbnail",
             width: "20%",
           },
           {
@@ -169,24 +230,37 @@
         loadingTable: false,
         pagination: {
           current: 1,
-          pageSize: 5,
+          pageSize: 10,
           total: 0,
         },
         formSearch: {
           code_Filter: "",
           name_Filter: "",
+          price_Filter: [0, 1000000],
+          category_Filter: []
         },
       };
     },
-    mounted() {
+   async mounted() {
       const selectedMenu = inject("selectedMenu");
       const changeSelectedMenu = inject("changeSelectedMenu");
       if (this.$route.name === "ProductHome") {
         changeSelectedMenu("Product");
       }
+      const serverResponse = await APIService.get('datacategory/get-list-by-parent-code/SAN_PHAM')
+                this.categoryOptions = serverResponse.data.data.map(item => {
+                    return {
+                        label: item.name,
+                        value: item.id
+                    }
+                })
       this.fetchData(this.pagination.current, this.pagination.pageSize);
     }, //end mounted
     methods: {
+      openCollapseSearch() {
+        this.$refs.searchCollapse.click;
+        console.log(this.$refs);
+      },
       goBack() {
         this.$router.go(-1); // Điều hướng trở lại trang trước
       },
@@ -215,6 +289,7 @@
         this.fetchData(this.pagination.current, this.pagination.pageSize);
       },
       SearchData() {
+        console.log(this.formSearch);
         this.fetchData(
           this.pagination.current,
           this.pagination.pageSize,
@@ -239,25 +314,25 @@
           this.pagination.current = response.data.data.pageIndex;
           this.pagination.pageSize = response.data.data.pageSize;
         } catch (error) {
-          message.error(error);
+          message.error("Lỗi Server");
         }
         this.loadingTable = false;
       }, //end fetchData
       openModalUpdate(id) {
         this.$refs.modalUpdate.showModal(id);
       },
+      openModalVariant(id) {
+        this.$refs.modalVariant.showModal(id);
+      },
     },
   };
 </script>
 <style scoped>
-      .btnSearch:hover {
+  .btnSearch:hover {
     background-color: rgb(229 127 123);
     color: white;
   }
 
-  :deep(.table-striped) td {
-    background-color: #fafafa;
-  }
 
   /* Ẩn chữ trên màn hình nhỏ hơn hoặc bằng 768px */
   @media (max-width: 767px) {
@@ -265,4 +340,29 @@
       display: none;
     }
   }
+
+  .ant-page-header {
+    padding: 0px;
+    /* Giảm padding */
+    margin-bottom: 8px;
+    /* Giảm margin dưới */
+  }
+
+  .ant-page-header {
+    height: 35px;
+    /* Tự động điều chỉnh chiều cao */
+  }
+
+  :deep(.ant-breadcrumb-separator) {
+    color: #fff;
+    /* Đặt màu chữ cho breadcrumb */
+  }
+
+  .ant-page-header-heading-title {
+    line-height: normal;
+    /* Đặt màu chữ cho tiêu đề */
+    display: flex;
+    /* Hiển thị theo chiều ngang */
+  }
+
 </style>

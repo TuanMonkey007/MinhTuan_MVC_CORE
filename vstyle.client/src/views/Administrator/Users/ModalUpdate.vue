@@ -225,7 +225,7 @@
             async showModal(id) {
                 const response = await APIService.get('datacategory/get-list-by-parent-code/GIOI_TINH');
                 this.listGender = response.data.data;
-                this.open = true
+              
                 const serverResponse = await APIService.get(`account/${id}`)
                 this.account = {
                     ...serverResponse.data.data,
@@ -264,6 +264,7 @@
                 } else {
                     this.fileList = [];
                 }
+                this.open = true
             },
             closeModal() {
                 this.open = false
