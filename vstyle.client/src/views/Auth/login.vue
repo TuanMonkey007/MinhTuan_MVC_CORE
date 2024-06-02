@@ -210,7 +210,7 @@
     </a-row>
 </template>
 <script>
-    import { Avatar, message } from "ant-design-vue";
+    import { Avatar, message,notification } from "ant-design-vue";
     import { ClaimTypes, Role } from "@/helpers/Constants";
     import { jwtDecode } from "jwt-decode";
     import { reactive, computed } from "vue";
@@ -316,8 +316,8 @@
             }, //end handleBtnForgot
             async onFinishForgot() {
                 this.loading = true;
-                message.loading({
-                    content: "Đang xử lý...",
+                notification.info({
+                    message: "Đang xử lý...",
                     key: "loadingKey",
                     duration: 0,
                 });
@@ -331,37 +331,35 @@
                     );
 
                     if (response.data.data != "") {
-                        message.success({
-                            content: response.data.message,
+                        notification.success({
+                            message: "Thành công",
+                            description: response.data.data,
                             key: "loadingKey",
                             duration: 2,
                         });
                     } else {
-                        message.warning({
-                            content: response.data.message,
+                       notification.error({
+                            message: "Thất bại",
+                            description: response.data.message,
                             key: "loadingKey",
                             duration: 2,
                         });
                     }
                 } catch {
-                    message.error({
-                        content: "Lấy lại mật khẩu thất bại!",
+                    notification.error({
+                        message: "Thất bại",
+                        description: "Lỗi server",
                         key: "loadingKey",
                         duration: 2,
                     });
                 } finally {
-                    setTimeout(() => {
-                        message.destroy("loadingKey");
-                        this.loading = false;
-                    }, 2000);
-
                     this.loading = false;
                 }
             }, //end onFinishForgot
             async onFinishRegister() {
                 this.loading = true;
-                message.loading({
-                    content: "Đang xử lý...",
+                notification.info({
+                    message: "Đang xử lý...",
                     key: "loadingKey",
                     duration: 0,
                 });
@@ -383,21 +381,28 @@
                             response.data.message == "DuplicateEmail"
                                 ? "Email đã được đăng ký"
                                 : "Số điện thoại đã được đăng ký";
-                        message.warning({
-                            content: contentMessage,
+                        notification.error({
+                            message: "Thất bại",
+                            description: contentMessage,
                             key: "loadingKey",
                             duration: 2,
                         });
                     } else {
-                        message.success({
-                            content: response.data.message,
+                        notification.success({
+                            message: "Thành công",
+                            description: "Đăng ký thành công",
                             key: "loadingKey",
                             duration: 2,
                         });
                         this.activeKey = "LoginTab";
                     }
                 } catch (error) {
-                    message.error("Đăng ký thất bại!");
+                    notification.error({
+                        message: "Thất bại",
+                        description: error.message,
+                        key: "loadingKey",
+                        duration: 2,
+                    });
                 } finally {
                     this.loading = false;
                 }
@@ -405,8 +410,8 @@
 
             async onFinish() {
                 this.loading = true;
-                message.loading({
-                    content: "Đang xử lý...",
+                notification.info({
+                    message: "Đang xử lý...",
                     key: "loadingKey",
                     duration: 0,
                 });
@@ -420,8 +425,9 @@
                     const response = await APIService.post("account/login", loginViewModel);
                     // Parse the token to get user role and user name
                     if (response.data.data.length < 100) {
-                        message.warning({
-                            content: response.data.data,
+                        notification.error({
+                            message: "Thất bại",
+                            description: response.data.data,
                             key: "loadingKey",
                             duration: 2,
                         });
@@ -453,15 +459,17 @@
                             });
                         }
 
-                        message.success({
-                            content: "Đăng nhập thành công!",
+                        notification.success({
+                            message: "Thành công",
+                            description: "Đăng nhập thành công",
                             key: "loadingKey",
                             duration: 2,
                         });
                     }
                 } catch (error) {
-                    message.error({
-                        content: "Lỗi server",
+                   notification.error({
+                        message: "Thất bại",
+                        description: error.message,
                         key: "loadingKey",
                         duration: 2,
                     });

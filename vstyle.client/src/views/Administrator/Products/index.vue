@@ -66,14 +66,14 @@
                       </a-input>
                     </a-col>
                   </a-row>
-                  <a-row>
+                  <a-row  :gutter="24">
                   
                     <a-col :span="12">
                       <span>Chọn khoảng giá</span>
                       <a-slider  style="max-width: 70%" v-model:value="formSearch.price_Filter" range :min="0" :max="1000000" placeholder="Chọn khoảng giá" />
                     </a-col>
                     <a-col :span="12">
-                      <span>Chọn danh mục</span>
+                   
                       <a-select style="min-width: 100%" v-model:value="formSearch.category_Filter" mode="multiple" :options="categoryOptions" placeholder="Chọn danh mục" />  
                     </a-col> 
                   </a-row>
@@ -158,7 +158,7 @@
   import ModalVariant from "@/views/Administrator/Products/ModalVariant.vue";
   import ModalUpdate from "@/views/Administrator/Products/ModalUpdate.vue";
   import ModalCreate from "@/views/Administrator/Products/ModalCreate.vue";
-  import { Modal, Pagination, message } from "ant-design-vue";
+  import { Modal, Pagination, message,notification } from "ant-design-vue";
   import {
     SmileOutlined,
     DownOutlined,
@@ -166,6 +166,7 @@
   } from "@ant-design/icons-vue";
   import APIService from "@/helpers/APIService";
   import { inject, ref } from "vue";
+
   export default {
     components: {
       SmileOutlined,
@@ -271,7 +272,10 @@
         try {
           const response = await APIService.delete(`product/soft-delete/${id}`);
           if (response.data.message == "Xóa thành công") {
-            message.success("Xóa thành công");
+            notification.success({
+              message: "Thành công",
+              description: response.data.message,
+            });
             if (this.dataSourceTable.length === 1) {
               // Nếu chỉ còn 1 bản ghi (bản ghi vừa bị xóa), quay lại trang trước
               this.pagination.current = Math.max(1, this.pagination.current - 1);
@@ -279,10 +283,16 @@
 
             this.fetchData(this.pagination.current, this.pagination.pageSize); // Tải lại dữ liệu
           } else {
-            message.error("Xóa thất bại");
+            notification.success({
+              message: "Thất bại",
+              description: response.data.message,
+            });
           }
         } catch (error) {
-          message.error("Xóa thất bại");
+          notification.error({
+            message: "Lỗi",
+            description: error,
+          });
         }
       },
       handlePaginationChange() {
@@ -314,7 +324,10 @@
           this.pagination.current = response.data.data.pageIndex;
           this.pagination.pageSize = response.data.data.pageSize;
         } catch (error) {
-          message.error("Lỗi Server");
+          notification.error({
+            message: "Lỗi",
+            description: error,
+          });
         }
         this.loadingTable = false;
       }, //end fetchData

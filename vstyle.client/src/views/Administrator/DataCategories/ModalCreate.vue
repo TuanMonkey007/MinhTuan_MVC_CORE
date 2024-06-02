@@ -55,6 +55,7 @@
     import { computed } from "vue";
     import APIService from "@/helpers/APIService"
     import { ref, reactive } from "vue";
+    import { message, notification } from "ant-design-vue";
 
     export default {
         props: {
@@ -114,20 +115,39 @@
             async handleSubmitAsync() {
                 this.$refs.formRef.validate().then(async () => {
                     this.isLoading = true
-                    console.log(this.category)
+                    notification.info({
+                        message: 'Thông báo',
+                        description: 'Đang xử lý...',
+                        key : 'loadingKey',
+                        duration: 0
+                    })
                     const serverResponse = await APIService.post('datacategory/create', this.category)
                     if (serverResponse.data.message == "Tạo mới thành công") {
-                        this.$message.success(serverResponse.data.message)
+                        notification.success({
+                            message: 'Thông báo',
+                            description: 'Tạo mới thành công',
+                            key : 'loadingKey',
+                            
+                        })
                         this.isLoading = false
 
                         this.closeModal()
                         this.$emit('addSuccess')
                     } else {
                         this.isLoading = false
-                        this.$message.error(serverResponse.data.message)
+                        notification.error({
+                            message: 'Thông báo',
+                            description: 'Tạo mới thất bại',
+                            key : 'loadingKey',
+                        })
                     }
                 }).catch(error => {
-                    console.log('error', error);
+                    this.isLoading = false
+                    notification.error({
+                        message: 'Thông báo',
+                        description: 'Vui lòng kiểm tra lại thông tin',
+                        key : 'loadingKey',
+                    })
                 }).finally(() => {
                     this.isLoading = false;
                 })

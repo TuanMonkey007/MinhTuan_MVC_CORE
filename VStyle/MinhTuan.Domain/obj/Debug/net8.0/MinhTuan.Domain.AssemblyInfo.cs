@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MinhTuan.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+462ba60f0dda8d2683b4d8b9b863b7d1337e8721")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d0612e27e3bdd09651f1f632f3df1aedfe320ac9")]
 [assembly: System.Reflection.AssemblyProductAttribute("MinhTuan.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MinhTuan.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -122,7 +122,7 @@
     import { computed } from "vue";
     import APIService from "@/helpers/APIService"
     import { ref, reactive } from "vue";
-    import { message } from "ant-design-vue";
+    import { message,notification } from "ant-design-vue";
 import { Date } from "core-js";
 
     export default {
@@ -315,7 +315,12 @@ import { Date } from "core-js";
             async handleSubmitAsync() {
                 this.$refs.formRef.validate().then(async () => {
                     this.isLoading = true
-                    message.loading({ content: 'Đang xử lý...', key: 'keyLoading', duration: 0 });
+                   notification.info({
+                        message: 'Thông báo',
+                        description: 'Đang xử lý...',
+                        key: 'keyLoading',
+                        duration: 0
+                    })
                     console.log(this.product)
                     const formData = new FormData();
                     formData.append('code', this.product.code);
@@ -339,15 +344,14 @@ import { Date } from "core-js";
                     const serverResponse = await APIService.put(`product/update/${this.id}`, formData)
                     if (serverResponse.data.message == "Cập nhật thành công") {
                         this.closeModal()
-                        message.success({ content: serverResponse.data.message, key: 'keyLoading', duration: 2 });
+                        notification.success({message:"Thành công", description: serverResponse.data.message, key: 'keyLoading', duration: 2 });
                         this.$emit('updateSuccess')
                     } else {
                         this.isLoading = false
-                        message.error({ content: serverResponse.data.message, key: 'keyLoading', duration: 2 });
+                        notification.error({ message:"Thất bại",description: serverResponse.data.message, key: 'keyLoading', duration: 2 });
                     }
                 }).catch(error => {
-                    console.log('error', error);
-                    message.error({ content: error, key: 'keyLoading', duration: 2 });
+                    notification.error({ message:"Lỗi hệ thống",description: 'Vui lòng kiểm tra lại thông tin', key: 'keyLoading', duration: 2 });
                     this.isLoading = false
                 }).finally(() => {
                     this.isLoading = false

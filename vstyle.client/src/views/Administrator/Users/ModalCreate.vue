@@ -134,7 +134,7 @@
 </template>
 <script>
     import { computed, watch } from "vue";
-    import { message } from "ant-design-vue";
+    import { message,notification } from "ant-design-vue";
     import APIService from "@/helpers/APIService"
     import { ref, reactive } from "vue";
     import dayjs from 'dayjs';
@@ -143,11 +143,25 @@
             const beforeUpload = file => {
                 const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg';
                 if (!isJpgOrPng) {
-                    message.error('Định dạng ảnh không hợp lệ');
+                    notification.error(
+                        {
+                            message: 'Thông báo',
+                            description: 'Chỉ chấp nhận định dạng ảnh JPG/PNG',
+                            key: 'loadingKey',
+                            duration: 2
+                        }
+                    );
                 }
                 const isLt2M = file.size / 1024 / 1024 < 10;
                 if (!isLt2M) {
-                    message.error('Ảnh tối đa 10MB');
+                    notification.error(
+                        {
+                            message: 'Thông báo',
+                            description: 'Kích thước ảnh phải nhỏ hơn 10MB!',
+                            key: 'loadingKey',
+                            duration: 2
+                        }
+                    );
                 }
 
                 return isJpgOrPng && isLt2M;
@@ -228,7 +242,14 @@
                 if (info.file.status == 'done') {
                     this.fileList = [...info.file];
                 } else if (info.file.status == 'error') {
-                    message.error(`${info.file.name} Lỗi .`);
+                    notification.error(
+                        {
+                            message: 'Thông báo',
+                            description: `${info.file.name} Lỗi .`,
+                            key: 'loadingKey',
+                            duration: 2
+                        }
+                    );
                     this.fileList = [];
                     info.file = null
 
@@ -296,9 +317,10 @@
                     // Tắt hiệu ứng chờ sau 2 giây
                     if (response.data.message != 'Tạo tài khoản thành công') {
                         const contentMessage = (response.data.message == 'DuplicateEmail') ? 'Email đã được đăng ký' : 'Số điện thoại đã được đăng ký';
-                        message.warning(
+                       notification.error(
                             {
-                                content: contentMessage,
+                                message: 'Thông báo',
+                                description: contentMessage,
                                 key: 'loadingKey',
                                 duration: 2
                             }
@@ -308,9 +330,10 @@
 
                     }
                     else {
-                        message.success(
+                        notification.success(
                             {
-                                content: response.data.message,
+                                message: 'Thông báo',
+                                description: response.data.message,
                                 key: 'loadingKey',
                                 duration: 2
                             }
@@ -321,9 +344,10 @@
                     }
                 }).catch(error => {
                     console.log('error', error);
-                    message.error(
+                    notification.error(
                         {
-                            content: 'Vui long kiểm tra lại thông tin',
+                            message: 'Thông báo',
+                            description: 'Vui lòng kiểm tra lại thông tin', // Thông báo lỗi
                             key: 'loadingKey',
                             duration: 2
                         }

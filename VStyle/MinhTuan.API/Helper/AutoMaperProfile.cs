@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using MinhTuan.API.ViewModels;
 using MinhTuan.API.ViewModels.AccountViewModel;
+using MinhTuan.API.ViewModels.BannerViewModel;
 using MinhTuan.API.ViewModels.CategoryViewModel;
 using MinhTuan.API.ViewModels.DataCategoryViewModel;
 using MinhTuan.API.ViewModels.ProductViewModel;
 using MinhTuan.Domain.DTOs.AccountDTO;
+using MinhTuan.Domain.DTOs.BannerDTO;
 using MinhTuan.Domain.DTOs.CategoryDTO;
 using MinhTuan.Domain.DTOs.DataCategoryDTO;
 using MinhTuan.Domain.DTOs.ProductDTO;
@@ -26,7 +28,7 @@ public class AutoMapperProfile : Profile
         CreateMap<UserDTO, CreateAccountViewModel>().ReverseMap();
         CreateMap<ForgotPasswordViewModel, ForgotPasswordDTO>().ReverseMap();
         CreateMap<ChangePasswordDTO, ChangePasswordViewModel>().ReverseMap();
-
+        CreateMap<ResetPasswordViewModel, ResetPasswordDTO>().ReverseMap();
         //Tạo mapper danh mục
         CreateMap<CategoryDTO, CreateCategoryViewModel>().ReverseMap();
         CreateMap<Category, CategoryDTO>().ReverseMap();
@@ -40,5 +42,9 @@ public class AutoMapperProfile : Profile
         CreateMap<CreateProductViewModel, Product>().ReverseMap();
         CreateMap<ProductVariantDTO, ProductVariantViewModel>().ReverseMap();
         CreateMap<ProductVariantDTO, Product_Variant>().ReverseMap();
+
+        //Tạo mapper banner
+        CreateMap<Banner, BannerDTO>().ReverseMap();
+        CreateMap<BannerDTO, BannerViewModel>().ReverseMap();
     }
 }

@@ -121,7 +121,7 @@
 
 </template>
 <script>
-  import { message } from "ant-design-vue";
+  import { message , notification} from "ant-design-vue";
   import ModalCreate from "./ModalCreate.vue";
   import ModalDetail from "./ModalDetail.vue";
   import ModalUpdate from "./ModalUpdate.vue";
@@ -270,7 +270,10 @@
           const response = await APIService.delete(`account/delete/${id}`);
 
           if (response.data.message == "Xóa thành công") {
-            message.success("Xóa thành công");
+            notification.success({
+              message: "Thông báo",
+              description: response.data.message,
+            });
             if (this.dataSourceTable.length === 1) {
               // Nếu chỉ còn 1 bản ghi (bản ghi vừa bị xóa), quay lại trang trước
               this.pagination.current = Math.max(1, this.pagination.current - 1);
@@ -278,10 +281,16 @@
 
             this.fetchData(this.pagination.current, this.pagination.pageSize); // Tải lại dữ liệu
           } else {
-            message.error("Xóa thất bại");
+            notification.error({
+              message: "Thất bại",
+              description: response.data.message,
+            });
           }
         } catch (error) {
-          message.error("Xóa thất bại");
+          notification.error({
+            message: "Lỗi hệ thống",
+            description: "Xóa thất bại",
+          });
         }
       },
     }, //end methods

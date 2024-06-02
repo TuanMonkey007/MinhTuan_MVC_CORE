@@ -122,7 +122,7 @@
     import { computed } from "vue";
     import APIService from "@/helpers/APIService"
     import { ref, reactive } from "vue";
-    import { message } from "ant-design-vue";
+    import { message , notification } from "ant-design-vue";
 
     export default {
         setup() {
@@ -247,7 +247,7 @@
             async handleSubmitAsync() {
                 this.$refs.formRef.validate().then(async () => {
                     this.isLoading = true
-                    message.loading({ content: 'Đang xử lý...', key: 'keyLoading', duration: 0 });
+                    notification.info({ message: 'Đang xử lý...', key: 'keyLoading', duration: 0 });
                     console.log(this.product)
                     const formData = new FormData();
                     formData.append('code', this.product.code);
@@ -274,11 +274,11 @@
 
 
                         this.closeModal()
-                        message.success({ content: serverResponse.data.message, key: 'keyLoading', duration: 2 });
+                        notification.success({ message: serverResponse.data.message, key: 'keyLoading', duration: 2 });
                         this.$emit('addSuccess')
                     } else {
                         this.isLoading = false
-                        message.error({ content: serverResponse.data.message, key: 'keyLoading', duration: 2 });
+                        notification.error({ message: serverResponse.data.message, key: 'keyLoading', duration: 2 });
                     }
                 }).catch(error => {
                     console.log('error', error);

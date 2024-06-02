@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <Folder Include="Uploads\Avatar\" />
+    <Folder Include="Uploads\Banner\" />
     <Folder Include="Uploads\Product\" />
   </ItemGroup>
 

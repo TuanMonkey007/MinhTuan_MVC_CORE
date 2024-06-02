@@ -89,5 +89,7 @@ namespace MinhTuan.Domain
 		public DbSet<Product_Image> Product_Images { get; set; }
 		public DbSet<Product_Category> Product_Categories { get; set; }
 
+		public DbSet<Banner> banners { get; set; }
+
 	}
 }

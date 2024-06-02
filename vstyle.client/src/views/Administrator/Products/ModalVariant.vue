@@ -86,7 +86,7 @@
     import { computed, watch } from "vue";
     import APIService from "@/helpers/APIService";
     import { ref, reactive } from "vue";
-    import { message } from "ant-design-vue";
+    import { message, notification } from "ant-design-vue";
     import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons-vue";
     export default {
         components: {
@@ -132,6 +132,7 @@
 
         mounted() {
             this.fetchColorAndSize();
+            
         },
         watch: {
             'dynamicValidateForm.productVariants': {
@@ -161,7 +162,11 @@
                 });
 
                 if (isDuplicate) {
-                    message.warning('Tổ hợp kích cỡ và màu sắc này đã tồn tại!');
+                    notification.warning({
+                        message: 'Thông báo',
+                        description: 'Kích cỡ và màu sắc đã được chọn. Vui lòng chọn kích cỡ hoặc màu sắc khác.',
+                        duration: 2
+                    });
 
                     // Xóa giá trị sizeId và colorId của productVariant hiện tại
                     currentVariant.sizeId = null;
@@ -177,7 +182,13 @@
 
             async onFinish() {
                 this.isLoading = true;
-                message.loading({ content: 'Đang xử lý...', key: 'keyLoading', duration: 0 });
+                //message.loading({ message: 'Đang xử lý...', key: 'keyLoading', duration: 0 });
+                notification.info({
+                    message: 'Thông báo',
+                    description: 'Đang xử lý...',
+                    key: 'keyLoading',
+                    duration: 0
+                });
                 // Chuẩn bị dữ liệu
                 const listModel = this.dynamicValidateForm.productVariants.map((productVariant) => ({
                     sizeId: productVariant.sizeId,
@@ -192,14 +203,14 @@
                 // Gửi dữ liệu lên server
                 const response = await APIService.put(`product/update-product-variant/${this.productId}`, { listModel: listModel })
                 if(response.data.message == "Cập nhật thành công"){
-                    message.success({ content: response.data.message, key: 'keyLoading', duration: 2 });
+                    notification.success({ message: response.data.message, key: 'keyLoading', duration: 2 });
                     this.closeModal()
                     this.$emit('addSuccess')
                 }else{
-                    message.error({ content: response.data.message, key: 'keyLoading', duration: 2 });
+                    notification.error({ message: response.data.message, key: 'keyLoading', duration: 2 });
                 }}
                 catch(error){
-                    message.error({ content: "Lỗi vãi L", key: 'keyLoading', duration: 2 });
+                    notification.error({ message: "Lỗi vãi L", key: 'keyLoading', duration: 2 });
                 }
             },
             addproductVariant() {

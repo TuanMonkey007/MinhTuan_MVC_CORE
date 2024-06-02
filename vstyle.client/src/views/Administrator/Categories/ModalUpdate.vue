@@ -55,6 +55,7 @@
     import { computed } from "vue";
     import APIService from "@/helpers/APIService"
     import { ref, reactive } from "vue";
+    import { message, notification } from "ant-design-vue";
 
     export default {
      
@@ -113,10 +114,16 @@
 
                     const serverResponse = await APIService.put(`category/update/${this.id}`, this.category)
                     if (serverResponse.data.message == "Cập nhật thành công") {
-                        this.$message.success(serverResponse.data.message)
+                        notification.success({
+                            message: 'Thông báo',
+                            description: 'Cập nhật thành công'
+                        })
                         this.closeModal()
                     } else {
-                        this.$message.error(serverResponse.data.message)
+                        notification.error({
+                            message: 'Thông báo',
+                            description: 'Cập nhật thất bại'
+                        })
                     }
                     this.isLoading = false
                     this.$emit('updateSuccess')

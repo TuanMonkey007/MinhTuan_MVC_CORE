@@ -7,8 +7,8 @@
 
                         <a-form-item label="Avatar" name="avatar">
                             <a-upload list-type="picture-card" :showUploadList="true" accept=".jpg,.jpeg,.png"
-                                maxCount="1" :fileList="fileList" :before-upload="beforeUpload"
-                                :action="apiUrl" @change="handleChangeAvatar">
+                                maxCount="1" :fileList="fileList" :before-upload="beforeUpload" :action="apiUrl"
+                                @change="handleChangeAvatar">
 
                                 <template #default>
                                     <div>
@@ -22,7 +22,8 @@
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
-                        <a-form-item label="Giới tính" name="gender"   :rules="[{ required: true, message: 'Vui lòng chọn giới tính' }]">
+                        <a-form-item label="Giới tính" name="gender"
+                            :rules="[{ required: true, message: 'Vui lòng chọn giới tính' }]">
                             <a-radio-group v-model:value="account.gender">
                                 <a-radio v-for="item in listGender" :key="item.id" :value="item.id">{{ item.name
                                     }}</a-radio>
@@ -42,17 +43,20 @@
                 <a-row :gutter="30">
                     <a-col :span="12">
                         <a-form-item label="Họ và tên" name="fullName"
-                            :rules="[{ required: true, message: 'Vui lòng nhập thông tin này' },{min:5,max:50,message:'Độ dài 5-50 ký tự'}]">
+                            :rules="[{ required: true, message: 'Vui lòng nhập thông tin này' }, { min: 5, max: 50, message: 'Độ dài 5-50 ký tự' }]">
                             <a-input type="text" v-model:value="account.fullName" />
                         </a-form-item>
                     </a-col>
-                  
+
                     <a-col :span="12">
                         <a-form-item label="Xác thực" name="EmailConfirmed">
-                           
-                            <a-switch v-model:checked="checkEmailConfirmed" :loading="isLoading" @change="handleChangeEmailcomfirmed">
-                                <template #checkedChildren><font-awesome-icon :icon="['fas', 'thumbs-up']" style="color: #0fff;" /></template>
-                                <template #unCheckedChildren><font-awesome-icon :icon="['fas', 'thumbs-down']" style="color: #0764fc;" /></template>
+
+                            <a-switch v-model:checked="checkEmailConfirmed" :loading="isLoading"
+                                @change="handleChangeEmailcomfirmed">
+                                <template #checkedChildren><font-awesome-icon :icon="['fas', 'thumbs-up']"
+                                        style="color: #0fff;" /></template>
+                                <template #unCheckedChildren><font-awesome-icon :icon="['fas', 'thumbs-down']"
+                                        style="color: #0764fc;" /></template>
                             </a-switch>
                         </a-form-item>
                     </a-col>
@@ -116,7 +120,7 @@
 <script>
     import dayjs from 'dayjs';
     import { computed, watch } from "vue";
-    import { message } from "ant-design-vue";
+    import { message, notification } from "ant-design-vue";
     import APIService from "@/helpers/APIService"
     import { ref, reactive } from "vue";
 
@@ -125,15 +129,15 @@
 
         setup() {
             const validateBirthDay = (rule, value) => {
-     
 
-      // Kiểm tra xem ngày sinh có hợp lệ không (ví dụ: không được lớn hơn ngày hiện tại)
-      if (dayjs(value).isAfter(dayjs(), 'day')) {
-        return Promise.reject('Ngày sinh không hợp lệ');
-      }
 
-      return Promise.resolve();
-    };
+                // Kiểm tra xem ngày sinh có hợp lệ không (ví dụ: không được lớn hơn ngày hiện tại)
+                if (dayjs(value).isAfter(dayjs(), 'day')) {
+                    return Promise.reject('Ngày sinh không hợp lệ');
+                }
+
+                return Promise.resolve();
+            };
             const beforeUpload = file => {
                 const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg';
                 if (!isJpgOrPng) {
@@ -151,7 +155,6 @@
                 checkLockOut: ref(false),
                 validateBirthDay,
                 checkEmailConfirmed: ref(false),
-
             }
         },
         data() {
@@ -165,8 +168,6 @@
                 avatar: '',
                 avatarBase64: '',
                 avatarContentType: '',
-
-
             });
 
             return {
@@ -188,7 +189,7 @@
 
             }
         },
-        mounted(){
+        mounted() {
             this.apiUrl = process.env.VUE_APP_URL + 'Account/valid-upload'; // Truy cập trong mounted
         },
 
@@ -196,13 +197,21 @@
             async handleChangeLockOut() {
                 this.isLoading = true;
                 const response = await APIService.get(`account/change-lock/${this.id}`);
-                message.success(response.data.message);
+                notification.success({
+                    message: response.data.message,
+                    key: 'loadingKey',
+                    duration: 2
+                });
                 this.isLoading = false;
             },
             async handleChangeEmailcomfirmed() {
                 this.isLoading = true;
                 const response = await APIService.get(`account/change-email-confirmed/${this.id}`);
-                message.success(response.data.message);
+                notification.success({
+                    message: response.data.message,
+                    key: 'loadingKey',
+                    duration: 2
+                });
                 this.isLoading = false;
             },
             handleChangeAvatar(info) {
@@ -211,7 +220,11 @@
                 if (info.file.status == 'done') {
                     this.fileList = [...info.file];
                 } else if (info.file.status == 'error') {
-                    message.error(`${info.file.name} Lỗi .`);
+                    notification.error({
+                        message: 'Tải ảnh thất bại',
+                        key: 'loadingKey',
+                        duration: 2
+                    });
                     this.fileList = [];
                     info.file = null
 
@@ -225,7 +238,7 @@
             async showModal(id) {
                 const response = await APIService.get('datacategory/get-list-by-parent-code/GIOI_TINH');
                 this.listGender = response.data.data;
-              
+
                 const serverResponse = await APIService.get(`account/${id}`)
                 this.account = {
                     ...serverResponse.data.data,
@@ -269,8 +282,8 @@
             closeModal() {
                 this.open = false
                 this.fileList = [],
-                this.checkLockOut = false,
-                this.checkEmailConfirmed = false,
+                    this.checkLockOut = false,
+                    this.checkEmailConfirmed = false,
                     this.isChangeAvatar = false,
                     this.avatarBase64 = null,
                     this.avatarContentType = null
@@ -279,13 +292,11 @@
 
             async handleSubmitAsync() {
                 this.$refs.formRef.validate().then(async () => {
-                    message.loading(
-                        {
-                            content: 'Đang xử lý...',
-                            key: 'loadingKey',
-                            duration: 0
-                        }
-                    );
+                    notification.info({
+                        message: 'Đang xử lý...',
+                        key: 'loadingKey',
+                        duration: 0
+                    });
                     this.isLoading = true
                     // Loại bỏ các trường rỗng
                     // const payload = Object.fromEntries(
@@ -302,7 +313,7 @@
                         address: this.account.address,
                         avatar: this.account.avatar,
                     }
-                    if(payload.birthDay == null){
+                    if (payload.birthDay == null) {
                         delete payload.birthDay;
                     }
                     const formData = new FormData();
@@ -317,33 +328,24 @@
 
 
                     const response = await APIService.put(`account/update/${this.id}`, formData);//
-                    // if (response.data.message == "Cập nhật thành công") {
-                    //     message.success(response.data.message);
-                    //     this.closeModal();
-                    //     this.$emit('updateSuccess');
-                    // } else {
-                    //     message.error(response.data.message);
-                    // }
-                    // Tắt hiệu ứng chờ sau 2 giây
+
                     if (response.data.message != 'Cập nhật thành công') {
                         const contentMessage = (response.data.message == 'DuplicateEmail') ? 'Email đã được đăng ký' : 'Số điện thoại đã được đăng ký';
-                        message.warning(
-                            {
-                                content: contentMessage,
-                                key: 'loadingKey',
-                                duration: 2
-                            }
-                        );
+                        notification.error({
+                            message: 'Thất bại',
+                            description: contentMessage,
+                            key: 'loadingKey',
+                            duration: 2
+                        });
 
                     }
                     else {
-                        message.success(
-                            {
-                                content: response.data.message,
-                                key: 'loadingKey',
-                                duration: 2
-                            }
-                        );
+                        notification.success({
+                            message: 'Thành công',
+                            description: 'Cập nhật tài khoản thành công',
+                            key: 'loadingKey',
+                            duration: 2
+                        });
                         this.closeModal();
                         this.$emit('updateSuccess');
                     }

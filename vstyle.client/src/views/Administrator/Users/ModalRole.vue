@@ -49,7 +49,7 @@
   </div>
 </template>
 <script>
-import { message } from "ant-design-vue";
+import { message, notification } from "ant-design-vue";
 import APIService from "@/helpers/APIService";
 import { ref, reactive } from "vue";
 
@@ -85,7 +85,7 @@ export default {
     closeModal() {
       this.open = false;
       this.selectedRoles = [];
-      this.$refs.formRef.resetFields();
+      //this.$refs.formRef.resetFields();
     },
 
     // async handleSubmitAsync() {
@@ -99,8 +99,8 @@ export default {
     // }, //end handleSubmitAsync
     async handleSubmitAsync() {
       this.isLoading = true;
-      message.loading({
-        content: "Đang xử lý...",
+      notification.info({
+        message: "Đang xử lý...",
         key: "loadingKey",
         duration: 0,
       });
@@ -112,21 +112,28 @@ export default {
         );
 
         if (response.data.status === "Success") {
-          message.success({
-            content: response.data.message,
+          notification.success({
+            message: "Thành công",
+            description: "Cập nhật quyền thành công",
             key: "loadingKey",
             duration: 2,
           });
           this.closeModal();
         } else {
-          message.error({
-            content: response.data.message,
+         notification.error({
+            message: "Thất bại",
+            description: response.data.message,
             key: "loadingKey",
             duration: 2,
           });
         }
       } catch (error) {
-        console.error("Lỗi khi cập nhật quyền:", error);
+        notification.error({
+          message: "Thất bại",
+          description: error.message,
+          key: "loadingKey",
+          duration: 2,
+        });
      
       } finally {
         this.isLoading = false;

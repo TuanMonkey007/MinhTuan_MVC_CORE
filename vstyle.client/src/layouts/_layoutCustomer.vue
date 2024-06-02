@@ -144,7 +144,7 @@
     ShoppingCartOutlined,
     SearchOutlined,
   } from "@ant-design/icons-vue";
-  import { message } from "ant-design-vue";
+  import { message, notification } from "ant-design-vue";
 
   export default {
     name: "LayoutCustomer",
@@ -183,19 +183,21 @@
         this.isLoggedIn = !!token;
       },
       logout() {
-        EventBus.emit("setLoading", true);
+       
         try {
-          setTimeout(() => {
-            EventBus.emit("setLoading", false);
-          }, 2000);
+          
           localStorage.removeItem("accessToken");
           localStorage.removeItem("role");
           localStorage.removeItem("userName");
           this.isLoggedIn = false;
           this.$router.push({ name: "Login" });
-          message.success("Đăng xuất thành công!");
+          notification.success({
+            message: "Đăng xuất thành công!",
+          });
         } catch {
-          message.error("Đăng xuất thất bại!");
+          notification.error({
+            message: "Đăng xuất thất bại!",
+          });
         }
       },
     },
@@ -225,14 +227,7 @@
       return window.innerWidth > 768; // Ví dụ: ẩn menu khi màn hình nhỏ hơn 768px
     });
 
-      onMounted(() => {
-        EventBus.on("setLoading", handleLoading);
-      });
-
-      onUnmounted(() => {
-        EventBus.off("setLoading", handleLoading);
-      });
-
+      
       return {
         visible,
         showDrawer,

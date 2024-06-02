@@ -115,7 +115,7 @@
 <script>
     import dayjs from 'dayjs';
     import { computed, watch } from "vue";
-    import { message } from "ant-design-vue";
+    import { message,notification } from "ant-design-vue";
     import APIService from "@/helpers/APIService"
     import { ref, reactive } from "vue";
 
@@ -136,11 +136,17 @@
             const beforeUpload = file => {
                 const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg';
                 if (!isJpgOrPng) {
-                    message.error('Định dạng ảnh không hợp lệ');
+                    notification.error({
+                        message: 'Thông báo',
+                        description: 'Chỉ chấp nhận định dạng ảnh JPG/PNG',
+                    });
                 }
                 const isLt2M = file.size / 1024 / 1024 < 10;
                 if (!isLt2M) {
-                    message.error('Ảnh tối đa 10MB');
+                    notification.error({
+                        message: 'Thông báo',
+                        description: 'Kích thước ảnh phải nhỏ hơn 10MB!',
+                    });
                 }
 
                 return isJpgOrPng && isLt2M;
@@ -195,7 +201,10 @@
             async handleChangeLockOut() {
                 this.isLoading = true;
                 const response = await APIService.get(`account/change-lock/${this.id}`);
-                message.success(response.data.message);
+                notification.success({
+                    message: 'Thông báo',
+                    description: response.data.message,
+                });
 
 
                 this.isLoading = false;
@@ -206,7 +215,10 @@
                 if (info.file.status == 'done') {
                     this.fileList = [...info.file];
                 } else if (info.file.status == 'error') {
-                    message.error(`${info.file.name} Lỗi .`);
+                    notification.error({
+                        message: 'Thông báo',
+                        description: 'Tải ảnh lên thất bại',
+                    });
                     this.fileList = [];
                     info.file = null
 
@@ -270,13 +282,12 @@
 
             async handleSubmitAsync() {
                 this.$refs.formRef.validate().then(async () => {
-                    message.loading(
-                        {
-                            content: 'Đang xử lý...',
-                            key: 'loadingKey',
-                            duration: 0
-                        }
-                    );
+                    notification.info({
+                        key: 'loadingKey',
+                        message: 'Thông báo',
+                        description: 'Đang cập nhật...',
+                        duration: 0,
+                    });
                     this.isLoading = true
                     // Loại bỏ các trường rỗng
                     // const payload = Object.fromEntries(
@@ -318,29 +329,29 @@
                     // Tắt hiệu ứng chờ sau 2 giây
                     if (response.data.message != 'Cập nhật thành công') {
                         const contentMessage = (response.data.message == 'DuplicateEmail') ? 'Email đã được đăng ký' : 'Số điện thoại đã được đăng ký';
-                        message.warning(
-                            {
-                                content: contentMessage,
-                                key: 'loadingKey',
-                                duration: 2
-                            }
-                        );
+                        notification.error({
+                            key: 'loadingKey',
+                            message: 'Thông báo',
+                            description: contentMessage,
+                        });
 
                     }
                     else {
-                        message.success(
-                            {
-                                content: response.data.message,
-                                key: 'loadingKey',
-                                duration: 2
-                            }
-                        );
+                       notification.success({
+                            key: 'loadingKey',
+                            message: 'Thông báo',
+                            description: response.data.message,
+                        });
                         this.closeModal();
                         this.$emit('updateSuccess');
                     }
 
                 }).catch(error => {
-                    console.log('error', error);
+                   notification.error({
+                        key: 'loadingKey',
+                        message: 'Lỗi hệ thống',
+                        description: error.message,
+                    });
                 }).finally(() => {
                     this.isLoading = false;
                 })

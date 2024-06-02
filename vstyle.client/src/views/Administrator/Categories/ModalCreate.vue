@@ -55,7 +55,8 @@
     import { computed } from "vue";
     import APIService from "@/helpers/APIService"
     import { ref, reactive } from "vue";
-
+    import { message,notification } from "ant-design-vue";
+    
     export default {
         setup() {
             const category = reactive({
@@ -112,14 +113,14 @@
                
                 const serverResponse = await APIService.post('category/create', this.category)
                 if (serverResponse.data.message == "Tạo danh mục mới thành công") {
-                    this.$message.success(serverResponse.data.message)
+                    notification.success({message:"Thành công", description: serverResponse.data.message})
                     this.isLoading = false
                    
                     this.closeModal()
                     this.$emit('addSuccess')
                 } else {
                     this.isLoading = false
-                    this.$message.error(serverResponse.data.message)
+                    notification.error({message:"Thất bại", description: serverResponse.data.message})
                 }
             }).catch(error => {
                     console.log('error', error);

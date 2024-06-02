@@ -30,6 +30,22 @@
             return isValid;
            
         }
+        public string UploadBannerImage(IFormFile file)
+        {
+            var isValid = ValidateImage(file);
+            if (isValid.Contains("Ảnh hợp lệ"))
+            {
+                string extention = Path.GetExtension(file.FileName);
+                string fileName = Guid.NewGuid().ToString() + extention;
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "Banner");
+                using FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create);
+                file.CopyTo(stream);
+                return fileName;
+            }
+            return isValid;
+
+        }
+
         //public string ValidateImage(IFormFile file)
         //{
 

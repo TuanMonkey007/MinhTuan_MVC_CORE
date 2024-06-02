@@ -255,6 +255,10 @@ namespace MinhTuan.Service.Services.ProductService
                 var existingProductImages = _productImageRepository.FindBy(pc => pc.ProductId.Equals(id) &&pc.IsThumbnail==false ).ToList();
                 if (existingProductImages.Any())
                 {
+                    //foreach(var item in existingProductImages)
+                    //{
+                    //    //Viết hàm xóa trong này
+                    //}
                     _productImageRepository.DeleteRange(existingProductImages);
                 }
                 if(listImageFileName.Count > 0)

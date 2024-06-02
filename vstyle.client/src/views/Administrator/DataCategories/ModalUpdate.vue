@@ -55,6 +55,7 @@
     import { computed } from "vue";
     import APIService from "@/helpers/APIService"
     import { ref, reactive } from "vue";
+    import { message, notification } from "ant-design-vue";
 
     export default {
         setup() {
@@ -112,18 +113,37 @@
             async handleSubmitAsync() {
                 this.$refs.formRef.validate().then(async () => {
                     this.isLoading = true
-
+                    notification.info({
+                        message: 'Thông báo',
+                        description: 'Đang xử lý dữ liệu',
+                        key: 'loadingKey',
+                        duration: 0
+                    })
                     const serverResponse = await APIService.put(`datacategory/update/${this.id}`, this.category)
                     if (serverResponse.data.message == "Cập nhật thành công") {
-                        this.$message.success(serverResponse.data.message)
+                       notification.success({
+                            message: 'Thông báo',
+                            description: serverResponse.data.message,
+                            key: 'loadingKey',
+                    
+                        })
                         this.closeModal()
                     } else {
-                        this.$message.error(serverResponse.data.message)
+                        notification.error({
+                            message: 'Thất bại',
+                            description: serverResponse.data.message,
+                            key: 'loadingKey',
+                        })
                     }
                     this.isLoading = false
                     this.$emit('updateSuccess')
                 }).catch(error => {
-                    console.log('error', error);
+                    notification.error({
+                        message: 'Lỗi hệ thống',
+                        description: 'Cập nhật thất bại',
+                        key: 'loadingKey',
+                        
+                    })
                 }).finally(() => {
                     this.isLoading = false;
                 })

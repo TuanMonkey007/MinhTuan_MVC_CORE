@@ -106,7 +106,7 @@
 <script>
   import ModalCreate from "./ModalCreate.vue";
   import ModalUpdate from "./ModalUpdate.vue";
-  import { Modal, Pagination, message } from "ant-design-vue";
+  import { Modal, Pagination, message, notification } from "ant-design-vue";
   import {
     SmileOutlined,
     DownOutlined,
@@ -201,7 +201,10 @@
             `datacategory/soft-delete/${id}`
           );
           if (response.data.message == "Xóa thành công") {
-            message.success("Xóa thành công");
+            notification.success({
+              message: "Thành công",
+              description: response.data.message,
+            });
             if (this.dataSourceTable.length === 1) {
               // Nếu chỉ còn 1 bản ghi (bản ghi vừa bị xóa), quay lại trang trước
               this.pagination.current = Math.max(1, this.pagination.current - 1);
@@ -211,10 +214,16 @@
               parentId_Filter: this.$route.params.id,
             }); // Tải lại dữ liệu
           } else {
-            message.error("Xóa thất bại");
+            notification.error({
+              message: "Lỗi",
+              description: response.data.message,
+            });
           }
         } catch (error) {
-          message.error("Xóa thất bại");
+          notification.error({
+            message: "Lỗi",
+            description: error,
+          });
         }
       },
       handlePaginationChange() {

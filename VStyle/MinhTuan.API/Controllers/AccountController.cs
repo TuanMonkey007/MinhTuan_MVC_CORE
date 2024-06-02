@@ -216,7 +216,7 @@ namespace MinhTuan.API.Controllers
 
         [HttpPost]
         [Route("confirm-email")]
-        public async Task<IActionResult> ConfirmEmail(ChangePasswordViewModel model)
+        public async Task<IActionResult> ConfirmEmail(ResetPasswordViewModel model)
         {
             var userEmail = model.Email;
             var token = model.Token;
@@ -252,10 +252,10 @@ namespace MinhTuan.API.Controllers
         }
         [HttpPost]
         [Route("reset-password")]
-        public async Task<IActionResult> ResetPassword(ChangePasswordViewModel model)
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
             var response = new ResponseWithDataDto<string> { Message = "Thay đổi mật khẩu thành công" };
-            var modelDTO = _mapper.Map<ChangePasswordDTO>(model);
+            var modelDTO = _mapper.Map<ResetPasswordDTO>(model);
             var result = await _accountService.ResetPassword(modelDTO);
             if (!result)
             {
@@ -350,6 +350,7 @@ namespace MinhTuan.API.Controllers
             var serverResponse = new ResponseWithDataDto<UserDTO>() { Message = "Lấy thông tin thành công" };
             try
             {
+              
                 var result = await _userManager.FindByIdAsync(id.ToString());
                 if (result != null)
                 {
@@ -395,6 +396,58 @@ namespace MinhTuan.API.Controllers
             }
         }
 
+        [HttpGet("get-user-by-email/{email}")]
+        public async Task<IActionResult> GetByEmailAsync(string email)
+        {
+            var serverResponse = new ResponseWithDataDto<UserDTO>() { Message = "Lấy thông tin thành công" };
+            try
+            {
+
+                var result = await _userManager.FindByEmailAsync(email);
+                if (result != null)
+                {
+                    
+                    var userWithImage = _mapper.Map<UserDTO>(result);
+                    if (!string.IsNullOrEmpty(userWithImage.Avatar))
+                    {
+                        var path = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "Avatar", userWithImage.Avatar);
+
+                        if (System.IO.File.Exists(path))
+                        {
+                            // Đọc file ảnh dưới dạng mảng byte
+                            byte[] imageBytes = await System.IO.File.ReadAllBytesAsync(path);
+
+                            // Chuyển đổi mảng byte thành base64
+                            userWithImage.AvatarBase64 = Convert.ToBase64String(imageBytes);
+
+                            // Lấy ContentType dựa trên phần mở rộng của file
+                            string fileExtension = Path.GetExtension(result.Avatar).ToLowerInvariant();
+                            userWithImage.AvatarContentType = fileExtension switch
+                            {
+                                ".jpg" or ".jpeg" => "image/jpeg",
+                                ".png" => "image/png",
+                                _ => "application/octet-stream",
+                            };
+                        }
+                        else
+                        {
+                            userWithImage.AvatarBase64 = null;
+                        }
+                    }
+                    userWithImage.NameGender = _dataCategoryService.GetNameById((Guid)result.Gender);
+                    serverResponse.Data = userWithImage;
+                }
+                return Ok(serverResponse);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseWithMessageDto
+                {
+                    Status = "Fail",
+                    Message = ex.Message
+                });
+            }
+        }
 
         [HttpPut("update/{id}")]
         //[Authorize]
@@ -588,6 +641,21 @@ namespace MinhTuan.API.Controllers
             }
         }
 
+        [HttpPut("change-password/{id}")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(Guid id, ChangePasswordViewModel model)
+        {
+            var response = new ResponseWithMessageDto() { Message = "Đổi mật khẩu thành công" };
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            var result = await _userManager.ChangePasswordAsync(user, model.Password, model.NewPassword);
+            if (result.Succeeded)
+            {
+                return Ok(response);
+            }
+            response.Message = result.Errors.First().Description;
+            return Ok(response);
+
+        }
 
     }
 

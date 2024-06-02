@@ -209,7 +209,7 @@ public class AccountService : IAccountService
             //Gửi email chứa token xác thực tài khoản
             var verifyToken = await _userManager.GenerateEmailConfirmationTokenAsync(createdUser);
 
-            var confirmationLink = $"http://nguyenminhtuan.id.vn/confirm-email?token={WebUtility.UrlEncode(verifyToken)}&email={WebUtility.UrlEncode(model.Email)}";
+            var confirmationLink = $"http://localhost:8080/confirm-email?token={WebUtility.UrlEncode(verifyToken)}&email={WebUtility.UrlEncode(model.Email)}";
 
             var message = new Message(new string[] { createdUser.Email! }, "Xác thực tài khoản", confirmationLink);
              _emailService.SendEmail(message);
@@ -454,14 +454,14 @@ public class AccountService : IAccountService
         
         var verifyToken = await _userManager.GeneratePasswordResetTokenAsync(user);
         // Tạo confirmation link
-        var confirmationLink = $"http://nguyenminhtuan.id.vn/reset-password?token={WebUtility.UrlEncode(verifyToken)}&email={WebUtility.UrlEncode(model.Email)}";
+        var confirmationLink = $"http://localhost:8080/reset-password?token={WebUtility.UrlEncode(verifyToken)}&email={WebUtility.UrlEncode(model.Email)}";
      
         var message = new Message(new string[] { user.Email! }, "Lấy lại mật khẩu", confirmationLink);
         _emailService.SendForgotPasswordEmail(message);
         return verifyToken;
     }
 
-    public async Task<bool> ResetPassword(ChangePasswordDTO model)
+    public async Task<bool> ResetPassword(ResetPasswordDTO model)
     {
         var user = await _userManager.FindByEmailAsync(model.Email);
         var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);

@@ -9,7 +9,7 @@ import Antd from 'ant-design-vue'; // Đăng ký tất cả component của ant-
 import "@ant-design/icons-vue";
 //import 'ant-design-vue/dist/reset.css'; // Import css của ant-design-vue
 
-import { message } from 'ant-design-vue'; // Import message từ ant-design-vue
+import { message,notification } from 'ant-design-vue'; // Import message từ ant-design-vue
 import '@ant-design/icons-vue'; // Import icon của ant-design-vue
 import { library } from '@fortawesome/fontawesome-svg-core' // Import thư viện font awesome
 import { fas } from '@fortawesome/free-solid-svg-icons'
@@ -31,5 +31,14 @@ message.config({
 });// Cấu hình message
 
 app.config.globalProperties.$message = message;// Đăng ký message vào globalProperties để sử dụng ở bất kỳ đâu trong project
-
+app.config.globalProperties.$notification = notification;// Đăng ký notification vào globalProperties để sử dụng ở bất kỳ đâu trong project
+notification.config({
+  placement: 'topRight',
+  top: '50px',
+  duration: 2,
+  style: {
+    width: '100px',
+  },
+ 
+});
 app.mount('#app')

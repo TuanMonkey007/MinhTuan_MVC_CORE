@@ -23,6 +23,6 @@ public interface IAccountService
     public Task<string> HandleGoogleLoginResponse();
     public Task<string> HandleFacebookLoginResponse();
     public Task<string> ForgotPassword(ForgotPasswordDTO model);
-    public Task<bool> ResetPassword(ChangePasswordDTO model);
+    public Task<bool> ResetPassword(ResetPasswordDTO model);
 
 }
