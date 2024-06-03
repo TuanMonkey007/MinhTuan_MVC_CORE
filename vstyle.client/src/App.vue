@@ -19,7 +19,7 @@
 body, html {
     margin: 0;
     padding: 0;
-    background-color: rgb(230, 233, 240);
+    background-color: #ffffff;;
     min-height: 100vh;
   }
   #app {
@@ -28,28 +28,11 @@ body, html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: left;
-  color: #2c3e50;
+  color: #ffffff;
   min-height: 100vh;
   max-width: 100%;
 }
-/* .route-enter-from {
-  opacity: 0;
-  transform: translate(100px, 100px); 
-}
 
-.route-leave-to {
-  opacity: 0;
-  transform: translate(-100px, -100px);  
-}
-
-.route-enter-active{
-  transition: all 0.5s ease-out;
-}
-
-.route-leave-active {
-  transition: all 0.5s ease-in;
-}
-  */
   .route-enter-active {
   transition: all 0.2s ease-out; /* Transition mượt mà */
 }
@@ -77,5 +60,22 @@ body, html {
   opacity: 0;
   transform: translate(-100px, -100px) scale(0.5); /* Kết thúc nhỏ và mờ */
 }
-
+.image-product {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.7s ease; /* Hiệu ứng zoom */
+}
+.ant-card-cover{
+  overflow: hidden;
+  border-radius: 10%;
+}
+.image-product:hover {
+  transform: scale(1.3);
+  transform-origin: center; /* Zoom từ trung tâm */
+}
+.price-product {
+  font-size: 20px;
+  color: #b63034e8;
+}
 </style>

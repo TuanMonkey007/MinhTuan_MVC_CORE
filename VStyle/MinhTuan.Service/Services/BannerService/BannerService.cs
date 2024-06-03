@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.IdentityModel.Tokens;
 using MinhTuan.Domain.Core.DTO;
 using MinhTuan.Domain.Core.UnitOfWork;
 using MinhTuan.Domain.DTOs.BannerDTO;
@@ -58,11 +59,11 @@ namespace MinhTuan.Service.Services.BannerService
         }
 
 
-        public ResponseWithDataDto<PagedList<BannerDTO>> GetDataByPage(BannerSearchDTO searchDTO)
+        public  ResponseWithDataDto<PagedList<BannerDTO>> GetDataByPage(BannerSearchDTO searchDTO)
         {
             try
             {
-                var query = from banner in _bannerRepository.GetQueryable()
+                 var query = from banner in _bannerRepository.GetQueryable()
                             join category in _dataCategoryRepository.GetQueryable() // Nối bảng BannerCategory
                                 on banner.CategoryId equals category.Id
                             where banner.IsDelete != true
@@ -75,6 +76,18 @@ namespace MinhTuan.Service.Services.BannerService
                                 OrderDisplay = banner.OrderDisplay,
                                 IsDisplay = banner.IsDisplay
                             };
+                if (!searchDTO.CategoryCode_Filter.IsNullOrEmpty())
+                {
+                    searchDTO.CategoryId_Filter = _dataCategoryRepository.FindBy(x => x.Code.Equals(searchDTO.CategoryCode_Filter)).FirstOrDefault().Id;
+                    if (!searchDTO.CategoryCode_Filter.IsNullOrEmpty())
+                    {
+                        query = query.Where(x => x.CategoryId.Equals(searchDTO.CategoryId_Filter));
+                    }
+
+                }
+                if (searchDTO.IsDisplay_Filter ==true){
+                    query = query.Where(x => x.IsDisplay.Equals(searchDTO.IsDisplay_Filter));
+                }
 
                 var result = PagedList<BannerDTO>.Create(query, searchDTO);
                 // Gán ảnh thumbnail vào ProductDTO
@@ -101,5 +114,6 @@ namespace MinhTuan.Service.Services.BannerService
                 };
             }
         }
+
     }
 }

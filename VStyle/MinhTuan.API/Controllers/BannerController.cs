@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using MinhTuan.API.Helper;
 using MinhTuan.API.ViewModels.BannerViewModel;
 using MinhTuan.Domain.Core.DTO;
+using MinhTuan.Domain.DTOs.AccountDTO;
 using MinhTuan.Domain.DTOs.BannerDTO;
+using MinhTuan.Domain.DTOs.CategoryDTO;
 using MinhTuan.Domain.Entities;
 using MinhTuan.Domain.Helper.Pagination;
 using MinhTuan.Service.SearchDTO;
@@ -34,15 +37,20 @@ public class BannerController : Controller
 
         try
         {
+
             var modelDTO = _mapper.Map<BannerDTO>(model);
-            var bannerFileName = new UploadHandler().UploadBannerImage(model.BannerImage);//validate file ảnh
-            if (bannerFileName.Contains("Kích") || bannerFileName.Contains("Định"))
+            if(model.BannerImage != null)
             {
-                serverResponse.Message = bannerFileName;//Trả về tb lỗi ảnh
-                return Ok(serverResponse);
+                var bannerFileName = new UploadHandler().UploadBannerImage(model.BannerImage);//validate file ảnh
+                if (bannerFileName.Contains("Kích") || bannerFileName.Contains("Định"))
+                {
+                    serverResponse.Message = bannerFileName;//Trả về tb lỗi ảnh
+                    return Ok(serverResponse);
+                }
+                modelDTO.Path = bannerFileName;
             }
-            modelDTO.Path = bannerFileName;
-            await _bannerService.CreateAsync(_mapper.Map<Banner>(modelDTO));
+            var modelMap = _mapper.Map<Banner>(modelDTO);
+            await _bannerService.CreateAsync(modelMap);
 
         }
         catch (Exception ex)
@@ -133,6 +141,89 @@ public class BannerController : Controller
                         new ResponseWithMessageDto { Status = "Error", Message = ex.Message });
         }
     }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var serverResponse = new ResponseWithDataDto<BannerDTO>() { Message = "Lấy thông tin thành công" };
+        try
+        {
+            var result = await _bannerService.GetByIdAsync(id);
+            if (result != null)
+            {
+                var modelMap = _mapper.Map<BannerDTO>(result);
+                if (!result.Path.IsNullOrEmpty())
+                {
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "Banner", result.Path);
+                    byte[] imageBytes = System.IO.File.ReadAllBytes(path);
+                    modelMap.BannerBase64 =  Convert.ToBase64String(imageBytes);
+                    var fileExtension = Path.GetExtension(Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "Banner", result.Path)).ToLowerInvariant();
+                    modelMap.BannerContentType = fileExtension switch
+                    {
+                        ".jpg" or ".jpeg" => "image/jpeg",
+                        ".png" => "image/png",
+                        _ => "application/octet-stream",
+                    };
+                }
+                serverResponse.Data = modelMap; ;
+            }
+            return Ok(serverResponse);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new ResponseWithMessageDto
+            {
+                Status = "Fail",
+                Message = ex.Message
+            }); ; ;
+        }
+    }
+
+    [HttpPut("update/{id}")]
+    public async Task<IActionResult> Update(Guid id , [FromForm] BannerViewModel model)
+    {
+        var serverResponse = new ResponseWithMessageDto() { Message = "Cập nhật thành công" };
+
+        try
+        {
+            var modelDTO = _mapper.Map<BannerDTO>(model);
+            string bannerFileName = string.Empty;
+            if (model.BannerImage != null)
+            {
+                bannerFileName = new UploadHandler().UploadBannerImage(model.BannerImage);//validate file ảnh
+                if (bannerFileName.Contains("Kích") || bannerFileName.Contains("Định"))
+                {
+                    serverResponse.Message = bannerFileName;
+                    return Ok(serverResponse);
+                }
+            }
+            var bannerNeedUpdate = await _bannerService.GetByIdAsync(id);
+            if(bannerNeedUpdate != null)
+            {
+                bannerNeedUpdate.IsDisplay = modelDTO.IsDisplay;
+                bannerNeedUpdate.OrderDisplay = modelDTO.OrderDisplay;
+                bannerNeedUpdate.Path = bannerFileName;
+                bannerNeedUpdate.CategoryId = modelDTO.CategoryId;
+            }
+           
+           var  result =  _bannerService.UpdateAsync(bannerNeedUpdate);
+            await result;
+            if (result.IsCompleted)
+            {
+                return Ok(serverResponse);
+            }
+            serverResponse.Message = "Lỗi cập nhật";
+            return Ok(serverResponse);
+        }
+        catch (Exception ex)
+        {
+            serverResponse.Message = "Có lỗi xảy ra khi cập nhật";
+            // Có thể tùy chỉnh phản hồi lỗi cụ thể hơn dựa trên loại exception (ex)
+            return StatusCode(500, serverResponse); // Trả về mã lỗi 500 (Internal Server Error)
+        }
+
+    }
+
 }
 
 

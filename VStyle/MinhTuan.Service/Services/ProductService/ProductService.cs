@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MinhTuan.Domain.Core.DTO;
 using MinhTuan.Domain.Core.UnitOfWork;
 using MinhTuan.Domain.DTOs.ProductDTO;
@@ -8,6 +9,7 @@ using MinhTuan.Domain.DTOs.ProductDTO;
 using MinhTuan.Domain.Entities;
 using MinhTuan.Domain.Helper.Pagination;
 using MinhTuan.Domain.Repository.CategoryRepositoy;
+using MinhTuan.Domain.Repository.DataCategoryRepository;
 using MinhTuan.Domain.Repository.ProductRepository;
 using MinhTuan.Service.Core;
 using MinhTuan.Service.SearchDTO;
@@ -30,11 +32,13 @@ namespace MinhTuan.Service.Services.ProductService
         private readonly IProductCategoryRepository _productCategoryRepository;
         private readonly IProductImageRepository _productImageRepository;
         private readonly IProductVariantRepository _productVariantRepository;
+        private readonly IDataCategoryRepository _dataCategoryRepository;
         private readonly IUnitOfWork _unitOfWork;
         public ProductService(IUnitOfWork unitOfWork, IMapper mapper, IProductRepository productRepository,
             IProductCategoryRepository productCategoryRepository,
             IProductVariantRepository productVariantRepository,
-            IProductImageRepository productImageRepository
+            IProductImageRepository productImageRepository,
+            IDataCategoryRepository dataCategoryRepository
             ) : base(unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -43,6 +47,7 @@ namespace MinhTuan.Service.Services.ProductService
             _productCategoryRepository = productCategoryRepository;
             _productImageRepository = productImageRepository;
             _productVariantRepository = productVariantRepository;
+            _dataCategoryRepository = dataCategoryRepository;
         }
         private static string ImageToBase64(string imagePath)
         {
@@ -159,6 +164,11 @@ namespace MinhTuan.Service.Services.ProductService
                     if (searchDTO.Id_Filter.HasValue)
                     {
                         query = query.Where(x => x.Id.Equals(searchDTO.Id_Filter));
+                    }
+                    if (!searchDTO.CategoryCode_Filter.IsNullOrEmpty())
+                    {
+                        var categoryId = _dataCategoryRepository.FindBy(x => x.Code.Equals(searchDTO.CategoryCode_Filter)).FirstOrDefault().Id;
+                        query = query.Where(p => _productCategoryRepository.GetQueryable().Any(pc => pc.ProductId == p.Id && pc.CategoryId.Equals(categoryId)));
                     }
 
 

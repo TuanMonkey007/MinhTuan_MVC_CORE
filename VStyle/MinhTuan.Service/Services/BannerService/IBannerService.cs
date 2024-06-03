@@ -16,5 +16,6 @@ namespace MinhTuan.Service.Services.BannerService
     public interface IBannerService :IService<Banner>
     {
         ResponseWithDataDto<PagedList<BannerDTO>> GetDataByPage(BannerSearchDTO searchDTO);
+
     }
 }

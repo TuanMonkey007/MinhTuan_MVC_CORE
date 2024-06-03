@@ -34,7 +34,7 @@
 <transition name="route" mode="out-in" appear>
   <a-row>
     <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-      <a-card :bordered="true" title="Danh sách danh mục" style="margin: 30px; height: 600px">
+      <a-card :bordered="true" title="Danh sách danh mục" style="margin: 30px;">
         <template #extra>
         <a-button @click="openModalCreate" type="primary"
           ><font-awesome-icon icon="fa-solid fa-plus" /> Thêm mới</a-button
@@ -172,7 +172,7 @@
         loadingTable: false,
         pagination: {
           current: 1,
-          pageSize: 5,
+          pageSize: 10,
           total: 0,
         },
         formSearch: {

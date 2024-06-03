@@ -276,7 +276,6 @@ namespace MinhTuan.Domain.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Path")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UpdatedBy")
@@ -290,8 +289,6 @@ namespace MinhTuan.Domain.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
 
                     b.ToTable("Banners");
                 });
@@ -690,17 +687,6 @@ namespace MinhTuan.Domain.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("MinhTuan.Domain.Entities.Banner", b =>
-                {
-                    b.HasOne("MinhTuan.Domain.Entities.DataCategory", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("MinhTuan.Domain.Entities.Product_Category", b =>

@@ -35,7 +35,7 @@
     <transition name="route" mode="out-in" appear>
         <a-row>
             <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-                <a-card :bordered="true" title="Danh sách Banner" style="margin: 30px; height: 600px">
+                <a-card :bordered="true" title="Danh sách Banner" style="margin: 30px;">
                     <template #extra>
                         <a-button @click="openModalCreate" type="primary"><font-awesome-icon icon="fa-solid fa-plus" />
                             Thêm mới</a-button>
@@ -102,10 +102,11 @@
         </a-row>
     </transition>
     <ModalCreate @addSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalCreate" />
-  <!-- <ModalUpdate @updateSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalUpdate" /> -->
+  <ModalUpdate @updateSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalUpdate" />
 </template>
 <script>
     import ModalCreate from "./ModalCreate.vue";
+    import ModalUpdate from "./ModalUpdate.vue";
     import { Modal, Pagination, message, notification } from "ant-design-vue";
     import {
         SmileOutlined,
@@ -119,7 +120,8 @@
             SmileOutlined,
             DownOutlined,
             Pagination,
-            ModalCreate
+            ModalCreate,
+            ModalUpdate
         },
 
         data() {
@@ -164,7 +166,7 @@
                 loadingTable: false,
                 pagination: {
                     current: 1,
-                    pageSize: 5,
+                    pageSize: 10,
                     total: 0,
                 },
                 formSearch: {

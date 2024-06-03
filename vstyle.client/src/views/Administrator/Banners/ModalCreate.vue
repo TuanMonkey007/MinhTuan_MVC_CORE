@@ -2,27 +2,26 @@
     <div>
         <a-modal v-model:open="open" title="THÊM BANNER" :footer="null">
             <a-divider style="margin-top: 0px;"></a-divider>
-            <a-form ref="formRef" :model="category" layout="vertical">
+            <a-form ref="formRef" :model="banner" layout="vertical">
                 <a-row :gutter="70">
                     
                     <a-col :span="12">
-                        <a-form-item label="Hiển thị" name="status">
-                            <a-radio-group>
-                                <a-radio value="1">Hiển thị</a-radio>
-                                <a-radio value="0">Ẩn</a-radio>
+                        <a-form-item label="Hiển thị" name="isDisplay">
+                            <a-radio-group v-model:value="banner.isDisplay" :rules="[{required: true, message:'Chọn trạng thái hiển thị'}]">
+                                <a-radio :value="true">Hiển thị</a-radio>
+                                <a-radio :value="false">Ẩn</a-radio>
                             </a-radio-group>
                         </a-form-item>
-                        <a-form-item ref="name" label="Thứ tự hiển thị" name="name">
-                            <a-input v-model:value="category.name" />
+                        <a-form-item ref="name" label="Thứ tự hiển thị" name="orderDisplay" :rules="[{required:true, message:'Nhập thứ tự hiển thị'}]" >
+                            <a-input-number v-model:value="banner.orderDisplay"></a-input-number>   
                         </a-form-item>
-                        <a-form-item ref="name" label="Danh mục hiển thị" name="name">
-                            <a-select>
-                              <a-select-option key="" value=""></a-select-option>
+                        <a-form-item ref="name" label="Danh mục hiển thị" name="categoryId" :rules="[{required:true, message:'Chọn danh mục banner'}]">
+                            <a-select v-model:value="banner.categoryId" :options="categoryOptions" placeholder="-- Danh mục hiển thị --">
                             </a-select>
                         </a-form-item>
                     </a-col>
                     <a-col :span="12">
-                        <a-form-item label="Ảnh banner" name="banner">
+                        <a-form-item label="Ảnh banner" name="bannerImage">
                             <a-upload list-type="picture-card" :showUploadList="true" accept=".jpg,.jpeg,.png"
                                 maxCount="1" :fileList="fileList" :before-upload="beforeUpload" :action="apiUrl"
                                 @change="handleChangeAvatar">
@@ -94,16 +93,17 @@
 
                 return isJpgOrPng && isLt2M;
             };
-            const category = reactive({
-                name: '',
-                code: '',
-                description: ''
+            const categoryOptions = ref([]);
+            const banner = reactive({
+                isDisplay: true,
+                orderDisplay: 0,
+                categoryId: '',
             })
-
+            
             return {
-                category,
+                banner,
                 isLoading: false,
-
+                categoryOptions,
                 labelCol: {
                     span: 6,
                 },
@@ -126,6 +126,16 @@
         },
 
         methods: {
+            async fetchCategory() {
+                const serverResponse = await APIService.get('datacategory/get-list-by-parent-code/BANNER')
+                this.categoryOptions = serverResponse.data.data.map(item => {
+                    return {
+                        label: item.name,
+                        value: item.id
+                    }
+                })
+
+            },
             handleChangeAvatar(info) {
                 this.fileList = [...info.fileList];
 
@@ -151,37 +161,59 @@
             },
 
 
-            showModal() {
+           async showModal() {
+               
+                this.fetchCategory()
                 this.open = true
             },
             closeModal() {
                 this.open = false
-
+                this.fileList = [],
+                
                 this.$refs.formRef.resetFields();
             },
             handleOk() {
                 console.log(this.category)
             },
             async handleSubmitAsync() {
-                this.$refs.formRef.validate().then(async () => {
-                    this.isLoading = true
-
-                    const serverResponse = await APIService.post('category/create', this.category)
-                    if (serverResponse.data.message == "Tạo danh mục mới thành công") {
-                        notification.success({ message: "Thành công", description: serverResponse.data.message })
+                console.log('submit')
+               
+                    
+                    this.$refs.formRef.validate().then(async () => {
+                        this.isLoading = true
+                    notification.info(
+                        {
+                            message: 'Trạng thái',
+                            description: 'Đang xử lý...',
+                            key: 'loadingKey',
+                            duration: 0
+                        }
+                    );
+                    const formData = new FormData();
+                    
+                    formData.append('isDisplay', this.banner.isDisplay);
+                    formData.append('orderDisplay', this.banner.orderDisplay);
+                    formData.append('categoryId', this.banner.categoryId);
+                    if(this.fileList.length > 0){
+                        formData.append('bannerImage', this.fileList[0].originFileObj);
+                    }
+                    const serverResponse = await APIService.post('banner/create', formData)
+                    if (serverResponse.data.message == "Tạo banner mới thành công") {
+                        notification.success({ message: "Thành công", description: serverResponse.data.message,key: 'loadingKey'})
                         this.isLoading = false
 
                         this.closeModal()
                         this.$emit('addSuccess')
                     } else {
                         this.isLoading = false
-                        notification.error({ message: "Thất bại", description: serverResponse.data.message })
+                        notification.error({ message: "Thất bại", description: serverResponse.data.message,key: 'loadingKey'})
                     }
-                }).catch(error => {
-                    console.log('error', error);
-                }).finally(() => {
-                    this.isLoading = false;
+                }
+                ).catch((e) => {
+                    this.isLoading = false
+                    //notification.error({ message: "Thất bại", description: e.message ,key: 'loadingKey'})
                 })
+                
 
 
             }

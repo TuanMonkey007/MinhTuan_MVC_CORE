@@ -11,12 +11,11 @@ namespace MinhTuan.Domain.Entities
     [Table("Banners")]
     public class Banner:AuditableEntity
     {
-        public string Path { get; set; }
-        [ForeignKey("CategoryId")]
+        public string? Path { get; set; }
+      
         public Guid CategoryId { get; set; }
         public int OrderDisplay { get; set; }
         public bool IsDisplay { get; set; }
-        
-        public virtual DataCategory Category { get; set; }
+       
     }
 }

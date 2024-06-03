@@ -15,5 +15,6 @@ namespace MinhTuan.Service.SearchDTO
         public float[]? Price_Filter { get; set; }
         public int? StockQuantity_Filter { get; set; }
         public Guid[]?  Category_Filter { get; set; }
+        public string? CategoryCode_Filter { get; set; }
     }
 }
