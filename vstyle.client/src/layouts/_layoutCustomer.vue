@@ -54,9 +54,9 @@
             style="height: max-content;border: none">
             <a-menu-item key="1"> <router-link to="/">
                 Trang chủ </router-link></a-menu-item>
-            <a-menu-item key="2"><router-link to="/fdfdf">Sản phẩm</router-link></a-menu-item>
-            <a-menu-item key="3"> <router-link to="/sdfsdf">Khuyến mãi </router-link></a-menu-item>
-            <a-menu-item key="5"> <router-link to="/">Giới thiệu </router-link></a-menu-item>
+            <a-menu-item key="2"><router-link to="/">Nữ</router-link></a-menu-item>
+            <a-menu-item key="3"> <router-link to="/">Nam</router-link></a-menu-item>
+            <a-menu-item key="5"> <router-link to="/">Về chúng tôi</router-link></a-menu-item>
             <a-menu-item key="6"> <router-link to="/sdfdf">Liên hệ </router-link></a-menu-item>
           </a-menu>
         </a-col>
@@ -93,7 +93,7 @@
                   <a-menu style="margin-top: 10px">
                     <a-menu-item>
                       <UserOutlined :style="{ fontSize: '20px' }" />
-                      <router-link to="/profile"> Trang cá nhân</router-link>
+                      <router-link :to="{name: 'CustomerProfile'}"> Trang cá nhân</router-link>
                     </a-menu-item>
                     <a-menu-item @click="logout">
                       <logout-outlined :style="{ fontSize: '20px' }" />
@@ -156,7 +156,7 @@
                 <font-awesome-icon :icon="['fas', 'phone-volume']" class="footer-link" />
                 <a class="footer-link"> 034.346.3334</a>
                 <br>
-                <font-awesome-icon :icon="['fa-solid', 'fa-locatopn-dot']" class="footer-link" />
+                <font-awesome-icon :icon="['fa-solid', 'fa-location-dot']" class="footer-link" />
                 <a class="footer-link"> Số 175 Tây Sơn, Đống Đa, Thành phố Hà Nội</a>
                 <br>
                 <font-awesome-icon :icon="['fas', 'inbox']" class="footer-link" />
@@ -396,4 +396,6 @@
   .footer-link:hover {
     color: #de2128;
   }
+
+  
 </style>

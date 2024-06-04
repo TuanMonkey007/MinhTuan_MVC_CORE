@@ -54,7 +54,9 @@
 
                 <div v-for="(item, index) in bestSellerImages" :key="index"
                     style="height: fit-content; display: grid;">
-                    <a-card hoverable style="width: 180px;margin: 20px;" :bordered="false">
+                    <router-link :to="{ name: 'ProductDetail', params: { code: item.code, id:item.id } }"> 
+
+                    <a-card hoverable style="width: 180px;margin: 20px;" :bordered="false" > 
                         <template #cover>
                             <div style="width: 100%;">
                             <img alt="example" class="image-product"
@@ -74,6 +76,7 @@
                            
                         </a-card-meta>
                     </a-card>
+                    </router-link>  
                 </div>
             </a-carousel>
 

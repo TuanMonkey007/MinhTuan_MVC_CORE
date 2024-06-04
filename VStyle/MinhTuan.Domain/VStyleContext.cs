@@ -90,6 +90,9 @@ namespace MinhTuan.Domain
 		public DbSet<Product_Category> Product_Categories { get; set; }
 
 		public DbSet<Banner> banners { get; set; }
+        public DbSet<Cart> carts { get; set; }
 
-	}
+		public DbSet<CartItem> cartItems { get; set; }
+
+    }
 }

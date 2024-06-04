@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MinhTuan.Domain.Core.DTO;
 using MinhTuan.Domain.Core.UnitOfWork;
+using MinhTuan.Domain.DTOs.DataCategoryDTO;
 using MinhTuan.Domain.DTOs.ProductDTO;
 
 using MinhTuan.Domain.Entities;
@@ -462,6 +463,33 @@ namespace MinhTuan.Service.Services.ProductService
                 newList.Add(item.CategoryId);
             }
             var response = new ResponseWithDataDto<List<Guid>>() { Data = newList };
+            return response;
+        }
+
+        public async Task<ResponseWithDataDto<List<DataCategoryDTO>>> GetAllSizeOfProductById(Guid id)
+        {
+            var result = await _productVariantRepository.FindByAsync(x => x.ProductId.Equals(id));
+            var lisSizeId = new List<Guid>();
+            foreach (var item in result)
+            {
+                lisSizeId.Add(item.SizeId);
+            }
+            var result2 = await _dataCategoryRepository.FindByAsync(x => lisSizeId.Contains(x.Id));
+            var listSizeDTO = _mapper.Map<List<DataCategoryDTO>>(result2);
+            var response = new ResponseWithDataDto<List<DataCategoryDTO>>() { Data = listSizeDTO };
+            return response;
+        }
+        public async Task<ResponseWithDataDto<List<DataCategoryDTO>>> GetAllColorOfProductById(Guid id)
+        {
+            var result = await _productVariantRepository.FindByAsync(x => x.ProductId.Equals(id));
+            var lisSizeId = new List<Guid>();
+            foreach (var item in result)
+            {
+                lisSizeId.Add(item.ColorId);
+            }
+            var result2 = await _dataCategoryRepository.FindByAsync(x => lisSizeId.Contains(x.Id));
+            var listSizeDTO = _mapper.Map<List<DataCategoryDTO>>(result2);
+            var response = new ResponseWithDataDto<List<DataCategoryDTO>>() { Data = listSizeDTO };
             return response;
         }
     }

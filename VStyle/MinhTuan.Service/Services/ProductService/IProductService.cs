@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MinhTuan.Domain.Core.DTO;
 using MinhTuan.Domain.DTOs.CategoryDTO;
+using MinhTuan.Domain.DTOs.DataCategoryDTO;
 using MinhTuan.Domain.DTOs.ProductDTO;
 using MinhTuan.Domain.Entities;
 using MinhTuan.Domain.Helper.Pagination;
@@ -28,5 +29,7 @@ namespace MinhTuan.Service.Services.ProductService
         Task<ResponseWithDataDto<List<ImageResponseDTO>>> GetAllImageOfProduct(Guid id);
         Task<ResponseWithDataDto<PagedList<ProductDTO>>> GetProductById(Guid id);
         Task<ResponseWithDataDto<List<Guid>>> GetCategoryByProductId(Guid id);
+        Task<ResponseWithDataDto<List<DataCategoryDTO>>> GetAllSizeOfProductById(Guid id);
+        Task<ResponseWithDataDto<List<DataCategoryDTO>>> GetAllColorOfProductById(Guid id);
     }
 }

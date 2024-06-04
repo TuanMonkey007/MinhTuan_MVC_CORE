@@ -11,6 +11,12 @@ const customerRouter = [
         meta: { title: "Trang chủ", }
       },
       {
+        path:":code?&:id?",
+        name:"ProductDetail",
+        component:()=>import("../views/Customer/Home/DetailProduct.vue"),
+       
+    },
+      {
         path: "/reset-password",
         name: "ResetPassword",
         meta: { title: "Đặt lại mật khẩu", },
@@ -53,6 +59,12 @@ const customerRouter = [
   
         
     },
+    {
+      path:"Profile",
+      name:"CustomerProfile",
+      component:()=>import("../views/Customer/ProfileCustomer.vue"),
+      meta: { requiresAuth: true, title: "Trang cá nhân" }
+  },
     ],
   },
 ];

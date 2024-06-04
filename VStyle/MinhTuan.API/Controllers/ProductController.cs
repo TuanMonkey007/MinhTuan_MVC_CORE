@@ -323,5 +323,31 @@ namespace MinhTuan.API.Controllers
                 return BadRequest(e);
             }
         }
+        [HttpGet("get-all-size-of-product-by-id/{id}")]
+        public async Task<IActionResult> GetAllSizeOfProductById(Guid id)
+        {
+            try
+            {
+                var response = await _productService.GetAllSizeOfProductById(id);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+        [HttpGet("get-all-color-of-product-by-id/{id}")]
+        public async Task<IActionResult> GetAllColorOfProductById(Guid id)
+        {
+            try
+            {
+                var response = await _productService.GetAllColorOfProductById(id);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
     }
 }

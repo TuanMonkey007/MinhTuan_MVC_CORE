@@ -22,11 +22,11 @@ body, html {
     background-color: #ffffff;;
     min-height: 100vh;
   }
-  #app {
-  font-family: 'Lora', serif; /* Thay Merriweather thành Lora */
+ :deep(#app) {
+  font-family: 'Lora', serif !important;  /* Thay Merriweather thành Lora */
  
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; */
   text-align: left;
   color: #ffffff;
   min-height: 100vh;
@@ -77,5 +77,21 @@ body, html {
 .price-product {
   font-size: 20px;
   color: #b63034e8;
+}
+.btn-buy-now{
+  display: inline-block;
+    box-sizing: border-box;
+    min-width: 100px;
+    width: 300px;
+    text-decoration: none;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .75);
+  background: #b11d1b;
+    outline: none;
+    border-radius: 15px;
+    border: 1px solid #9a3a37;
+    box-shadow: inset 1px 1px 0 hsla(0, 0%, 100%, .25), inset 0 0 6px #a23227, inset 0 80px 80px -40px #ac3223, 1px 1px 3px rgba(0, 0, 0, .75);
+    overflow: visible;
+    transition: .5s linear;
 }
 </style>
