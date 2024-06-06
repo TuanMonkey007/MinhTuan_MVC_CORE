@@ -27,4 +27,7 @@ public class UserDTO
     public string? AvatarBase64 { get; set; } // Chuỗi base64 của ảnh
 
     public string? AvatarContentType { get; set; } // Loại nội dung của ảnh (ví dụ: image/jpeg)
+    public int? ProvinceId { get; set; }
+    public int? DistrictId { get; set; }
+    public int? WardId { get; set; }
 }

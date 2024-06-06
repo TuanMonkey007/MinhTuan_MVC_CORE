@@ -480,6 +480,9 @@ namespace MinhTuan.API.Controllers
                 EntityNeedUpdate.BirthDay = modelDTO.BirthDay;
                 EntityNeedUpdate.Address = modelDTO.Address;
                 EntityNeedUpdate.Avatar = avatarFileName ;//Đổi link ảnh mối
+                EntityNeedUpdate.ProvinceId = modelDTO.ProvinceId;
+                EntityNeedUpdate.DistrictId = modelDTO.DistrictId;
+                EntityNeedUpdate.WardId = modelDTO.WardId;
                 if(EntityNeedUpdate.Email != modelDTO.Email)//Nếu đã cập nhật email
                 {
                     //Thay đổi trạng thái xác nhận của email

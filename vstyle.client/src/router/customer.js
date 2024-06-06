@@ -64,7 +64,25 @@ const customerRouter = [
       name:"CustomerProfile",
       component:()=>import("../views/Customer/ProfileCustomer.vue"),
       meta: { requiresAuth: true, title: "Trang cá nhân" }
-  },
+    },
+    {
+      path:"Cart",
+      name:"Cart",
+      component:()=>import("../views/Customer/Home/Cart.vue"),
+      meta: { requiresAuth: false, title: "Giỏ hàng" }
+    },
+    {
+      path:"Order",
+      name:"Order",
+      component:()=>import("../views/Customer/Home/Order.vue"),
+      meta: { requiresAuth: false, title: "Tạo đơn hàng" }
+    },
+    {
+      path:"OrderSuccess",
+      name:"OrderSuccess",
+      component:()=>import("../views/Customer/Home/OrderSuccess.vue"),
+      meta: { requiresAuth: false, title: "Đặt hàng thành công" }
+    },
     ],
   },
 ];

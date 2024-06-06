@@ -4,12 +4,17 @@ using MinhTuan.API.ViewModels.AccountViewModel;
 using MinhTuan.API.ViewModels.BannerViewModel;
 using MinhTuan.API.ViewModels.CategoryViewModel;
 using MinhTuan.API.ViewModels.DataCategoryViewModel;
+using MinhTuan.API.ViewModels.OrderViewModel;
 using MinhTuan.API.ViewModels.ProductViewModel;
+using MinhTuan.API.ViewModels.VoucherViewModel;
 using MinhTuan.Domain.DTOs.AccountDTO;
 using MinhTuan.Domain.DTOs.BannerDTO;
+using MinhTuan.Domain.DTOs.CartDTO;
 using MinhTuan.Domain.DTOs.CategoryDTO;
 using MinhTuan.Domain.DTOs.DataCategoryDTO;
+using MinhTuan.Domain.DTOs.OrderDTO;
 using MinhTuan.Domain.DTOs.ProductDTO;
+using MinhTuan.Domain.DTOs.VoucherDTO;
 using MinhTuan.Domain.Entities;
 
 namespace MinhTuan.Application.Helper;
@@ -46,5 +51,17 @@ public class AutoMapperProfile : Profile
         //Tạo mapper banner
         CreateMap<Banner, BannerDTO>().ReverseMap();
         CreateMap<BannerDTO, BannerViewModel>().ReverseMap();
+
+        //Tạo mapper Cart
+        CreateMap<CartItem, CartItemDTO>().ReverseMap();
+
+        //Tao mapper Voucher
+        CreateMap<Voucher, VoucherDTO>().ReverseMap();
+        CreateMap<CreateVoucherViewModel, VoucherDTO>().ReverseMap();
+
+        //Tạo mapper Order
+
+        CreateMap<Order, OrderDTO>().ReverseMap();
+        CreateMap<OrderDTO, CreateOrderViewModel>().ReverseMap();
     }
 }

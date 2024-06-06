@@ -36,9 +36,7 @@ notification.config({
   placement: 'topRight',
   top: '50px',
   duration: 2,
-  style: {
-    width: '100px',
-  },
+  maxCount: 3
  
 });
 app.mount('#app')

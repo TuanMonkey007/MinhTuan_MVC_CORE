@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MinhTuan.API.ViewModels.CategoryViewModel;
@@ -173,7 +174,7 @@ namespace MinhTuan.API.Controllers
         }
 
         [HttpPut("update/{id}")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> Update(Guid id, [FromBody] CreateCategoryViewModel model)
         {
 

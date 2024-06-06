@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-modal v-model:open="open" title="Cập nhật danh mục" :footer="null">
+        <a-modal v-model:open="open" title="CẬP NHẬT DANH MỤC" :footer="null">
             <a-form ref="formRef" :model="category" layout="vertical">
                 <a-form-item ref="code" label="Mã danh mục" name="code" :rules="[
                     {

@@ -313,22 +313,54 @@
             },
            async handleAddToCart() {
                 if (!this.selectedColor || !this.selectedSize) {
-                    this.$message.error('Vui lòng chọn màu và size trước khi thêm vào giỏ hàng');
+                    notification.error({
+                        message: 'Lỗi',
+                        description: 'Vui lòng chọn màu và size',
+                    });
                     return;
                 }
                 const variant = this.productVariant.find(
                     v => v.colorId === this.selectedColor && v.sizeId === this.selectedSize
                 );
                 if (!variant) {
-                    this.$message.error('Không tìm thấy sản phẩm phù hợp');
+                    notification.error({
+                        message: 'Lỗi',
+                        description: 'Không tìm thấy sản phẩm phù hợp',
+                    });
                     return;
                 }
-                const  response = await APIService.post('cart/add-to-cart', {
+                try{
+                    if(localStorage.getItem('userCartId')){
+                        const  response = await APIService.post('cart/add-to-cart', {
+                    productVariantId: variant.id,
+                    cartId : localStorage.getItem('userCartId'),
+                    quantity: this.quantity,
+                });
+                localStorage.setItem('userCartId', response.data.message);
+                    }
+                    else{
+                        const  response = await APIService.post('cart/add-to-cart', {
                     productVariantId: variant.id,
                     cartId : localStorage.getItem('cartId'),
                     quantity: this.quantity,
                 });
                 localStorage.setItem('cartId', response.data.message);
+                    }
+                    
+                   
+               
+                notification.success({
+                    message: 'Thành công',
+                    description: 'Thêm sản phẩm vào giỏ hàng thành công',
+                });
+                }
+                catch{
+                    notification.error({
+                        message: 'Lỗi',
+                        description: 'Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng',
+                    });
+                }
+               
                 
             },
                 

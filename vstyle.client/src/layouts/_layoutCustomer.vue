@@ -1,5 +1,5 @@
 <template>
-  <a-layout style="min-height: 100vh">
+  <a-layout >
     <a-drawer v-model:visible="visible" class="custom-class" style="color: red" :closable="false" placement="left"
       :width="250">
       <template #title>
@@ -72,7 +72,10 @@
             <a-col :span="6">
               <a-tooltip title="Giỏ hàng" placement="bottomRight" color="#de2e21">
                 <a class="ant-dropdown-link" @click.prevent style="color: #383838">
-                  <shopping-cart-outlined :style="{ fontSize: '20px' }" />
+                  <router-link :to="{name:'Cart'}" style="color: #383838">
+                    <shopping-cart-outlined :style="{ fontSize: '20px' }" />
+                  </router-link>
+                  
                 </a>
               </a-tooltip>
             </a-col>
@@ -119,7 +122,7 @@
 
       marginTop: '64px',
       justifyContent: 'center',
-      minHeight: '1000px',
+      minHeight: '500px',
       backgroundColor: '#ffffff',
     }">
       <router-view></router-view>
@@ -295,6 +298,10 @@
           localStorage.removeItem("accessToken");
           localStorage.removeItem("role");
           localStorage.removeItem("userName");
+          localStorage.removeItem("jwt");
+          localStorage.removeItem("userPhone");
+          localStorage.removeItem("userEmail");
+          localStorage.removeItem("userCartId");
           this.isLoggedIn = false;
           this.$router.push({ name: "Login" });
           notification.success({

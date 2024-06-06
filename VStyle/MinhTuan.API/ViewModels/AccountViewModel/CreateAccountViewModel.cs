@@ -11,5 +11,9 @@
         public string? Address { get; set; }
         public DateOnly? BirthDay { get; set; }
         public IFormFile? AvatarFile { get; set; }
+
+        public int? ProvinceId { get; set; }
+        public int? DistrictId { get; set; }
+        public int? WardId { get; set; }
     }
 }

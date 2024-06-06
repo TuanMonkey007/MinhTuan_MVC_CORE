@@ -30,6 +30,12 @@ const adminRouter=[
                 meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF], title: "Quản lý danh mục" }
             },
             {
+                path:"Voucher",
+                name:"VoucherHome",
+                component:()=>import("../views/Administrator/Vouchers/index.vue"),
+                meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF], title: "Quản lý phiếu giảm giá" }
+            },
+            {
                 path:"DataCategory/:id?",
                 name:"DataCategoryHome",
                 component:()=>import("../views/Administrator/DataCategories/index.vue"),

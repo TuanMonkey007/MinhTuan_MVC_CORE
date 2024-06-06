@@ -35,6 +35,12 @@
           <shopping-cart-outlined />
           <span>Đơn hàng</span>
         </a-menu-item>
+        <a-menu-item key="Voucher">
+          <router-link :to="{ name: 'VoucherHome' }">
+            <font-awesome-icon icon="fa-solid fa-ticket" />
+            <span>  Mã giảm giá</span>
+          </router-link>
+        </a-menu-item>
         <a-sub-menu key="Settings">
           <template #title>
             <span>
@@ -232,6 +238,8 @@
           localStorage.removeItem("userName");
           localStorage.removeItem("userPhone");
           localStorage.removeItem("userEmail");
+          localStorage.removeItem("userCartId");
+          localStorage.removeItem("jwt");
           this.$router.push("/login");
           this.$notification.success({
             message: "Đăng xuất thành công",

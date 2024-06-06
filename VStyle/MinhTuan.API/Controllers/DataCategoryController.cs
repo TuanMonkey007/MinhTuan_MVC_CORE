@@ -148,7 +148,7 @@ namespace MinhTuan.API.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize]
+        
         public async Task<IActionResult> GetByIdAsync(Guid id)
         {
             var serverResponse = new ResponseWithDataDto<DataCategoryDTO>() { Message = "Lấy thông tin thành công" };
@@ -211,13 +211,13 @@ namespace MinhTuan.API.Controllers
             return Ok(serverResponse);
         }
         [HttpGet("get-list-by-parent-code/{parentCode}")]
-        [Authorize]
+      
         public async Task<IActionResult> GetListByParentCode(string parentCode)
         {
             return Ok(_dataCategoryService.GetByParentCode(parentCode));
         }
         [HttpGet("get-list-by-parent-id/{parentId}")]
-        [Authorize]
+  
         public async Task<IActionResult> GetListByParentId(Guid parentId)
         {
             return Ok(_dataCategoryService.GetByParentId(parentId));

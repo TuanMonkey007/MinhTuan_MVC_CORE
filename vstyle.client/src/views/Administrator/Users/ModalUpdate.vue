@@ -186,6 +186,7 @@
                 avatarContentType: null,
                 listGender: [],
                 isChangeAvatar: false,
+                
 
             }
         },

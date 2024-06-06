@@ -1,0 +1,17 @@
+﻿using MinhTuan.Domain.Core.Repository;
+using MinhTuan.Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MinhTuan.Domain.Repository.VoucherRepository
+{
+    public class VoucherRepository : Repository<Voucher>, IVoucherRepository
+    {
+        public VoucherRepository(VStyleContext context) : base(context)
+        {
+        }
+    }
+}

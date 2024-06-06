@@ -182,7 +182,7 @@ public class AccountService : IAccountService
         var token = new JwtSecurityToken(
             issuer: _configuration["JWT:ValidIssuer"],
             audience: _configuration["JWT:ValidAudience"],
-            expires: DateTime.Now.AddHours(4), //Hết hạn xác thực jwt trong 4 giờ
+            expires: DateTime.Now.AddDays(90), //Hết hạn xác thực jwt trong 4 giờ
             claims: authClaims,
             signingCredentials: new Microsoft.IdentityModel.Tokens.SigningCredentials(authenKey, SecurityAlgorithms.HmacSha512Signature)
 

@@ -33,7 +33,7 @@ body, html {
   max-width: 100%;
 }
 
-  .route-enter-active {
+.route-enter-active {
   transition: all 0.2s ease-out; /* Transition mượt mà */
 }
 
@@ -93,5 +93,10 @@ body, html {
     box-shadow: inset 1px 1px 0 hsla(0, 0%, 100%, .25), inset 0 0 6px #a23227, inset 0 80px 80px -40px #ac3223, 1px 1px 3px rgba(0, 0, 0, .75);
     overflow: visible;
     transition: .5s linear;
+}
+img {
+  width: 100%; /* Đảm bảo ảnh chiếm toàn bộ chiều rộng của cột */
+  height: auto; /* Giữ tỷ lệ khung hình của ảnh */
+  object-fit: contain; /* Hoặc object-fit: cover; */
 }
 </style>

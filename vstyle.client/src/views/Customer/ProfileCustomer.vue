@@ -18,7 +18,7 @@
                             <font-awesome-icon icon="fa-solid fa-house" style="color: #fff;" />
                             <span style="color: #fff;"> Trang chủ</span>
                         </a-breadcrumb-item>
-                       
+
                         <a-breadcrumb-item href="">
                             <font-awesome-icon :icon="['fas', 'fa-user']" style="color: #fff;" />
                             <span style="color: #fff;"> Tài khoản cá nhân</span>
@@ -135,7 +135,7 @@
                                         </a-row>
 
                                         <a-row :gutter="30">
-                                            <a-col :span="12">
+                                            <a-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                                                 <a-form-item label="Họ và tên" name="fullName"
                                                     :rules="[{ required: true, message: 'Vui lòng nhập thông tin này' }, { min: 5, max: 50, message: 'Độ dài 5-50 ký tự' }]">
                                                     <a-input type="text" v-model:value="account.fullName" />
@@ -158,6 +158,29 @@
                                                     <a-input v-model:value="account.phoneNumber" />
                                                 </a-form-item>
                                             </a-col>
+                                        </a-row>
+                                        <a-row justify="space-between">
+                                            <a-col :xs="24" :sm="24" :md="7" :lg="7" :xl="7">
+                                                <a-form-item label="Tỉnh" name="selectedProvince"
+                                                    :rules="[{ required: true, message: 'Chọn Tỉnh/Thành phố' }]">
+                                                    <a-select show-search optionFilterProp="label"
+                                                        v-model:value="account.selectedProvince"
+                                                        :options="provinceOptions" @change="handleChangeProvince" />
+                                                </a-form-item></a-col>
+                                            <a-col :xs="24" :sm="24" :md="7" :lg="7" :xl="7">
+                                                <a-form-item label="Huyện" name="selectedDistrict"
+                                                    :rules="[{ required: true, message: 'Chọn Quận/Huyện' }]">
+                                                    <a-select show-search optionFilterProp="label"
+                                                        v-model:value="account.selectedDistrict"
+                                                        :options="districtOptions" @change="handleChangeDistrict" />
+                                                </a-form-item></a-col>
+                                            <a-col :xs="24" :sm="24" :md="7" :lg="7" :xl="7">
+                                                <a-form-item label="Xã" name="selectedWard"
+                                                    :rules="[{ required: true, message: 'Chọn Huyện/Xã' }]">
+                                                    <a-select show-search optionFilterProp="label"
+                                                        v-model:value="account.selectedWard" :options="wardOptions"
+                                                        @change="handleChangeWard" />
+                                                </a-form-item></a-col>
                                         </a-row>
 
 
@@ -192,7 +215,7 @@
                                 <a-tab-pane key="3" tab="Đổi mật khẩu">
                                     <a-row justify="center">
                                         <a-col :span="18" style="margin-top: 30px;">
-                                            <a-form :model="formChangePassword" :ref="formChangePassword" >
+                                            <a-form :model="formChangePassword" :ref="formChangePassword">
                                                 <a-form-item label="Mật khẩu cũ" name="password"
                                                     :rules="[{ required: true, message: 'Nhập mật khẩu cũ' }]">
                                                     <a-input-password v-model:value="formChangePassword.password">
@@ -246,7 +269,8 @@
                                                         </template></a-input-password>
                                                 </a-form-item>
                                                 <a-form-item>
-                                                    <a-button type="primary" @click="handleChangePassword">Đổi mật khẩu</a-button>
+                                                    <a-button type="primary" @click="handleChangePassword">Đổi mật
+                                                        khẩu</a-button>
                                                 </a-form-item>
                                             </a-form>
                                         </a-col>
@@ -266,6 +290,7 @@
     import dayjs from 'dayjs';
     import { notification } from 'ant-design-vue';
     import APIService from '@/helpers/APIService';
+    import axios from 'axios';
     export default {
         setup() {
             const formChangePassword = reactive({
@@ -365,6 +390,9 @@
                             : null, // Hoặc một giá trị mặc định khác nếu birthDay là null
                         address: this.account.address,
                         avatar: this.account.avatar,
+                        provinceId: this.account.selectedProvince,
+                        districtId: this.account.selectedDistrict,
+                        wardId: this.account.selectedWard,
                     }
                     if (payload.birthDay == null) {
                         delete payload.birthDay;
@@ -411,38 +439,115 @@
 
             },
             async handleChangePassword() {
-                
-                    notification.info({
-                        message: 'Đang xử lý...',
-                        key: 'loadingKey',
-                        duration: 0
-                    });
-                    this.isLoading = true
-                    const response = await APIService.put(`account/change-password/${this.id}`, {
-                        password: this.formChangePassword.password,
-                        newPassword: this.formChangePassword.newPassword,
-                    });
-                    console.log(response.data);
-                    if (response.data.message != 'Đổi mật khẩu thành công') {
-                        notification.error({
-                            message: 'Thất bại',
-                            description: 'Mật khẩu cũ không đúng',
-                            key: 'loadingKey',
-                            duration: 2
-                        });
-                    }
-                    else {
-                        notification.success({
-                            message: 'Thành công',
-                            description: 'Đổi mật khẩu thành công',
-                            key: 'loadingKey',
-                            duration: 2
-                        });
-                        window.location.reload();
-                    }
 
-               
+                notification.info({
+                    message: 'Đang xử lý...',
+                    key: 'loadingKey',
+                    duration: 0
+                });
+                this.isLoading = true
+                const response = await APIService.put(`account/change-password/${this.id}`, {
+                    password: this.formChangePassword.password,
+                    newPassword: this.formChangePassword.newPassword,
+                });
+                console.log(response.data);
+                if (response.data.message != 'Đổi mật khẩu thành công') {
+                    notification.error({
+                        message: 'Thất bại',
+                        description: 'Mật khẩu cũ không đúng',
+                        key: 'loadingKey',
+                        duration: 2
+                    });
+                }
+                else {
+                    notification.success({
+                        message: 'Thành công',
+                        description: 'Đổi mật khẩu thành công',
+                        key: 'loadingKey',
+                        duration: 2
+                    });
+                    window.location.reload();
+                }
+
+
             },
+            async fetchProvice() {
+                try {
+                    // Tạo Axios instance mới
+                    const apiClient = axios.create();
+
+                    apiClient.interceptors.request.use(config => {
+                        config.headers['token'] = process.env.VUE_APP_GHN_TOKEN; // Gán token trực tiếp
+                        return config;
+                    });
+                    const response = await apiClient.get('https://online-gateway.ghn.vn/shiip/public-api/master-data/province');
+                    this.provinceOptions = response.data.data.map(province => ({
+                        label: province.ProvinceName,
+                        value: province.ProvinceID
+                    }));
+
+
+                } catch (error) {
+                    notification.error({
+                        message: 'Lỗi',
+                        description: 'Không thể lấy danh sách tỉnh thành'
+                    });
+                }
+            },// Hàm xử lý khi chọn tỉnh
+            async handleChangeProvince(value,label) {
+                try {
+                   
+                    // Tạo Axios instance mới
+                    const apiClient = axios.create();
+                    
+                    apiClient.interceptors.request.use(config => {
+                        config.headers['token'] = process.env.VUE_APP_GHN_TOKEN; // Gán token trực tiếp
+                        return config;
+                    });
+                    this.selectedProvince = label;
+                    this.account.selectedDistrict = null;
+                    this.account.selectedWard = null;
+                    this.districtOptions = [];
+                    this.wardOptions = [];
+                    const response = await apiClient.get(`https://online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=${value}`);
+                    this.districtOptions = response.data.data.map(district => ({
+                        label: district.DistrictName,
+                        value: district.DistrictID
+                    }));
+                } catch (error) {
+                    notification.error({
+                        message: 'Lỗi',
+                        description: 'Không thể lấy danh sách huyện'
+                    });
+                }
+            },// Hàm xử lý khi chọn huyện
+            async handleChangeDistrict(value,label) {
+                try {
+                    // Tạo Axios instance mới
+                    const apiClient = axios.create();
+
+                    apiClient.interceptors.request.use(config => {
+                        config.headers['token'] = process.env.VUE_APP_GHN_TOKEN; // Gán token trực tiếp
+                        return config;
+                    });
+                    this.selectedDistrict = label;
+                    this.account.selectedWard = null;
+                    this.wardOptions = [];
+                    const response = await apiClient.get(`https://online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=${value}`);
+                    this.wardOptions = response.data.data.map(ward => ({
+                        label: ward.WardName,
+                        value: ward.WardCode
+                    }));
+                } catch (error) {
+                    notification.error({
+                        message: 'Lỗi',
+                        description: 'Không thể lấy danh sách xã'
+                    });
+                }
+            },// Hàm xử lý khi chọn xã
+            handleChangeWard(label) {
+                this.selectedWard = label;
+            }
         },
         computed: {
             formattedBirthDay() {
@@ -468,6 +573,7 @@
                 this.checkLockOut = false;
             }
             this.checkEmailConfirmed = serverResponse.data.data.emailConfirmed;
+            this.fetchProvice();
 
 
             // Kiểm tra nếu có avatar và chuyển đổi thành fileList
@@ -509,10 +615,13 @@
                 avatar: '',
                 avatarBase64: '',
                 avatarContentType: '',
+                selectedProvince: '',
+                    selecteddistrict: '',
+                    selectedward: '',
             });
 
             return {
-               
+
                 account,
                 fileList: [],
                 avatarBase64: null,
@@ -521,6 +630,12 @@
                 isChangeAvatar: false,
                 apiUrl: '',
                 id: '',
+                provinceOptions: [],
+                selectedProvince: '',
+                districtOptions: [],
+                selectedDistrict: '',
+                wardOptions: [],
+                selectedWard: '',
 
             }
         },//end data

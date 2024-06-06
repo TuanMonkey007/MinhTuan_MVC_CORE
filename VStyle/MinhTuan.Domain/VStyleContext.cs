@@ -93,6 +93,9 @@ namespace MinhTuan.Domain
         public DbSet<Cart> carts { get; set; }
 
 		public DbSet<CartItem> cartItems { get; set; }
+        public DbSet<Voucher> vouchers { get; set; }
+
+		public DbSet<Order> orders { get; set; }
 
     }
 }

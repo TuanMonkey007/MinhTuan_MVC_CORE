@@ -453,12 +453,18 @@
                         //check role and redirect to the corresponding page
                         if (defaultRole === Role.ADMIN || defaultRole === Role.STAFF) {
                             router.push({ name: "AdminHome" });
+                            //Gửi api lấy dữ liệu 
+
                         } else {
                             router.push({ name: "CustomerHome" }).then(() => {
                                 window.location.reload();
                             });
                         }
-
+                        const resUserCartId = await APIService.get(`cart/get-user-cart-id/${userEmail}`);
+                        if (resUserCartId.data.message != null) {
+                            localStorage.setItem("userCartId", resUserCartId.data.message);
+                        }
+                        console.log(resUserCartId)
                         notification.success({
                             message: "Thành công",
                             description: "Đăng nhập thành công",
