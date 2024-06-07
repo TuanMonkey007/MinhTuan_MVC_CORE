@@ -34,7 +34,7 @@ namespace MinhTuan.API.Controllers
             //Khách lần đầu mua hàng thì tạo mới một giỏ hàng
             if(model.CartId == null)
             {
-                var newCart = new Cart() {UserId = Guid.Empty};
+                var newCart = new Cart() {UserId = Guid.Empty, IsOrder = false};
                await _cartService.CreateAsync(newCart);
                 //Thêm mới
                 var newCartItem = new CartItem() { CartId = newCart.Id, Quantity = model.Quantity, ProductVariantId = model.ProductVariantId };
@@ -111,7 +111,7 @@ namespace MinhTuan.API.Controllers
             {
                 var user = await _userManager.FindByEmailAsync(email);
                 var userId = user.Id;
-               var cart = await _cartService.FindByAsync(x=> x.UserId.ToString() == userId.ToString() && x.IsDelete != true);
+               var cart = await _cartService.FindByAsync(x=> x.UserId.ToString() == userId.ToString() && x.IsDelete != true && x.IsOrder !=true);
                
                 if(cart.Count() > 0) //nếu chưa có thì tạo giỏ hàng
                 {

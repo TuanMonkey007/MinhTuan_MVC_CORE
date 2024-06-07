@@ -17,11 +17,19 @@ namespace MinhTuan.Domain.DTOs.OrderDTO
         public string? CustomerNote { get; set; }
         public string? ShopNote { get; set; }
         public Guid PaymentMethod { get; set; }
+        public string? PaymentMethodName { get; set; }
         public Guid? Status { get; set; }
+        public string? StatusName { get; set; }
         public double TotalAmount { get; set; }
 
         public Guid? VoucherId { get; set; }
         public double ShippingCost { get; set; }
-
+        public Guid CartId { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        //Thông tin người dùng (nếu có) 
+        public string? UserName { get; set; }
+        public string? UserEmail { get; set; }
+        public string?  UserPhoneNumber { get; set; }
+        public string?  UserAddress { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace MinhTuan.Domain.Entities
     public class Cart : AuditableEntity
     {
         public Guid UserId { get; set; }
+        public bool IsOrder { get; set; }
         
     }
 }

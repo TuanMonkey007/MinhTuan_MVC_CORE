@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MinhTuan.API.ViewModels.CategoryViewModel;
 using MinhTuan.API.ViewModels.OrderViewModel;
@@ -8,8 +9,12 @@ using MinhTuan.Domain.DTOs.OrderDTO;
 using MinhTuan.Domain.Entities;
 using MinhTuan.Domain.Helper.Pagination;
 using MinhTuan.Service.SearchDTO;
+using MinhTuan.Service.Services.CartService;
 using MinhTuan.Service.Services.CategoryService;
+using MinhTuan.Service.Services.DataCategoryService;
+using MinhTuan.Service.Services.OrderItemService;
 using MinhTuan.Service.Services.OrderService;
+using MinhTuan.Service.Services.VoucherService;
 using Newtonsoft.Json;
 
 namespace MinhTuan.API.Controllers
@@ -20,17 +25,35 @@ namespace MinhTuan.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ICartService _cartService;
+        private readonly IVoucherService _voucherService;
         private readonly IOrderService _orderService;
+        private readonly ICartItemService _cartItemService;
+        private readonly IOrderItemService _orderItemService;
+        private readonly IDataCategoryService _dataCategoryService;
+        private readonly UserManager<AppUser> _userManager;
 
         public OrderController(
              IMapper mapper,
                IHttpContextAccessor httpContextAccessor,
-               IOrderService orderService
+               IOrderService orderService,
+               ICartService cartService,
+               IVoucherService voucherService,
+               ICartItemService cartItemService,
+               IOrderItemService orderItemService,
+               IDataCategoryService dataCategoryService,
+                UserManager<AppUser> userManager
                )
         {
             _mapper = mapper;
             _orderService = orderService;
             _httpContextAccessor = httpContextAccessor;
+            _cartService = cartService;
+            _voucherService = voucherService;
+            _cartItemService = cartItemService;
+            _orderItemService = orderItemService;
+            _dataCategoryService = dataCategoryService;
+            _userManager = userManager;
         }
 
         [HttpPost("get-data-by-page")]
@@ -70,7 +93,13 @@ namespace MinhTuan.API.Controllers
                 }
 
                 var resultGetted = _orderService.GetDataByPage(searchDTO);
+                foreach (var item in resultGetted.Data.Items)
+                {
 
+                    item.PaymentMethodName = _dataCategoryService.GetNameById((Guid)item.PaymentMethod);
+                    item.StatusName = _dataCategoryService.GetNameById((Guid)item.Status);
+
+                }
                 // Kiểm tra resultGetted.Data trước khi serialize
                 if (resultGetted != null && resultGetted.Data != null && resultGetted.Data.Items != null)
                 {
@@ -97,7 +126,38 @@ namespace MinhTuan.API.Controllers
                 var modelDTO = _mapper.Map<OrderDTO>(model);
                 var newCode = await _orderService.AutoGenOrderCode();
                 modelDTO.Code = newCode;
-                await _orderService.CreateAsync(_mapper.Map<Order>(modelDTO));
+                var entity = _mapper.Map<Order>(modelDTO);
+
+                //Tạo được rồi thì đổi trạng thái giỏ hàng
+                //dựa trên cartid
+                var updateCart = await _cartService.GetByIdAsync(model.CartId);
+                var namePaymentMethod = _dataCategoryService.GetCodeById(model.PaymentMethod);
+                entity.Status = namePaymentMethod == "TIEN_MAT" ? _dataCategoryService.GetIdByCode("CHO_XAC_NHAN") : _dataCategoryService.GetIdByCode("CHO_THANH_TOAN");
+
+                await _orderService.CreateAsync(entity);
+                updateCart.IsOrder = true;
+                await _cartService.UpdateAsync(updateCart);
+                if (model.VoucherId != null)
+                {
+                    var updateVoucher = await _voucherService.GetByIdAsync(model.VoucherId);
+                    updateVoucher.Quantity -= 1;
+                    await _voucherService.UpdateAsync(updateVoucher);
+                }
+                //Chuyển cart item sang order item
+                var listCartItem = await _cartItemService.GetAllCartItemByCartId(model.CartId);
+                foreach (var item in listCartItem.Data)
+                {
+                    var newOrderItem = new OrderItem()
+                    {
+                        OrderId = entity.Id,
+                        ProductVariantId = item.ProductVariantId,
+                        Quantity = item.Quantity,
+                        Price = (double)item.ProductPrice
+                    };
+                    await _orderItemService.CreateAsync(newOrderItem);
+                }
+
+                serverResponse.Status = newCode; //Trả về mã đơn hàng
             }
             catch (Exception ex)
             {
@@ -109,5 +169,49 @@ namespace MinhTuan.API.Controllers
             return Ok(serverResponse);
         }
 
+
+        [HttpDelete("soft-delete/{id}")]
+        public async Task<IActionResult> SoftDelete(Guid id)
+        {
+            var serverResponse = new ResponseWithMessageDto() { Message = "Xóa thành công" };
+
+            try
+            {
+                var data = await _orderService.GetByIdAsync(id);
+                if (data == null)
+                {
+                    serverResponse.Message = "Không tìm thấy dữ liệu";
+                    serverResponse.Status = "Fail";
+                    return Ok(serverResponse);
+                }
+                await _orderService.SoftDeleteAsync(data);
+                return Ok(serverResponse);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                            new ResponseWithMessageDto { Status = "Error", Message = ex.Message });
+            }
+        }
+
+        [HttpGet("get-order-info-by-id/{id}")]
+        public async Task<IActionResult> GetOrderInfoById(Guid id) {
+            var response = new ResponseWithDataDto<OrderDTO>();
+            var baseInfo = await _orderService.GetByIdAsync(id);
+            var baseInfoDTO = _mapper.Map<OrderDTO>(baseInfo);
+            if(baseInfo.UserId != Guid.Empty)//Nếu là người dùng đã đăng nhập mua thì sẽ xuất thông tin
+            {
+                var userInfo = await _userManager.FindByIdAsync(baseInfo.UserId.ToString());
+                baseInfoDTO.UserName = userInfo.FullName;
+                baseInfoDTO.UserPhoneNumber = userInfo.PhoneNumber;
+                baseInfoDTO.UserEmail = userInfo.Email;
+                baseInfoDTO.UserAddress = userInfo.Address;
+            }
+            baseInfoDTO.PaymentMethodName = _dataCategoryService.GetNameById((Guid)baseInfoDTO.PaymentMethod);
+            baseInfoDTO.StatusName = _dataCategoryService.GetNameById((Guid)baseInfoDTO.Status);
+            response.Data = baseInfoDTO;
+            return Ok(response);
+        }
     }
 }

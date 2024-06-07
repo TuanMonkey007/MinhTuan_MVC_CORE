@@ -98,10 +98,19 @@
                       <UserOutlined :style="{ fontSize: '20px' }" />
                       <router-link :to="{name: 'CustomerProfile'}"> Trang cá nhân</router-link>
                     </a-menu-item>
+                    <a-menu-item>
+                      <font-awesome-icon icon="fa-solid fa-boxes-stacked" :style="{ fontSize: '20px' }" />
+                      <router-link :to="{name: 'CustomerProfile'}"> Đơn hàng</router-link>
+                    </a-menu-item>
+                    <a-menu-item v-if="role != 'CUSTOMER'">
+                      <font-awesome-icon icon="fa-solid fa-wrench" :style="{ fontSize: '20px' }" />
+                      <router-link :to="{name: 'AdminHome'}"> Quản trị</router-link>
+                    </a-menu-item>
                     <a-menu-item @click="logout">
                       <logout-outlined :style="{ fontSize: '20px' }" />
                       <a @click="logout"> Đăng xuất</a>
                     </a-menu-item>
+
                   </a-menu>
                 </template>
               </a-dropdown>
@@ -289,6 +298,7 @@
       },
       checkLoginStatus() {
         const token = localStorage.getItem("accessToken");
+        this.role = localStorage.getItem("role");
         this.isLoggedIn = !!token;
       },
       logout() {
@@ -317,6 +327,7 @@
     data() {
       return {
         isLoggedIn: false,
+        role: null,
       };
     },
     beforeMount() {

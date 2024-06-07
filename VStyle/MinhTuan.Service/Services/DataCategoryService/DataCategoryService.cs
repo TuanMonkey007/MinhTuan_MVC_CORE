@@ -173,9 +173,19 @@ namespace MinhTuan.Service.Services.DataCategoryService
             }
         }
 
+        public Guid GetIdByCode(string code)
+        {
+            return _dataCategoryRepository.FindBy(x=>x.Code.Equals(code)).FirstOrDefault().Id;
+        }
+
         public string GetNameById(Guid id)
         {
            return  _dataCategoryRepository.GetById(id).Name;
         }
+        public string GetCodeById(Guid id)
+        {
+            return _dataCategoryRepository.GetById(id).Code;
+        }
+
     }
 }

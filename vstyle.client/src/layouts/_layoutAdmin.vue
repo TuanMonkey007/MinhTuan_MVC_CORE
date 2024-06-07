@@ -31,9 +31,11 @@
             <span>Sản phẩm</span>
           </router-link>
         </a-menu-item>
-        <a-menu-item key="Cart">
+        <a-menu-item key="Order">
+          <router-link :to="{ name: 'OrderHome' }">
           <shopping-cart-outlined />
           <span>Đơn hàng</span>
+          </router-link>
         </a-menu-item>
         <a-menu-item key="Voucher">
           <router-link :to="{ name: 'VoucherHome' }">

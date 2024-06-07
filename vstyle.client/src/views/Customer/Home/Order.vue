@@ -463,7 +463,7 @@
                 this.selectedWard = label;
             },
             async handleOrderSubmit() {
-                
+                console.log(this.orderInfo);
                 try {
                     await this.$refs.formOrder.validate();
                     if (this.orderInfo.paymentMethod == '') {
@@ -477,23 +477,41 @@
                     const selectedProvince = this.provinceOptions.find(province => province.value == this.orderInfo.selectedProvince).label;
                     const selectedDistrict = this.districtOptions.find(district => district.value == this.orderInfo.selectedDistrict).label;
                     const selectedWard = this.wardOptions.find(ward => ward.value == this.orderInfo.selectedWard).label;
-                    //const userCartId = localStorage.getItem('userCartId') ? localStorage.getItem('userCartId') : localStorage.getItem('cartId');
+                    const userCartId = localStorage.getItem('userCartId') ? localStorage.getItem('userCartId') : localStorage.getItem('cartId');
                     const payload = {
                         customerName: this.orderInfo.fullName,
                         customerPhoneNumber: this.orderInfo.phoneNumber,
-                        shippingAddress: `${this.orderInfo.address} | xã ${selectedWard},huyện ${selectedDistrict},tỉnh ${selectedProvince}`,
+                        shippingAddress: `${this.orderInfo.address} | ${selectedWard},${selectedDistrict},${selectedProvince}`,
                         customerNote: this.orderInfo.note,
                         paymentMethod: this.orderInfo.paymentMethod,
-                        voucherId: this.voucherId,
                         shippingCost: this.shipingCost,
                         totalAmount: this.total,
+                        cartId: userCartId
                     };
+                    if(this.voucherId != null){
+                        payload.voucherId = this.voucherId
+                    }
                     if(localStorage.getItem('userEmail') != null){ //Lấy userId từ email nếu đã đăng nhập
                         const resGetUserId = await APIService.get(`account/get-user-by-email/${localStorage.getItem('userEmail')}`);
                         payload.userId = resGetUserId.data.data.id;
                     }
                     const response = await APIService.post('order/create', payload);
-                    console.log(response);
+                    console.log(response)
+                    notification.success({
+                        message: 'Thống báo',
+                        description: 'Đặt hàng thành công'
+                    });
+                    //Xử lý khi người dùng chưa đăng nhập
+                   if(userCartId == localStorage.getItem('cartId')){
+                       localStorage.removeItem('cartId'); //Xóa cartId trong localStorage
+                       localStorage.removeItem('userCartId'); //Xóa userCartId trong localStorage
+                       const orderIds = JSON.parse(localStorage.getItem('orderIds')) || [];
+                       orderIds.push(response.data.status);
+                       localStorage.setItem('orderIds', JSON.stringify(orderIds));
+                   }else{
+                       localStorage.removeItem('userCartId'); //Xóa userCartId trong localStorage
+                   }
+                    this.$router.push({ name: 'CustomerHome' });
 
 
 
@@ -501,7 +519,7 @@
                 catch (error) {
                     notification.warning({
                         message: 'Lỗi',
-                        description: 'Vui lòng nhập đầy đủ thông tin'
+                        description: "Vui lòng điền đầy đủ thông tin"
                     });
 
                 }

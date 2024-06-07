@@ -185,17 +185,20 @@
                     <template #description>
                         <a-row justify="space-around">
                             <a-col :span="10">
-
+                                <router-link :to="{name: 'CustomerHome'}">
                                 <a-button type="primary"
                                     style="border-radius: 20px; width: 100%; background-color: #ffffff; border-color: #dc3a35; height: 40px">
-                                   <router-link :to="{name: 'CustomerHome'}"><a  style="color: #dc3a35;"> Tiếp tục mua sắm</a></router-link> 
+                                  <a  style="color: #dc3a35;"> Tiếp tục mua sắm</a>
                                 </a-button>
+                            </router-link> 
                             </a-col>
                             <a-col :span="10">
+                                <router-link :to="{name: 'Order'}">
                                 <a-button type="primary" class="btn-buy-now"
                                     style="border-radius: 20px; width: 100%; background-color: #c12227; height: 40px;">
-                                    <router-link :to="{name: 'Order'}"><a  style="color: white;">Thanh toán</a></router-link>
+                                    <a  style="color: white;">Thanh toán</a>
                                 </a-button>
+                            </router-link>
                             </a-col>
 
 
@@ -223,10 +226,12 @@
                     <br>
                 </a-col>
                 <a-col :span="24" style="display: flex; justify-content:center;">
+                    <router-link :to="{name: 'CustomerHome'}">
                     <a-button type="primary" class="btn-buy-now"
                         style=" display: flex; justify-content:center;border-radius: 20px; background-color: #c12227; height: 40px;">
-                        <router-link :to="{name: 'CustomerHome'}"><a style="color: white;">Quay lại cửa hàng</a></router-link>
+                       <a style="color: white;">Quay lại cửa hàng</a>
                     </a-button>
+                </router-link>
                 </a-col>
             </a-row>
 

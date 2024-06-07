@@ -17,5 +17,8 @@ namespace MinhTuan.Service.Services.VoucherService
     {
         ResponseWithDataDto<PagedList<VoucherDTO>> GetDataByPage(VoucherSearchDTO searchDTO);
         bool CheckExitCode(string code, Guid id);
+
+        
+
     }
 }

@@ -28,13 +28,12 @@
         <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12" :xxl="12">
             <a-carousel arrows :autoplay="true" :slidesToShow="1" style="height: 80%;">
 
-                <div v-for="image in mainImages" :key="image.id"
-                >
-                    <div  style="width: 556px;">
+                <div v-for="image in mainImages" :key="image.id">
+                    <div style="width: 556px;">
                         <img :src="'data:' + image.contentType + ';base64,' + image.base64" :alt="image.path"
-                        style="border-radius: 5%;height: 100%;max-height: 80%;" />
+                            style="border-radius: 5%;height: 100%;max-height: 80%;" />
                     </div>
-                   
+
 
                 </div>
 
@@ -63,10 +62,11 @@
                     <h4
                         style="font-size: 14px;font-weight: 400;line-height: 22px;letter-spacing: 0;text-align: left;color: #807878;">
                         Mã sản phẩm: {{ this.productInfo.code }}</h4>
-                        <p class="price-product" style="font-size: 24px; font-weight: 600; line-height: 36px;"> {{ this.productPriceChange }}&#8363;</p>
-             
+                    <p class="price-product" style="font-size: 24px; font-weight: 600; line-height: 36px;"> {{
+                        this.productPriceChange }}&#8363;</p>
+
                 </a-col>
-            
+
                 <a-col :span="24">
                     <span>Chọn màu: <span style="font-weight: 500;"> {{ getSelectedColorLabel() }}</span></span>
                     <br>
@@ -131,9 +131,11 @@
 
         </a-col>
     </a-row>
-    <a-row justify="center" style="margin-top: 20px"> 
+    <a-row justify="center" style="margin-top: 20px">
         <a-col :xs="24" :sm="24" :md="24" :lg="16" :xl="16" style="display: contents">
-            <h3 style="font-size: 24px; font-weight: 600; align-items: center; justify-content: center;">Thông tin sản phẩm</h3>
+            <h3 style="font-size: 24px; font-weight: 600; align-items: center; justify-content: center;">Thông tin sản
+                phẩm
+            </h3>
             <p style="font-size: 16px; font-weight: 400; line-height: 24px;">{{ this.productInfo.description }}</p>
         </a-col>
     </a-row>
@@ -311,7 +313,7 @@
                     this.quantity++;
                 }
             },
-           async handleAddToCart() {
+            async handleAddToCart() {
                 if (!this.selectedColor || !this.selectedSize) {
                     notification.error({
                         message: 'Lỗi',
@@ -329,42 +331,44 @@
                     });
                     return;
                 }
-                try{
-                    if(localStorage.getItem('userCartId')){
-                        const  response = await APIService.post('cart/add-to-cart', {
-                    productVariantId: variant.id,
-                    cartId : localStorage.getItem('userCartId'),
-                    quantity: this.quantity,
-                });
-                localStorage.setItem('userCartId', response.data.message);
+                try {
+                    if (localStorage.getItem('userCartId')) {
+                        const response = await APIService.post('cart/add-to-cart', {
+                            productVariantId: variant.id,
+                            cartId: localStorage.getItem('userCartId'),
+                            quantity: this.quantity,
+                        });
+                        localStorage.setItem('userCartId', response.data.message);
                     }
-                    else{
-                        const  response = await APIService.post('cart/add-to-cart', {
-                    productVariantId: variant.id,
-                    cartId : localStorage.getItem('cartId'),
-                    quantity: this.quantity,
-                });
-                localStorage.setItem('cartId', response.data.message);
+                    else {
+                       
+                        const response = await APIService.post('cart/add-to-cart', {
+                            productVariantId: variant.id,
+                            cartId: localStorage.getItem('cartId'),
+                            quantity: this.quantity,
+                        });
+                        localStorage.setItem('cartId', response.data.message);
                     }
-                    
-                   
-               
-                notification.success({
-                    message: 'Thành công',
-                    description: 'Thêm sản phẩm vào giỏ hàng thành công',
-                });
+
+
+
+                    notification.success({
+                        message: 'Thành công',
+                        description: 'Thêm sản phẩm vào giỏ hàng thành công',
+                    });
                 }
-                catch{
+                catch {
                     notification.error({
                         message: 'Lỗi',
                         description: 'Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng',
                     });
+                    localStorage.removeItem('cartId');
                 }
-               
-                
+
+
             },
-                
-                
+
+
 
 
         },//end methods

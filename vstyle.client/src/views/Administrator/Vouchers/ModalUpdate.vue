@@ -11,9 +11,9 @@
                                 trigger: 'change',
                             },
                             {
-                                min: 10,
+                                min: 5,
                                 max: 20,
-                                message: 'Độ dài từ 10-20',
+                                message: 'Độ dài từ 5-20',
                                 trigger: 'blur',
                             },
                         ]">

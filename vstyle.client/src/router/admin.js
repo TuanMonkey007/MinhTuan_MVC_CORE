@@ -30,6 +30,12 @@ const adminRouter=[
                 meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF], title: "Quản lý danh mục" }
             },
             {
+                path:"Order",
+                name:"OrderHome",
+                component:()=>import("../views/Administrator/Orders/index.vue"),
+                meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF], title: "Quản lý đơn hàng" }
+            },
+            {
                 path:"Voucher",
                 name:"VoucherHome",
                 component:()=>import("../views/Administrator/Vouchers/index.vue"),
@@ -40,6 +46,12 @@ const adminRouter=[
                 name:"DataCategoryHome",
                 component:()=>import("../views/Administrator/DataCategories/index.vue"),
                 meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF], title: "Quản lý dữ liệu danh mục", }
+            },
+            {
+                path:"DetailOrder/:id?",
+                name:"DetailOrder",
+                component:()=>import("../views/Administrator/Orders/DetailOrder.vue"),
+                meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF], title: "Chi tiết đơn hàng", }
             },
             {
                 path:"Account",

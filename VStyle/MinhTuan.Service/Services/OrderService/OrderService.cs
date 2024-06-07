@@ -74,22 +74,20 @@ namespace MinhTuan.Service.Services.OrderService
                                 Id = entityTbl.Id,
                                 UserId = entityTbl.UserId,
                                 Code = entityTbl.Code ?? string.Empty,
-                                CustomerName = entityTbl.CustomerName,
-                                CustomerPhoneNumber = entityTbl.CustomerPhoneNumber,
-                                ShippingAddress = entityTbl.ShippingAddress,
-                                CustomerNote = entityTbl.CustomerNote,
-                                ShopNote = entityTbl.ShopNote,
-                                PaymentMethod = entityTbl.PaymentMethod,
-                                Status = entityTbl.Status,
+                                CustomerName = entityTbl.CustomerName ?? string.Empty,
+                                CustomerPhoneNumber = entityTbl.CustomerPhoneNumber ?? string.Empty,
+                                ShippingAddress = entityTbl.ShippingAddress ?? string.Empty,
+                                CustomerNote = entityTbl.CustomerNote ?? string.Empty,
+                                ShopNote = entityTbl.ShopNote ?? string.Empty,
+                                PaymentMethod = entityTbl.PaymentMethod != null ? entityTbl.PaymentMethod: Guid.Empty,
+                                Status = entityTbl.Status != null ? entityTbl.Status:Guid.Empty,
                                 TotalAmount = entityTbl.TotalAmount,
                                 ShippingCost = entityTbl.ShippingCost,
-                                VoucherId = entityTbl.VoucherId
-
-                                
+                                VoucherId = entityTbl.VoucherId,
+                                CartId = entityTbl.CartId,
+                                CreatedDate = entityTbl.CreatedDate 
                             };
 
-
-               
                 var result = PagedList<OrderDTO>.Create(query, searchDTO);
                 return new ResponseWithDataDto<PagedList<OrderDTO>>()
                 {
