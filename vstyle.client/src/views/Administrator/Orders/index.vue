@@ -33,10 +33,7 @@
     <a-row>
       <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
         <a-card :bordered="true" title="Danh sách đơn hàng" style="margin: 30px;">
-          <template #extra>
-            <a-button @click="openModalCreate" type="primary"><font-awesome-icon icon="fa-solid fa-plus" /> Thêm
-              mới</a-button>
-          </template>
+          
 
 
           <a-row>
@@ -46,6 +43,21 @@
                 :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : null)"
                 @change="handleTableChange">
                 <template #bodyCell="{ column, record }">
+                  <template v-if="column.key == 'code'">
+                    <router-link :to="{
+                          name: 'DetailOrder',
+                          params: { id: record.id },
+                        }">
+                      {{ record.code }}</router-link>
+                    </template> 
+                  <template v-if="column.key == 'status'">
+                    <a-tag :color="getColor(record.isCancelled)">
+                      {{ record.isCancelled == true ? 'Đơn huỷ' : record.statusName }}
+                    </a-tag>
+                    </template> 
+                  <template v-if="column.key == 'totalAmount'">
+                    <span>{{ fomartPrice(record.totalAmount) }}</span>
+                    </template> 
                   <template v-if="column.key === 'createdDate'">
                     {{ formatCreatedDate(record.createdDate) }}
                   </template>
@@ -58,12 +70,19 @@
                         }">
                           <a-button type="link" shape="circle">
                             <font-awesome-icon :icon="['fas', 'info']" style="color: #01a214" />
-
                             <template #icon></template>
                           </a-button>
                         </router-link>
                       </a-tooltip>
+                      <a-tooltip title="Hủy đơn" placement="leftTop">
+                        
+                          <a-button type="link" @click="openModalCancelOrder(record.id, record.statusName)" shape="circle">
+                            <font-awesome-icon icon="fa-solid fa-ban" style="color: #0253de;" />
 
+                            <template #icon></template>
+                          </a-button>
+                      
+                      </a-tooltip>
 
 
                       <a-popconfirm title="Xác nhận xóa?" ok-text="Xóa" cancel-text="Hủy"
@@ -93,13 +112,13 @@
       </a-col>
     </a-row>
   </transition>
-  <ModalCreate @addSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalCreate" />
-  <ModalUpdate @updateSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalUpdate" />
+  <ModalCancel @updateSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalCancel"/>
+
 </template>
 <script>
   import dayjs from "dayjs";
-  import ModalCreate from "./ModalCreate.vue";
-  import ModalUpdate from "./ModalUpdate.vue";
+  import ModalCancel from "./ModalCancel.vue";
+ 
   import { Modal, Pagination, message, notification } from "ant-design-vue";
   import {
     SmileOutlined,
@@ -113,8 +132,8 @@
       SmileOutlined,
       DownOutlined,
       Pagination,
-      ModalCreate,
-      ModalUpdate,
+      ModalCancel,
+    
     },
 
     data() {
@@ -190,6 +209,24 @@
       this.fetchData(this.pagination.current, this.pagination.pageSize);
     }, //end mounted
     methods: {
+      getColor(isCancelled) {
+        return isCancelled ? "red" : "green";
+      },
+      openModalCancelOrder(id,statusName) {
+        console.log(statusName)
+        if(statusName.includes("Đang vận chuyển") || statusName.includes("Thành công")){ 
+          console.log(statusName)
+          notification.error({
+            message: "Thể hành động",
+            description: "Đơn hàng không thể hủy trong thời gian này",
+          })
+          return
+        }
+        this.$refs.modalCancel.showModal(id);
+      },
+      fomartPrice(price) {
+                return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      },
       goBack() {
         this.$router.go(-1); // Điều hướng trở lại trang trước
       },
@@ -246,7 +283,7 @@
             "order/get-data-by-page",
             searchParam
           );
-          console.log(response);
+        
           this.dataSourceTable = response.data.data.items;
           this.pagination.total = response.data.data.totalCount;
           this.pagination.current = response.data.data.pageIndex;
@@ -256,9 +293,6 @@
         }
         this.loadingTable = false;
       }, //end fetchData
-      openModalUpdate(id) {
-        this.$refs.modalUpdate.showModal(id);
-      },
 
       formatCreatedDate(date) {
         return dayjs(date).format("HH:mm:ss DD/MM/YYYY ");

@@ -134,6 +134,9 @@
                       style="max-width: 100px; max-height: 100px; object-fit: contain;" />
                     <span v-else>Chưa cập nhật</span>
                   </template>
+                  <template v-if="column.key === 'price'">
+                    <span style="color: red">{{ fomartPrice(record.price) }}&#8363;</span>
+                  </template>
                 </template>
               </a-table>
             </a-col>
@@ -258,6 +261,9 @@
       this.fetchData(this.pagination.current, this.pagination.pageSize);
     }, //end mounted
     methods: {
+      fomartPrice(price) {
+                return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            },
       openCollapseSearch() {
         this.$refs.searchCollapse.click;
         console.log(this.$refs);

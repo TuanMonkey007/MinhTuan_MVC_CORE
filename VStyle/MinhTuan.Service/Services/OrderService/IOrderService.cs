@@ -1,4 +1,5 @@
 ﻿using MinhTuan.Domain.Core.DTO;
+using MinhTuan.Domain.DTOs.CartDTO;
 using MinhTuan.Domain.DTOs.CategoryDTO;
 using MinhTuan.Domain.DTOs.OrderDTO;
 using MinhTuan.Domain.Entities;
@@ -16,6 +17,7 @@ namespace MinhTuan.Service.Services.OrderService
     public interface IOrderService :IService<Order>
     {
         ResponseWithDataDto<PagedList<OrderDTO>> GetDataByPage(OrderSearchDTO searchDTO);
+        Task<ResponseWithDataDto<List<OrderItemDTO>>> GetOrderItemsById(Guid id);
 
         Task<string> AutoGenOrderCode();
     }

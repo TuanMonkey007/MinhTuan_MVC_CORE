@@ -19,7 +19,7 @@
 body, html {
     margin: 0;
     padding: 0;
-    background-color: #ffffff;;
+    background-color: #f6f9ff;;
     min-height: 100vh;
   }
  :deep(#app) {
@@ -28,7 +28,8 @@ body, html {
   /* -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; */
   text-align: left;
-  color: #ffffff;
+  color: #f6f9ff;
+  background-color: #f6f9ff;
   min-height: 100vh;
   max-width: 100%;
 }

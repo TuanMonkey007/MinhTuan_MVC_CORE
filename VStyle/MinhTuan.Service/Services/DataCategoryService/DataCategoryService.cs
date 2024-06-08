@@ -175,7 +175,7 @@ namespace MinhTuan.Service.Services.DataCategoryService
 
         public Guid GetIdByCode(string code)
         {
-            return _dataCategoryRepository.FindBy(x=>x.Code.Equals(code)).FirstOrDefault().Id;
+            return _dataCategoryRepository.FindBy(x=>x.Code.Equals(code) && x.IsDelete != true).FirstOrDefault().Id;
         }
 
         public string GetNameById(Guid id)

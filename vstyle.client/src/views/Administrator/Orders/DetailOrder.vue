@@ -37,27 +37,11 @@
                 <a-card :bordered="true" style="margin: 30px">
                     <a-row>
                         <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-                            <a-steps>
-                                <a-step status="finish" title="Login">
-                                    <template #icon>
-                                        <user-outlined />
-                                    </template>
-                                </a-step>
-                                <a-step status="finish" title="Verification">
-                                    <template #icon>
-                                        <solution-outlined />
-                                    </template>
-                                </a-step>
-                                <a-step status="process" title="Pay">
-                                    <template #icon>
-                                        <loading-outlined />
-                                    </template>
-                                </a-step>
-                                <a-step status="wait" title="Done">
-                                    <template #icon>
-                                        <smile-outlined />
-                                    </template>
-                                </a-step>
+
+                            <a-steps v-model:current="currentStep" @change="handleChangeStep"
+                                :status="this.orderInfo.isCancelled ? 'error' : ''">
+                                <a-step v-for="(status, index) in orderStatusList" :key="index" :title="status.name"
+                                    :disabled="loadingChangeStep" />
                             </a-steps>
                         </a-col>
                     </a-row>
@@ -79,130 +63,68 @@
                                     <a-row>
                                         <a-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" style="padding: 10px">
                                             <a-descriptions title="Thông tin khách hàng">
-                                                <a-descriptions-item span="24" label="Họ và tên">{{ orderInfo.userName }}</a-descriptions-item>
-                                                <a-descriptions-item span="24"
-                                                    label="Email">{{ orderInfo.userEmail }}</a-descriptions-item>
-                                                <a-descriptions-item span="24"
-                                                    label="Số điện thoại">{{ orderInfo.userPhoneNumber }}</a-descriptions-item>
-                                                <a-descriptions-item span="24" label="Địa chỉ">{{ orderInfo.userAddress }}</a-descriptions-item>
+                                                <a-descriptions-item span="24" label="Họ và tên">{{ orderInfo.userName
+                                                    }}</a-descriptions-item>
+                                                <a-descriptions-item span="24" label="Email">{{ orderInfo.userEmail
+                                                    }}</a-descriptions-item>
+                                                <a-descriptions-item span="24" label="Số điện thoại">{{
+                                                    orderInfo.userPhoneNumber }}</a-descriptions-item>
+                                                <a-descriptions-item span="24" label="Địa chỉ">{{ orderInfo.userAddress
+                                                    }}</a-descriptions-item>
                                             </a-descriptions>
                                         </a-col>
                                         <a-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" style="padding: 10px">
                                             <a-descriptions title="Thông tin đơn hàng">
-                                                <a-descriptions-item span="24"
-                                                    label="Mã đơn">{{ orderInfo.code }}</a-descriptions-item>
-                                                <a-descriptions-item span="24" label="Trạng thái">
-                                                   <a-tag color="green"> {{ orderInfo.statusName }}</a-tag>
+                                                <a-descriptions-item span="24" label="Mã đơn">{{ orderInfo.code
+                                                    }}</a-descriptions-item><a-descriptions-item span="24"
+                                                    label="Trạng thái">
+                                                    <a-tag :color="getColor(orderInfo.isCancelled)">
+                                                        {{ orderInfo.isCancelled ? 'Hủy đơn' : (orderInfo.statusName ||
+                                                        'Chưa xác định') }}
+                                                    </a-tag>
                                                 </a-descriptions-item>
-                                                <a-descriptions-item span="24" label="Ghi chú">{{ orderInfo.shopNote }}</a-descriptions-item>
-                                              
+
+                                                <a-descriptions-item span="24" label="Ghi chú">{{
+                                                    this.orderInfo.reasonCancelled
+                                                }}</a-descriptions-item>
+
+
                                             </a-descriptions>
                                         </a-col>
                                         <a-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" style="padding: 10px">
                                             <a-descriptions title="Thông tin giao hàng">
-                                                <a-descriptions-item span="24" label="Họ và tên người nhận">{{ orderInfo.customerName }}</a-descriptions-item>
-                                                <a-descriptions-item span="24"
-                                                    label="Số điện thoại">{{ orderInfo.customerPhoneNumber }}</a-descriptions-item>
-                                                <a-descriptions-item span="24" label="Địa chỉ">{{ orderInfo.shippingAddress }}</a-descriptions-item>
-                                                <a-descriptions-item span="24" label="Ghi chú cho người bán">{{ orderInfo.customerNote }}
+                                                <a-descriptions-item span="24" label="Họ và tên người nhận">{{
+                                                    orderInfo.customerName }}</a-descriptions-item>
+                                                <a-descriptions-item span="24" label="Số điện thoại">{{
+                                                    orderInfo.customerPhoneNumber }}</a-descriptions-item>
+                                                <a-descriptions-item span="24" label="Địa chỉ">{{
+                                                    orderInfo.shippingAddress
+                                                    }}</a-descriptions-item>
+                                                <a-descriptions-item span="24" label="Ghi chú cho người bán">{{
+                                                    orderInfo.customerNote }}
                                                 </a-descriptions-item>
-                                                <a-descriptions-item span="24" label="Thời gian đặt">{{ orderInfo.createdDate }}</a-descriptions-item>
+                                                <a-descriptions-item span="24" label="Thời gian đặt">{{
+                                                   formatCreatedDate(orderInfo.createdDate) }}</a-descriptions-item>
                                                 <a-descriptions-item span="24"
                                                     label="Đơn vị vận chuyển ">GHN</a-descriptions-item>
                                             </a-descriptions>
                                         </a-col>
                                         <a-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" style="padding: 10px">
                                             <a-descriptions title="Thông tin thanh toán">
-                                                <a-descriptions-item span="24"
-                                                    label="Phương thức thanh toán"><a-tag color="default">{{ orderInfo.paymentMethodName }}</a-tag></a-descriptions-item>
-                                                <a-descriptions-item span="24"
-                                                    label="Trạng thái thanh toán">
+                                                <a-descriptions-item span="24" label="Phương thức thanh toán"><a-tag
+                                                        color="default">{{ orderInfo.paymentMethodName
+                                                        }}</a-tag></a-descriptions-item>
+                                                <a-descriptions-item span="24" label="Trạng thái thanh toán">
                                                     <a-tag color="green"> {{ orderInfo.statusName }}</a-tag>
-                                                   </a-descriptions-item>
-                                                    <a-descriptions-item span="24"
-                                                    label="Tổng tiền">{{ orderInfo.totalAmount }}</a-descriptions-item>
-                                                
-                                                <a-descriptions-item span="24"
-                                                    label="Ghi chú">{{ orderInfo.shopNote }}</a-descriptions-item>
-                                            </a-descriptions>
-                                        </a-col>
-                                    </a-row>
-                                </a-tab-pane>
-                                <a-tab-pane key="orderChange">
-                                    <template #tab>
-                                        <span>
-                                            <font-awesome-icon icon="fa-solid fa-hammer" />
-                                            Cập nhật đơn hàng
-                                        </span>
-                                    </template>
-                                    <a-row>
-                                        <a-col :xs="24" :sm="24" :md="10" :lg="10" :xl="10" class="border-deptrai">
-                                            <a-form layout="vertical" ref="formOrder" :model="orderInfo"
-                                                style="margin: 20px">
-                                                <a-form-item label="Họ và tên" name="fullName" :rules="[
-                                                    {
-                                                        required: true,
-                                                        message: 'Nhập họ tên người nhận',
-                                                    },
-                                                ]">
-                                                    <a-input v-model:value="orderInfo.fullName"
-                                                        placeholder="Nhập họ tên người nhận" />
-                                                </a-form-item>
-                                                <a-form-item label="Số điện thoại" name="phoneNumber" :rules="[
-                                                    {
-                                                        required: true,
-                                                        message: 'Nhập số điện thoại người nhận',
-                                                    },
-                                                ]">
-                                                    <a-input v-model:value="orderInfo.phoneNumber"
-                                                        placeholder="Nhập số điện thoại" />
-                                                </a-form-item>
+                                                </a-descriptions-item>
+                                                <a-descriptions-item span="24" label="Tổng tiền"><span
+                                                        style="color: red">{{
+                                                            fomartPrice(orderInfo.totalAmount)
+                                                        }}&#8363;</span></a-descriptions-item>
 
-                                                <a-row justify="space-between">
-                                                    <a-col :xs="24" :sm="24" :md="7" :lg="7" :xl="7">
-                                                        <a-form-item label="Tỉnh" name="selectedProvince" :rules="[
-                                                            {
-                                                                required: true,
-                                                                message: 'Chọn Tỉnh/Thành phố',
-                                                            },
-                                                        ]">
-                                                            <a-select show-search optionFilterProp="label"
-                                                                v-model:value="orderInfo.selectedProvince"
-                                                                :options="provinceOptions"
-                                                                @change="handleChangeProvince" />
-                                                        </a-form-item></a-col>
-                                                    <a-col :xs="24" :sm="24" :md="7" :lg="7" :xl="7">
-                                                        <a-form-item label="Huyện" name="selectedDistrict" :rules="[
-                                                            { required: true, message: 'Chọn Quận/Huyện' },
-                                                        ]">
-                                                            <a-select show-search optionFilterProp="label"
-                                                                v-model:value="orderInfo.selectedDistrict"
-                                                                :options="districtOptions"
-                                                                @change="handleChangeDistrict" />
-                                                        </a-form-item></a-col>
-                                                    <a-col :xs="24" :sm="24" :md="7" :lg="7" :xl="7">
-                                                        <a-form-item label="Xã" name="selectedWard" :rules="[
-                                                            { required: true, message: 'Chọn Huyện/Xã' },
-                                                        ]">
-                                                            <a-select show-search optionFilterProp="label"
-                                                                v-model:value="orderInfo.selectedWard"
-                                                                :options="wardOptions" @change="handleChangeWard" />
-                                                        </a-form-item></a-col>
-                                                </a-row>
-                                                <a-form-item label="Địa chỉ cụ thể" name="address" :rules="[
-                                                    {
-                                                        required: true,
-                                                        message: 'Nhập địa chỉ giao hàng cụ thể',
-                                                    },
-                                                ]">
-                                                    <a-input v-model:value="orderInfo.address"
-                                                        placeholder="Nhập địa chỉ giao hàng" />
-                                                </a-form-item>
-                                                <a-form-item label="Ghi chú cho người bán" name="note">
-                                                    <a-textarea v-model:value="orderInfo.note"
-                                                        placeholder="Nhập ghi chú giao hàng (Nếu cần)" />
-                                                </a-form-item>
-                                            </a-form>
+                                                <a-descriptions-item span="24" label="Ghi chú">{{ orderInfo.shopNote
+                                                    }}</a-descriptions-item>
+                                            </a-descriptions>
                                         </a-col>
                                     </a-row>
                                 </a-tab-pane>
@@ -213,7 +135,33 @@
                                             Danh sách sản phẩm
                                         </span>
                                     </template>
+                                    <a-row>
+                                        <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                                            <a-table :columns="orderItemscolumns" :data-source="orderItemsTable"
+                                                :pagination="false" :scroll="{ x: 1000 }">
+                                                <template #bodyCell="{ column, record }">
+                                                    <template v-if="column.key == 'price'">
+                                                        <span style="color: red">{{ fomartPrice(record.price) }}&#8363;</span>
+                                                    </template>
+                                                    <template v-if="column.key == 'variant'">
+                                                        <a-tag color="green">{{ record.colorName }} | {{ record.sizeName
+                                                            }} </a-tag>
+                                                    </template>
+                                                    <template v-if="column.key == 'thumbnail'">
+                                                        <img v-if="record.thumbnailBase64"
+                                                            :src="'data:' + record.thumbnailContentType + ';base64,' + record.thumbnailBase64"
+                                                            style="max-width: 100px; max-height: 100px; object-fit: contain;" />
+                                                        <a-tag color="red" v-else>Chưa cập nhật</a-tag>
+                                                    </template>
+                                                </template>
+
+                                            </a-table>
+                                        </a-col>
+                                    </a-row>
+
                                 </a-tab-pane>
+
+
                             </a-tabs>
                         </a-col>
                     </a-row>
@@ -223,13 +171,18 @@
     </transition>
 </template>
 <script>
+    import dayjs from "dayjs";
+  
+    import { Modal } from "ant-design-vue";
     import APIService from "@/helpers/APIService";
-import {
+    import { message, notification } from "ant-design-vue";
+    import {
         UserOutlined,
         SolutionOutlined,
         LoadingOutlined,
         SmileOutlined,
     } from "@ant-design/icons-vue";
+    import { backTopProps } from "ant-design-vue/es/float-button/interface";
     export default {
         components: {
             UserOutlined,
@@ -239,6 +192,10 @@ import {
         },
         data() {
             return {
+
+                loadingChangeStep: false,
+                currentStep: 0,
+                orderStatus: 'cancelled',
                 orderInfo: {
                     id: "",
                     userId: "",
@@ -261,19 +218,146 @@ import {
                     userEmail: "",
                     userPhoneNumber: "",
                     userAddress: "",
+                    isCancelled: false,
+                    reasonCancelled: []
                 },
+                orderItemscolumns: [
+                    {
+                        title: "Hình ảnh",
+                        dataIndex: "thumbnail",
+                        key: "thumbnail",
+                        width: "15%",
+                        sorter: false,
+                    },
+                    {
+                        title: "Mã sản phẩm",
+                        dataIndex: "productCode",
+                        key: "productCode",
+                        width: "15%",
+                        sorter: false,
+                    },
+                    {
+                        title: "Tên sản phẩm",
+                        dataIndex: "productName",
+                        key: "name",
+                        width: "15%",
+                        sorter: false,
+                    },
+                    {
+                        title: "Kiểu dáng",
+                        key: "variant",
+                        width: "15%",
+                        sorter: false,
+                    },
+                    {
+                        title: "Số lượng",
+                        dataIndex: "quantity",
+                        key: "quantity",
+                        width: "15%",
+                        sorter: false,
+                    },
+                    {
+                        title: "Giá tiền",
+                        dataIndex: "price",
+                        key: "price",
+                        width: "15%",
+                        sorter: false,
+                    },
+                ],
+                orderItemsTable: [],
+                orderStatusList: [],
+                previousStep: 0,
             };
         },
-        mounted() {
-            this.fetchOrderInfo();
+       async mounted() {
+          await  this.fetchOrderInfo();
+            this.fetchOrderItem();
+            this.fetchListStatus();
+         
+
         },//end mounted
         methods: {
-            async fetchOrderInfo(){
+
+            getColor(isCancelled) {
+                return isCancelled ? "red" : "green";
+            },
+            async handleChangeStep(newStep) {
+
+                try {
+                    if (this.orderInfo.isCancelled) {
+                        this.loadingChangeStep = true;
+                    }
+
+                    const updateStep = this.orderStatusList[newStep].id;
+                    const response = await APIService.get(`order/update-order-status/${this.orderInfo.id}/${updateStep}`)
+                    if (response.data.message == "Cập nhật thành công") {
+                        notification.success({
+                            message: 'Cập nhật thành công',
+                        })
+                      await  this.fetchOrderInfo();
+                        //  this.previousStep = this.currentStep
+                    } else {
+                        notification.success({
+                            message: response.data.message,
+                        })
+                        this.currentStep = this.previousStep
+                    }
+                } catch (error) {
+                    notification.error({
+                        message: 'Lỗi',
+                        description: error.message,
+                    })
+
+                } finally {
+                    if (!this.orderInfo.isCancelled) {
+                        this.loadingChangeStep = false
+                    }
+                }
+            },
+            async fetchOrderInfo() {
                 const id = this.$route.params.id;
                 const response = await APIService.get(`order/get-order-info-by-id/${id}`);
                 this.orderInfo = response.data.data;
-            
-            }
+                if (this.orderInfo.isCancelled) {
+                    this.loadingChangeStep = true
+                }
+
+
+            },
+            async fetchOrderItem() {
+                const id = this.$route.params.id;
+                const response = await APIService.get(`order/get-order-item-by-id/${id}`);
+
+                this.orderItemsTable = response.data.data;
+            },
+            async fetchListStatus() {
+                var response = {};
+                if (this.orderInfo.paymentMethodName == 'VNPay') {
+                    response = await APIService.get(`datacategory/get-list-by-parent-code/STATUS_VNPAY`);
+                } else {
+                    response = await APIService.get(`datacategory/get-list-by-parent-code/STATUS_COD`);
+                }
+                this.orderStatusList = response.data.data;
+                console.log("orderStatusList: ", this.orderStatusList)
+                console.log(this.orderInfo.status)
+                console.log("step hiện tại: ",this.currentStep)
+                this.currentStep = this.orderStatusList.findIndex(
+                    (item) => item.id == this.orderInfo.status
+                );
+              
+                this.previousStep = this.currentStep;
+
+            },
+            fomartPrice(price) {
+                return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            },
+            formatCreatedDate(date) {
+        return dayjs(date).format("HH:mm:ss DD/MM/YYYY ");
+      }
+
+
+
+
         },//end methods
     };
 </script>
@@ -320,5 +404,18 @@ import {
         border: 0.5px solid #d1c4c4;
         transition: 0.5s linear;
         box-shadow: rgba(87, 104, 110, 0.5) 2px 0px 2px 0px;
+    }
+
+    :deep(.ant-steps-item-active .ant-steps-item-icon) {
+        background-color: #c12227 !important;
+        color: #fff;
+        border: 1px solid #c12227;
+
+
+    }
+
+    :deep(.ant-steps-item-finish .ant-steps-item-title::after) {
+
+        background-color: #c12227 !important;
     }
 </style>

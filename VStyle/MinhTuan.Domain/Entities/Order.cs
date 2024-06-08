@@ -21,9 +21,10 @@ namespace MinhTuan.Domain.Entities
         public Guid PaymentMethod { get; set; }
         public Guid Status { get; set; }
         public double TotalAmount { get; set; }
-
         public Guid? VoucherId { get; set; }
         public double ShippingCost { get; set; }
         public  Guid CartId { get; set; }
+        public bool? IsCancelled { get; set; }
+        public string? ReasonCancelled { get; set; }
     }
 }

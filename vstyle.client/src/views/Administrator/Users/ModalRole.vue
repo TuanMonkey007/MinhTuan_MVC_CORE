@@ -87,16 +87,6 @@ export default {
       this.selectedRoles = [];
       //this.$refs.formRef.resetFields();
     },
-
-    // async handleSubmitAsync() {
-    //   message.loading({
-    //     content: "Đang xử lý...",
-    //     key: "loadingKey",
-    //     duration: 0,
-    //   });
-    //   this.isLoading = true;
-    //   console.log(this.selectedRoles);
-    // }, //end handleSubmitAsync
     async handleSubmitAsync() {
       this.isLoading = true;
       notification.info({

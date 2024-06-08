@@ -200,7 +200,7 @@ namespace MinhTuan.API.Controllers
             var response = new ResponseWithDataDto<OrderDTO>();
             var baseInfo = await _orderService.GetByIdAsync(id);
             var baseInfoDTO = _mapper.Map<OrderDTO>(baseInfo);
-            if(baseInfo.UserId != Guid.Empty)//Nếu là người dùng đã đăng nhập mua thì sẽ xuất thông tin
+            if(baseInfo.UserId != null)//Nếu là người dùng đã đăng nhập mua thì sẽ xuất thông tin
             {
                 var userInfo = await _userManager.FindByIdAsync(baseInfo.UserId.ToString());
                 baseInfoDTO.UserName = userInfo.FullName;
@@ -208,10 +208,56 @@ namespace MinhTuan.API.Controllers
                 baseInfoDTO.UserEmail = userInfo.Email;
                 baseInfoDTO.UserAddress = userInfo.Address;
             }
-            baseInfoDTO.PaymentMethodName = _dataCategoryService.GetNameById((Guid)baseInfoDTO.PaymentMethod);
+            baseInfoDTO.PaymentMethodName = _dataCategoryService.GetNameById((Guid)baseInfoDTO  .PaymentMethod);
             baseInfoDTO.StatusName = _dataCategoryService.GetNameById((Guid)baseInfoDTO.Status);
             response.Data = baseInfoDTO;
             return Ok(response);
+        }
+        [HttpGet("get-order-item-by-id/{id}")]
+        public async Task<IActionResult> GetOrderItemsById(Guid id)
+        {
+            var response = await _orderService.GetOrderItemsById(id);
+            return Ok(response);
+        }
+        [HttpGet("update-order-status/{orderId}/{statusId}")]
+        public async Task<IActionResult> UpdateOrderStatus(Guid orderId, Guid statusId)
+        {
+            var response = new ResponseWithMessageDto() { Message = "Cập nhật thành công" };
+            try
+            {
+                var orderUpdate = await _orderService.GetByIdAsync(orderId);
+                orderUpdate.Status = statusId;
+                await _orderService.UpdateAsync(orderUpdate);
+                return Ok(response);
+            }
+            catch(Exception e)
+            {
+                response.Message = e.Message;
+                return Ok(response);
+            }
+       
+            
+        }
+
+
+        [HttpPut("cancel/{id}")]
+        public async Task<IActionResult> CancelOrder(Guid id, [FromBody] CancelOrderReason model)
+        {
+            var response = new ResponseWithMessageDto() { Message = "Hủy thành công" };
+            try
+            {
+                var order = await _orderService.GetByIdAsync(id);
+                order.IsCancelled = true;
+                order.ReasonCancelled = model.ReasonCancel;
+                await _orderService.UpdateAsync(order);
+                return Ok(response);
+            }
+            catch(Exception e)
+            {
+                response.Message = e.Message;
+                return Ok(response);
+            }
+           
         }
     }
 }

@@ -546,7 +546,6 @@ namespace MinhTuan.Domain.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CustomerNote")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CustomerPhoneNumber")
@@ -562,11 +561,17 @@ namespace MinhTuan.Domain.Migrations
                     b.Property<DateTime?>("DeleteTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool?>("IsCancelled")
+                        .HasColumnType("bit");
+
                     b.Property<bool?>("IsDelete")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("PaymentMethod")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ReasonCancelled")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShippingAddress")
                         .IsRequired()
@@ -576,7 +581,6 @@ namespace MinhTuan.Domain.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("ShopNote")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("Status")
@@ -595,7 +599,7 @@ namespace MinhTuan.Domain.Migrations
                     b.Property<Guid?>("UpdatedID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("VoucherId")
