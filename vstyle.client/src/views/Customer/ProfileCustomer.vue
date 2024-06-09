@@ -161,24 +161,24 @@
                                         </a-row>
                                         <a-row justify="space-between">
                                             <a-col :xs="24" :sm="24" :md="7" :lg="7" :xl="7">
-                                                <a-form-item label="Tỉnh" name="selectedProvince"
+                                                <a-form-item label="Tỉnh" name="provinceId"
                                                     :rules="[{ required: true, message: 'Chọn Tỉnh/Thành phố' }]">
                                                     <a-select show-search optionFilterProp="label"
-                                                        v-model:value="account.selectedProvince"
-                                                        :options="provinceOptions" @change="handleChangeProvince" />
+                                                        v-model:value="account.provinceId" :options="provinceOptions"
+                                                        @change="handleChangeProvince" />
                                                 </a-form-item></a-col>
                                             <a-col :xs="24" :sm="24" :md="7" :lg="7" :xl="7">
-                                                <a-form-item label="Huyện" name="selectedDistrict"
+                                                <a-form-item label="Huyện" name="districtId"
                                                     :rules="[{ required: true, message: 'Chọn Quận/Huyện' }]">
                                                     <a-select show-search optionFilterProp="label"
-                                                        v-model:value="account.selectedDistrict"
-                                                        :options="districtOptions" @change="handleChangeDistrict" />
+                                                        v-model:value="account.districtId" :options="districtOptions"
+                                                        @change="handleChangeDistrict" />
                                                 </a-form-item></a-col>
                                             <a-col :xs="24" :sm="24" :md="7" :lg="7" :xl="7">
-                                                <a-form-item label="Xã" name="selectedWard"
+                                                <a-form-item label="Xã" name="wardId"
                                                     :rules="[{ required: true, message: 'Chọn Huyện/Xã' }]">
                                                     <a-select show-search optionFilterProp="label"
-                                                        v-model:value="account.selectedWard" :options="wardOptions"
+                                                        v-model:value="account.wardId" :options="wardOptions"
                                                         @change="handleChangeWard" />
                                                 </a-form-item></a-col>
                                         </a-row>
@@ -188,8 +188,8 @@
 
                                         <a-row>
                                             <a-col :span="24">
-                                                <a-form-item label="Địa chỉ" name="address">
-                                                    <a-textarea v-model:value="account.address" />
+                                                <a-form-item label="Địa chỉ" name="addressChange">
+                                                    <a-textarea v-model:value="this.addressChange" />
                                                 </a-form-item>
                                             </a-col>
 
@@ -388,11 +388,11 @@
                         birthDay: this.account.birthDay
                             ? this.account.birthDay.format('YYYY-MM-DD') // Format nếu birthDay có giá trị
                             : null, // Hoặc một giá trị mặc định khác nếu birthDay là null
-                        address: this.account.address,
+                        address: `${this.addressChange} | ${this.selectedWard}, ${this.selectedDistrict}, ${this.selectedProvince}`,
                         avatar: this.account.avatar,
-                        provinceId: this.account.selectedProvince,
-                        districtId: this.account.selectedDistrict,
-                        wardId: this.account.selectedWard,
+                        provinceId: this.account.provinceId,
+                        districtId: this.account.districtId,
+                        wardId: this.account.wardId,
                     }
                     if (payload.birthDay == null) {
                         delete payload.birthDay;
@@ -496,17 +496,21 @@
             },// Hàm xử lý khi chọn tỉnh
             async handleChangeProvince(value,label) {
                 try {
-                   
+
                     // Tạo Axios instance mới
                     const apiClient = axios.create();
-                    
+
                     apiClient.interceptors.request.use(config => {
                         config.headers['token'] = process.env.VUE_APP_GHN_TOKEN; // Gán token trực tiếp
                         return config;
                     });
-                    this.selectedProvince = label;
-                    this.account.selectedDistrict = null;
-                    this.account.selectedWard = null;
+
+                    this.selectedProvince = label.label
+              
+                    this.selectedDistrict = null
+                    this.selectedWard = null
+                    this.account.districtId = null;
+                    this.account.wardId = null;
                     this.districtOptions = [];
                     this.wardOptions = [];
                     const response = await apiClient.get(`https://online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=${value}`);
@@ -521,7 +525,7 @@
                     });
                 }
             },// Hàm xử lý khi chọn huyện
-            async handleChangeDistrict(value,label) {
+            async handleChangeDistrict(value, label) {
                 try {
                     // Tạo Axios instance mới
                     const apiClient = axios.create();
@@ -530,8 +534,10 @@
                         config.headers['token'] = process.env.VUE_APP_GHN_TOKEN; // Gán token trực tiếp
                         return config;
                     });
-                    this.selectedDistrict = label;
-                    this.account.selectedWard = null;
+
+                    this.account.wardId = null;
+                    this.selectedDistrict = label.label
+                    this.selectedWard = null
                     this.wardOptions = [];
                     const response = await apiClient.get(`https://online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=${value}`);
                     this.wardOptions = response.data.data.map(ward => ({
@@ -545,8 +551,8 @@
                     });
                 }
             },// Hàm xử lý khi chọn xã
-            handleChangeWard(label) {
-                this.selectedWard = label;
+            handleChangeWard(value,label) {
+                this.selectedWard = label.label;
             }
         },
         computed: {
@@ -562,8 +568,15 @@
             const serverResponse = await APIService.get(`account/get-user-by-email/${email}`)
             this.account = {
                 ...serverResponse.data.data,
-                birthDay: serverResponse.data.data.birthDay ? dayjs(serverResponse.data.data.birthDay) : null
+                birthDay: serverResponse.data.data.birthDay ? dayjs(serverResponse.data.data.birthDay) : null,
+
             }; // Gán lại account.birthDay sau khi chuyển đổi
+            const fullAddress = this.account.address
+            const addressParts = fullAddress.split('|');
+            this.addressChange = addressParts[0].trim(); // Lấy phần tử đầu tiên và loại bỏ khoảng trắng thừa
+
+            
+
             this.id = serverResponse.data.data.id;
             this.avatarBase64 = serverResponse.data.data.avatarBase64;
             this.avatarContentType = serverResponse.data.data.avatarContentType;
@@ -573,7 +586,7 @@
                 this.checkLockOut = false;
             }
             this.checkEmailConfirmed = serverResponse.data.data.emailConfirmed;
-            this.fetchProvice();
+            await this.fetchProvice();
 
 
             // Kiểm tra nếu có avatar và chuyển đổi thành fileList
@@ -599,6 +612,37 @@
             } else {
                 this.fileList = [];
             }
+
+            // Tạo Axios instance mới
+            const apiClient = axios.create();
+
+            apiClient.interceptors.request.use(config => {
+                config.headers['token'] = process.env.VUE_APP_GHN_TOKEN; // Gán token trực tiếp
+                return config;
+            });
+
+            if (this.account.provinceId != null) {
+                const responseDistrict = await apiClient.get(`https://online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=${this.account.provinceId}`);
+                this.districtOptions = responseDistrict.data.data.map(district => ({
+                    label: district.DistrictName,
+                    value: district.DistrictID,
+                }));
+                this.selectedProvince = this.provinceOptions.find(province => province.value === this.account.provinceId).label
+                this.selectedDistrict = this.districtOptions.find(district => district.value === this.account.districtId).label
+
+
+                this.account.wardId = this.account.wardId.toString()
+                if (this.account.districtId != null) {
+                    const responseWard = await apiClient.get(`https://online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=${this.account.districtId}`);
+                    this.wardOptions = responseWard.data.data.map(ward => ({
+                        label: ward.WardName,
+                        value: ward.WardCode,
+
+                    }));
+                    this.selectedWard = this.wardOptions.find(ward => ward.value === this.account.wardId).label
+                }
+               
+            }
         },
 
 
@@ -615,9 +659,10 @@
                 avatar: '',
                 avatarBase64: '',
                 avatarContentType: '',
-                selectedProvince: '',
-                    selecteddistrict: '',
-                    selectedward: '',
+
+                provinceId: '',
+                districtId: '',
+                wardId: '',
             });
 
             return {
@@ -636,6 +681,7 @@
                 selectedDistrict: '',
                 wardOptions: [],
                 selectedWard: '',
+                addressChange: '',
 
             }
         },//end data

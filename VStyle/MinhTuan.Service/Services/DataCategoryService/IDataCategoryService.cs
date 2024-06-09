@@ -20,7 +20,9 @@ namespace MinhTuan.Service.Services.DataCategoryService
         ResponseWithDataDto<List<DataCategoryDTO>> GetByParentCode(string parentCode);
         string GetNameById(Guid id);
         Guid GetIdByCode(string code);
+        Task<Guid> GetIdByCodeandParentCode(string code, string parentCode);
         string GetCodeById(Guid id);
+
         bool CheckExitCode(string code,Guid parentId, Guid id);
         bool CheckExitName(string name,Guid parentId, Guid id);
     }

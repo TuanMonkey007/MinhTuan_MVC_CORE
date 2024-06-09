@@ -5,7 +5,7 @@
             <a-carousel arrows :autoplay="true">
                 <div v-for="image in images" :key="image.id" style="height: 450px; width: 100%;">
                     <img :src="'data:' + image.bannerContentType + ';base64,' + image.bannerBase64" alt="Banner Image"
-                        style="max-width: 100%; max-height: 100%" />
+                        style=" object-fit: contain;" />
                 </div>
             </a-carousel>
         </a-col>

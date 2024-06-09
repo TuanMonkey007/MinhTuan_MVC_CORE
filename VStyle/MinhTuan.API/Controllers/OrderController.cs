@@ -6,6 +6,7 @@ using MinhTuan.API.ViewModels.OrderViewModel;
 using MinhTuan.Domain.Core.DTO;
 using MinhTuan.Domain.DTOs.CategoryDTO;
 using MinhTuan.Domain.DTOs.OrderDTO;
+using MinhTuan.Domain.DTOs.VNPayDTO;
 using MinhTuan.Domain.Entities;
 using MinhTuan.Domain.Helper.Pagination;
 using MinhTuan.Service.SearchDTO;
@@ -14,6 +15,8 @@ using MinhTuan.Service.Services.CategoryService;
 using MinhTuan.Service.Services.DataCategoryService;
 using MinhTuan.Service.Services.OrderItemService;
 using MinhTuan.Service.Services.OrderService;
+using MinhTuan.Service.Services.PaymentInfoService;
+using MinhTuan.Service.Services.VNPAY;
 using MinhTuan.Service.Services.VoucherService;
 using Newtonsoft.Json;
 
@@ -32,6 +35,9 @@ namespace MinhTuan.API.Controllers
         private readonly IOrderItemService _orderItemService;
         private readonly IDataCategoryService _dataCategoryService;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IVnPayService _vnpayService;
+        private readonly IConfiguration _config;
+        private readonly IPaymentInfoService _paymentInfoService;
 
         public OrderController(
              IMapper mapper,
@@ -42,7 +48,10 @@ namespace MinhTuan.API.Controllers
                ICartItemService cartItemService,
                IOrderItemService orderItemService,
                IDataCategoryService dataCategoryService,
-                UserManager<AppUser> userManager
+                UserManager<AppUser> userManager,
+                IVnPayService vnPayService,
+                IConfiguration config,
+                IPaymentInfoService paymentInfoService
                )
         {
             _mapper = mapper;
@@ -54,6 +63,10 @@ namespace MinhTuan.API.Controllers
             _orderItemService = orderItemService;
             _dataCategoryService = dataCategoryService;
             _userManager = userManager;
+            _vnpayService = vnPayService;
+            _config = config;
+            _paymentInfoService = paymentInfoService;
+            
         }
 
         [HttpPost("get-data-by-page")]
@@ -98,6 +111,9 @@ namespace MinhTuan.API.Controllers
 
                     item.PaymentMethodName = _dataCategoryService.GetNameById((Guid)item.PaymentMethod);
                     item.StatusName = _dataCategoryService.GetNameById((Guid)item.Status);
+                    var paymentInfo = await _paymentInfoService.FindByAsync(x => x.OrderId.Equals(item.Id) && x.IsDelete != true);
+                    var paymentStatusId = paymentInfo.FirstOrDefault().PaymentStatusId;
+                    item.PaymentStatusName = _dataCategoryService.GetNameById((Guid)paymentStatusId);
 
                 }
                 // Kiểm tra resultGetted.Data trước khi serialize
@@ -156,7 +172,32 @@ namespace MinhTuan.API.Controllers
                     };
                     await _orderItemService.CreateAsync(newOrderItem);
                 }
+                var newPaymentInfo = new PaymentInfo()
+                {
+                    OrderId = entity.Id,
+                    PaymentMethodId = model.PaymentMethod,
+                    TotalAmount = modelDTO.TotalAmount,
+                    PaymentStatusId = _dataCategoryService.GetIdByCodeandParentCode("CHO_THANH_TOAN", "PAYMENT_STATUS").Result
 
+            };
+                if (namePaymentMethod != "TIEN_MAT")//Nếu thanh toán bằng VNPay
+                {
+                    var vnpayModel = new VnPaymentRequestDTO
+                    {
+                        Amount = modelDTO.TotalAmount,
+                        CreatedDate = DateTime.Now,
+                        Description = $"{modelDTO.CustomerName} {modelDTO.CustomerPhoneNumber}",
+                        FullName = modelDTO.CustomerName,
+                        OrderCode = modelDTO.Code
+                    };
+                  
+                    await _paymentInfoService.CreateAsync(newPaymentInfo);
+                    serverResponse.Message = _vnpayService.CreatePaymentUrl(HttpContext, vnpayModel);
+                }
+                else
+                {
+                     await _paymentInfoService.CreateAsync(newPaymentInfo);
+                }
                 serverResponse.Status = newCode; //Trả về mã đơn hàng
             }
             catch (Exception ex)
@@ -208,8 +249,11 @@ namespace MinhTuan.API.Controllers
                 baseInfoDTO.UserEmail = userInfo.Email;
                 baseInfoDTO.UserAddress = userInfo.Address;
             }
-            baseInfoDTO.PaymentMethodName = _dataCategoryService.GetNameById((Guid)baseInfoDTO  .PaymentMethod);
+            baseInfoDTO.PaymentMethodName = _dataCategoryService.GetNameById((Guid)baseInfoDTO.PaymentMethod);
             baseInfoDTO.StatusName = _dataCategoryService.GetNameById((Guid)baseInfoDTO.Status);
+            var paymentInfo = await _paymentInfoService.FindByAsync(x => x.OrderId.Equals(id) && x.IsDelete != true);
+            var paymentStatusId = paymentInfo.FirstOrDefault().PaymentStatusId;
+            baseInfoDTO.PaymentStatusName = _dataCategoryService.GetNameById((Guid)paymentStatusId);    
             response.Data = baseInfoDTO;
             return Ok(response);
         }
@@ -227,6 +271,11 @@ namespace MinhTuan.API.Controllers
             {
                 var orderUpdate = await _orderService.GetByIdAsync(orderId);
                 orderUpdate.Status = statusId;
+               //var statusDataCategory= await _dataCategoryService.GetByIdAsync(statusId);
+               // if(statusDataCategory.Code != "CHO_THANH_TOAN")//Nếu trạng thái cập nhật không phải trạng thái chờ thanh toán
+               // {
+               //     //Cập
+               // }
                 await _orderService.UpdateAsync(orderUpdate);
                 return Ok(response);
             }
@@ -257,7 +306,37 @@ namespace MinhTuan.API.Controllers
                 response.Message = e.Message;
                 return Ok(response);
             }
-           
         }
+        [HttpGet("payment-callback")]
+        public async Task<IActionResult> PaymentCallBack()
+        {
+            string returnUrl = _config["VnPay:FrontendReturnURL"];
+            var response = _vnpayService.PaymentExecute(Request.Query);
+            var orderCode = response.OrderDescription; //Mã đơn hàng để ở description
+            var order = await _orderService.FindByAsync(x => x.Code.Equals(orderCode) && x.IsDelete != true);
+            var orderId = order.FirstOrDefault().Id;
+            if(response == null || response.VnPayResponseCode != "00")
+            {
+                returnUrl += "?success=false";
+            }
+            else
+            {
+                returnUrl += $"?success=true?orderCode={orderCode}";
+                //Cập nhật trạng thái thanh toán của VNPAY
+               var payinfo =  await _paymentInfoService.FindByAsync(x => x.OrderId.Equals(orderId) && x.IsDelete !=true);
+               var updateInfo = payinfo.FirstOrDefault();
+                updateInfo.VnpResponseCode = response.VnPayResponseCode;
+                updateInfo.TransactionId = response.TransactionId;
+                var paymentStatusId = await _dataCategoryService.GetIdByCodeandParentCode("DA_THANH_TOAN", "PAYMENT_STATUS");
+                updateInfo.PaymentStatusId = paymentStatusId;
+                await _paymentInfoService.UpdateAsync(updateInfo);
+                //Cập nhật trạng thái đơn hàng
+
+                
+            }
+            return Redirect(returnUrl);
+        }
+
+
     }
 }

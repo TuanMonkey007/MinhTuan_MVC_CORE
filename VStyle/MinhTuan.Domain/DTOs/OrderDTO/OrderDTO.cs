@@ -33,5 +33,6 @@ namespace MinhTuan.Domain.DTOs.OrderDTO
         public string?  UserAddress { get; set; }
         public bool? IsCancelled { get; set; }
         public string? ReasonCancelled { get; set; }
+        public string? PaymentStatusName { get; set; }
     }
 }

@@ -38,10 +38,10 @@
                     <a-row>
                         <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
 
-                            <a-steps v-model:current="currentStep" @change="handleChangeStep"
+                            <a-steps v-model:current="currentStep"
                                 :status="this.orderInfo.isCancelled ? 'error' : ''">
                                 <a-step v-for="(status, index) in orderStatusList" :key="index" :title="status.name"
-                                    :disabled="loadingChangeStep" />
+                                    :disabled="true" />
                             </a-steps>
                         </a-col>
                     </a-row>
@@ -114,8 +114,8 @@
                                                 <a-descriptions-item span="24" label="Phương thức thanh toán"><a-tag
                                                         color="default">{{ orderInfo.paymentMethodName
                                                         }}</a-tag></a-descriptions-item>
-                                                <a-descriptions-item span="24" label="Trạng thái thanh toán">
-                                                    <a-tag color="green"> {{ orderInfo.statusName }}</a-tag>
+                                                <a-descriptions-item v-if="isVnpay" span="24" label="Trạng thái thanh toán">
+                                                    <a-tag color="green"> {{ this.orderInfo.paymentStatusName}}</a-tag>
                                                 </a-descriptions-item>
                                                 <a-descriptions-item span="24" label="Tổng tiền"><span
                                                         style="color: red">{{
@@ -192,7 +192,7 @@
         },
         data() {
             return {
-
+                isVnpay: false,
                 loadingChangeStep: false,
                 currentStep: 0,
                 orderStatus: 'cancelled',
@@ -218,6 +218,7 @@
                     userEmail: "",
                     userPhoneNumber: "",
                     userAddress: "",
+                    paymentStatusName: null,
                     isCancelled: false,
                     reasonCancelled: []
                 },
@@ -277,49 +278,21 @@
 
         },//end mounted
         methods: {
+          
 
             getColor(isCancelled) {
                 return isCancelled ? "red" : "green";
             },
-            async handleChangeStep(newStep) {
-
-                try {
-                    if (this.orderInfo.isCancelled) {
-                        this.loadingChangeStep = true;
-                    }
-
-                    const updateStep = this.orderStatusList[newStep].id;
-                    const response = await APIService.get(`order/update-order-status/${this.orderInfo.id}/${updateStep}`)
-                    if (response.data.message == "Cập nhật thành công") {
-                        notification.success({
-                            message: 'Cập nhật thành công',
-                        })
-                      await  this.fetchOrderInfo();
-                        //  this.previousStep = this.currentStep
-                    } else {
-                        notification.success({
-                            message: response.data.message,
-                        })
-                        this.currentStep = this.previousStep
-                    }
-                } catch (error) {
-                    notification.error({
-                        message: 'Lỗi',
-                        description: error.message,
-                    })
-
-                } finally {
-                    if (!this.orderInfo.isCancelled) {
-                        this.loadingChangeStep = false
-                    }
-                }
-            },
+            
             async fetchOrderInfo() {
                 const id = this.$route.params.id;
                 const response = await APIService.get(`order/get-order-info-by-id/${id}`);
                 this.orderInfo = response.data.data;
                 if (this.orderInfo.isCancelled) {
                     this.loadingChangeStep = true
+                }
+                if(this.orderInfo.paymentMethodName == 'VNPay'){
+                    this.isVnpay = true
                 }
 
 
@@ -338,14 +311,15 @@
                     response = await APIService.get(`datacategory/get-list-by-parent-code/STATUS_COD`);
                 }
                 this.orderStatusList = response.data.data;
-                console.log("orderStatusList: ", this.orderStatusList)
-                console.log(this.orderInfo.status)
-                console.log("step hiện tại: ",this.currentStep)
+              
+              
+                
                 this.currentStep = this.orderStatusList.findIndex(
                     (item) => item.id == this.orderInfo.status
                 );
               
-                this.previousStep = this.currentStep;
+              
+            
 
             },
             fomartPrice(price) {

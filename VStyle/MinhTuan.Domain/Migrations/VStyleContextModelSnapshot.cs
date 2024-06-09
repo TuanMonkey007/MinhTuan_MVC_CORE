@@ -665,6 +665,82 @@ namespace MinhTuan.Domain.Migrations
                     b.ToTable("OrderItems");
                 });
 
+            modelBuilder.Entity("MinhTuan.Domain.Entities.PaymentInfo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AdditionalData")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatedID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DeleteBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("DeleteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeleteTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PaymentMethodId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PaymentStatusId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("TotalAmount")
+                        .HasColumnType("float");
+
+                    b.Property<string>("TransactionId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("VnpBankCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VnpBankTranNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VnpCardType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("VnpPayDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("VnpResponseCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("paymentInfos");
+                });
+
             modelBuilder.Entity("MinhTuan.Domain.Entities.Product", b =>
                 {
                     b.Property<Guid>("Id")

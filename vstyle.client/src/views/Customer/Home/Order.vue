@@ -497,10 +497,7 @@
                     }
                     const response = await APIService.post('order/create', payload);
                     console.log(response)
-                    notification.success({
-                        message: 'Thống báo',
-                        description: 'Đặt hàng thành công'
-                    });
+                    
                     //Xử lý khi người dùng chưa đăng nhập
                    if(userCartId == localStorage.getItem('cartId')){
                        localStorage.removeItem('cartId'); //Xóa cartId trong localStorage
@@ -511,7 +508,17 @@
                    }else{
                        localStorage.removeItem('userCartId'); //Xóa userCartId trong localStorage
                    }
+                   if(response.data.message.includes('http')){
+                       window.location.href = response.data.message
+                       
+                   }else{
                     this.$router.push({ name: 'CustomerHome' });
+                    notification.success({
+                        message: 'Thống báo',
+                        description: 'Đặt hàng thành công'
+                    });
+                   }
+                    
 
 
 

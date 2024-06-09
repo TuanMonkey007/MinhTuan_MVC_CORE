@@ -98,6 +98,7 @@ namespace MinhTuan.Domain
 		public DbSet<Order> orders { get; set; }
 
         public DbSet<OrderItem> orderItems { get; set; }
+        public DbSet<PaymentInfo> paymentInfos { get; set; }
 
     }
 }

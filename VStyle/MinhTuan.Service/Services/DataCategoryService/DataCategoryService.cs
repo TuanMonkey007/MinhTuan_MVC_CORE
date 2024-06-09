@@ -187,5 +187,12 @@ namespace MinhTuan.Service.Services.DataCategoryService
             return _dataCategoryRepository.GetById(id).Code;
         }
 
+        public async Task<Guid> GetIdByCodeandParentCode(string code, string parentCode)
+        {
+            var find = await _categoryRepository.FindByAsync(x => x.Code.Equals(parentCode)) ;
+            var parentId = find.FirstOrDefault().Id;
+            return _dataCategoryRepository.FindBy(x => x.Code.Equals(code) && x.ParentId.Equals(parentId)  && x.IsDelete != true).FirstOrDefault().Id;
+
+        }
     }
 }

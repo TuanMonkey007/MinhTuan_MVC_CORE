@@ -64,7 +64,7 @@ namespace MinhTuan.Service.Services.OrderService
             string separator = "-";
 
             // 6 ký tự bất kỳ: kết hợp chữ hoa, chữ thường và số
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             Random random = new Random();
 
             while (true)
@@ -108,7 +108,7 @@ namespace MinhTuan.Service.Services.OrderService
                                 CartId = entityTbl.CartId,
                                 CreatedDate = entityTbl.CreatedDate,
                                 IsCancelled = entityTbl.IsCancelled,
-                                ReasonCancelled = entityTbl.ReasonCancelled
+                                ReasonCancelled = entityTbl.ReasonCancelled,
                             };
 
                 var result = PagedList<OrderDTO>.Create(query, searchDTO);

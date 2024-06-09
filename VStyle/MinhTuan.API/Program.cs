@@ -17,6 +17,7 @@ using MinhTuan.Service.Core;
 using MinhTuan.Service.Core.Services;
 using MinhTuan.Service.Services.CategoryService;
 using System.Text;
+using MinhTuan.Service.Services.VNPAY;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -113,7 +114,8 @@ foreach (var intf in serviceTypes.Where(t => t.IsInterface))
     var impl = serviceTypes.FirstOrDefault(c => c.IsClass && intf.Name.Substring(1) == c.Name);
     if (impl != null) builder.Services.AddScoped(intf, impl);//Tự động đăng ký Inject Service 
 }
-builder.Services.AddScoped<ICategoryService, CategoryService>();
+//builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddSingleton<IVnPayService, VnPayService>(); //Inject VNPay service
 // Thêm logging vào container dịch vụ
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();

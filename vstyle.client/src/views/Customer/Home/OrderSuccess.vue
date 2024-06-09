@@ -30,7 +30,7 @@
     </a-row>
     <a-row align="center" justify="center" style="margin-top: 20px;">
         <a-col :xs="24" :sm="24" :md="16" :lg="14" :xl="14">
-            <a-steps :current="1" :direction="horizontal" :responsive="false">
+            <a-steps :current="2" :direction="horizontal" :responsive="false">
                 <a-step>
                     <template #icon>
                         <a-button type="text" style="color: #fff; font-size:16px ;">Giỏ hàng</a-button>
@@ -50,86 +50,43 @@
         </a-col>
     </a-row>
     <transition name="route" mode="out-in" appear>
-        <a-row align="center" justify="center" style="margin-top: 20px; ">
-            <a-col :xs="24" :sm="24" :md="10" :lg="10" :xl="10" class="border-deptrai">
-                <a-form layout="vertical" :model="orderInfo" style="margin: 20px;">
+        <a-row :gutter="[8,30]" align="center" justify="center" style="margin-top: 20px; " >
+            <a-col :span="24" style="text-align: center">
 
-                    <a-form-item label="Họ và tên" name="fullName"
-                        :rules="[{ required: true, message: 'Nhập họ tên người nhận' }]">
-                        <a-input v-model:value="orderInfo.fullName" placeholder="Nhập họ tên người nhận" />
-                    </a-form-item>
-                    <a-form-item label="Số điện thoại" name="phoneNumber"
-                        :rules="[{ required: true, message: 'Nhập số điện thoại người nhận' }]">
-                        <a-input v-model:value="orderInfo.phoneNumber" placeholder="Nhập số điện thoại" />
-                    </a-form-item>
-
-                    <a-row justify="space-between">
-                        <a-col :xs="24" :sm="24" :md="7" :lg="7" :xl="7">
-                            <a-form-item label="Tỉnh" name="selectedProvince"
-                                :rules="[{ required: true, message: 'Chọn Tỉnh/Thành phố' }]">
-                                <a-select show-search optionFilterProp="label"
-                                    v-model:value="orderInfo.selectedProvince" :options="provinceOptions"
-                                    @change="handleChangeProvince" />
-                            </a-form-item></a-col>
-                        <a-col :xs="24" :sm="24" :md="7" :lg="7" :xl="7">
-                            <a-form-item label="Huyện" name="selectedDistrict"
-                                :rules="[{ required: true, message: 'Chọn Quận/Huyện' }]">
-                                <a-select show-search optionFilterProp="label"
-                                    v-model:value="orderInfo.selectedDistrict" :options="districtOptions"
-                                    @change="handleChangeDistrict" />
-                            </a-form-item></a-col>
-                        <a-col :xs="24" :sm="24" :md="7" :lg="7" :xl="7">
-                            <a-form-item label="Xã" name="selectedWard"
-                                :rules="[{ required: true, message: 'Chọn Huyện/Xã' }]">
-                                <a-select show-search optionFilterProp="label" v-model:value="orderInfo.selectedWard"
-                                    :options="wardOptions" @change="handleChangeWard" />
-                            </a-form-item></a-col>
-                    </a-row>
-                    <a-form-item label="Địa chỉ cụ thể" name="address"
-                        :rules="[{ required: true, message: 'Nhập địa chỉ giao hàng cụ thể' }]">
-                        <a-input v-model:value="orderInfo.address" placeholder="Nhập địa chỉ giao hàng" />
-                    </a-form-item>
-                    <a-form-item label="Ghi chú cho người bán" name="note">
-                        <a-textarea v-model:value="orderInfo.note" placeholder="Nhập ghi chú giao hàng (Nếu cần)" />
-                    </a-form-item>
-
-
-                </a-form>
+                <div><span
+                        style="color: #c12227;font-family: Archivo;font-size: 24px;font-weight: 600;line-height: 36px;letter-spacing: 0;text-align: center;">ĐẶT
+                        HÀNG THÀNH CÔNG!</span></div>
+                <div>
+                    <p
+                        style="font-family: Archivo; font-size: 20px;font-weight: 400;line-height: 24px;letter-spacing: 0;text-align: center;margin-block-start: 5px;margin-block-end: 5px;">
+                        Cám ơn bạn đã lựa chọn mua sắm tại VStyle!
+                    </p>
+                    <p
+                        style="font-family: Archivo; font-size: 20px;font-weight: 400;line-height: 24px;letter-spacing: 0;text-align: center;margin-block-start: 5px;margin-block-end: 5px;">
+                        Đơn hàng của bạn CHẮC CHẮN đã được chuyển tới hệ thống xử lý đơn hàng của VStyle.
+                    </p>
+                    <p
+                        style="font-family: Archivo; font-size: 20px;font-weight: 400;line-height: 24px;letter-spacing: 0;text-align: center;margin-block-start: 5px;margin-block-end: 5px;">
+                        Bạn sẽ được nhận hàng trong vòng 1 đến 2 ngày.
+                    </p>
+                </div>
+            </a-col>
+      
+            <a-col :xs="24" :sm="24" :md="10" :lg="10" :xl="10">
+                <h2>THÔNG TIN NHẬN HÀNG</h2>
+               <a-descriptions class="border-deptrai" style="padding:10px">
+                    <a-descriptions-item :span="24" label="Tên người nhận"></a-descriptions-item>
+                    <a-descriptions-item :span="24" label="Số điện thoại"></a-descriptions-item>
+                    <a-descriptions-item :span="24" label="Địa chỉ nhận hàng"></a-descriptions-item>
+                    <a-descriptions-item :span="24" label="Phương thức thanh toán"></a-descriptions-item>
+                    <a-descriptions-item :span="24" label="Trạng thái thanh toán"></a-descriptions-item>
+               </a-descriptions>
             </a-col>
 
             <a-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8" style="  margin: 20px">
+                <h2>THÔNG TIN ĐƠN HÀNG</h2>
                 <a-card class="border-deptrai">
                     <a-row justify="center">
-                        <a-col :span="24">
-                            <span
-                                style="display: flex;justify-content: center; font-weight: 600;text-align: left; font-size: 16px ; color: #c22026">PHƯƠNG
-                                THỨC THANH TOÁN</span>
-                        </a-col>
-                        <a-col :span="24">
-                            <a-radio-group style="display: flex; justify-content: space-around;"
-                                v-model:value="orderInfo.paymentMethod"
-                                :rules="[{ required: true, message: 'Chọn phương thức thanh toán' }]">
-                                <a-radio v-for="item in paymentMethods" :key="item.id" :value="item.id">{{ item.name
-                                    }}</a-radio>
-                            </a-radio-group>
-                        </a-col>
-                        <a-col :span="24">
-                            <a-divider />
-                        </a-col>
-                        <a-col :span="24">
-                            <a-input-search :loading="loadingSearch" class="input-voucher" v-model:value="searchVoucher"
-                                placeholder="Nhập mã giảm giá" style="width: 100%;border-radius: 20px;"
-                                @search="onSearchVoucher">
-                                <template #enterButton>
-                                    <a-button type="primary"
-                                        style="border-end-end-radius: 20px;border-start-end-radius: 20px; background-color: #c12227">Áp
-                                        dụng</a-button>
-                                </template>
-
-                            </a-input-search>
-                        </a-col>
-
-                        <a-divider></a-divider>
                         <a-col :span="12">
                             <span style="font-weight: 600;text-align: left; font-size: 14px">Tổng tiền hàng</span>
 
@@ -150,7 +107,6 @@
                         </a-col>
                         <a-col :span="12">
                             <span style="font-weight: 600;text-align: left; font-size: 14px">Áp dụng giảm giá</span>
-
                         </a-col>
                         <a-col :span="12" style="text-align: end;">
                             <span style="font-weight: 600;text-align: right;color: green; font-size: 14px;">
@@ -176,12 +132,18 @@
                         </template>
                         <template #description>
                             <a-row justify="space-around">
-
-                                <a-col :span="16">
+                                <a-col :span="10">
+                                <router-link :to="{name: 'CustomerHome'}">
+                                <a-button type="primary"
+                                    style="border-radius: 20px; width: 100%; background-color: #ffffff; border-color: #dc3a35; height: 40px">
+                                  <a  style="color: #dc3a35;"> Tiếp tục mua sắm</a>
+                                </a-button>
+                            </router-link> 
+                            </a-col>
+                                <a-col :span="10">
                                     <a-button type="primary" class="btn-buy-now"
                                         style="border-radius: 20px; width: 100%; background-color: #c12227; height: 40px;">
-                                        <router-link :to="{ name: 'CustomerHome' }"><a style="color: white;">Đặt
-                                                hàng</a></router-link>
+                                        <router-link :to="{ name: 'CustomerHome' }"><a style="color: white;">Theo dõi đơn hàng</a></router-link>
                                     </a-button>
                                 </a-col>
 
@@ -200,12 +162,12 @@
     import { message, notification } from 'ant-design-vue';
     import { debounce } from 'lodash';
     import axios from 'axios';
- 
+
     export default {
         components: {
             deleteOutlined
         },
-        
+
         data() {
             return {
                 provinceOptions: [],
@@ -232,21 +194,21 @@
                 savingVoucher: 0,
                 searchVoucher: '',
                 loadingSearch: false,
-          
-            
+
+
 
             }
         },
         mounted() {
             this.fetchProvice();
             this.fetchPaymentMethods();
-            this.fetchUserInfo();
+            // this.fetchUserInfo();
         },
         methods: {
             async onSearchVoucher() {
-              if(this.searchVoucher == ''){
-                return;
-              }
+                if (this.searchVoucher == '') {
+                    return;
+                }
                 try {
                     this.loadingSearch = true;
                     const response = await APIService.get(`voucher/get-voucher-by-code/${this.searchVoucher}`);
@@ -258,14 +220,14 @@
                         return;
                     }
                     if (response.data.data.type == 1) { //Giảm theo số tiền
-                        if (this.getTotalPrice() >= response.data.data.minimumPurchaseAmount ) {
+                        if (this.getTotalPrice() >= response.data.data.minimumPurchaseAmount) {
                             this.savingVoucher = response.data.data.discountAmount;
                             this.total = this.getTotalPrice() + this.shipingCost - this.savingVoucher;
                             notification.success({
                                 message: 'Thành công',
                                 description: `Áp dụng mã giảm giá thành công`
                             });
-                          console.log(response.data.data.type)
+                            console.log(response.data.data.type)
                             return;
                         } else {
                             notification.warning({
@@ -275,19 +237,19 @@
                         }
 
                     } else {
-                      
-                            this.savingVoucher = this.getTotalPrice() * response.data.data.discountPercent / 100;
-                            if (this.savingVoucher > response.data.data.maxValue) {
-                                this.savingVoucher = response.data.data.maxValue;
-                            }
-                            this.total = this.getTotalPrice() + this.shipingCost - this.savingVoucher;
-                            notification.success({
-                                message: 'Thành công',
-                                description: `Áp dụng mã giảm giá thành công`
-                            });
-                          
-                            return
-                        
+
+                        this.savingVoucher = this.getTotalPrice() * response.data.data.discountPercent / 100;
+                        if (this.savingVoucher > response.data.data.maxValue) {
+                            this.savingVoucher = response.data.data.maxValue;
+                        }
+                        this.total = this.getTotalPrice() + this.shipingCost - this.savingVoucher;
+                        notification.success({
+                            message: 'Thành công',
+                            description: `Áp dụng mã giảm giá thành công`
+                        });
+
+                        return
+
 
                     }
                 } catch (error) {

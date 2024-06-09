@@ -81,8 +81,16 @@
 
                             <template #icon></template>
                           </a-button>
-                      
                       </a-tooltip>
+                      <a-tooltip title="Cập nhật trạng thái" placement="leftTop">
+                        
+                        <a-button type="link" @click="openModalUpdateStatus(record.id,record.paymentMethodName, record.isCancelled)" shape="circle">
+                          <font-awesome-icon icon="fa-solid fa-pen-to-square"
+                          style="color: #ffd43b" />
+
+                         
+                        </a-button>
+                    </a-tooltip>
 
 
                       <a-popconfirm title="Xác nhận xóa?" ok-text="Xóa" cancel-text="Hủy"
@@ -113,11 +121,12 @@
     </a-row>
   </transition>
   <ModalCancel @updateSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalCancel"/>
-
+  <ModalUpdateStatus @updateSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalUpdateStatus"/>
 </template>
 <script>
   import dayjs from "dayjs";
   import ModalCancel from "./ModalCancel.vue";
+  import ModalUpdateStatus from "./ModalUpdateStatus.vue";
  
   import { Modal, Pagination, message, notification } from "ant-design-vue";
   import {
@@ -133,6 +142,7 @@
       DownOutlined,
       Pagination,
       ModalCancel,
+      ModalUpdateStatus
     
     },
 
@@ -209,12 +219,22 @@
       this.fetchData(this.pagination.current, this.pagination.pageSize);
     }, //end mounted
     methods: {
+      openModalUpdateStatus(id,statusName,isCancelled) {
+        if(isCancelled == true){
+          notification.error({
+            message: "Không thể hành động",
+            description: "Đơn hàng đã bị hủy",
+          })
+          return
+        }
+        this.$refs.modalUpdateStatus.showModal(id,statusName);
+      },
       getColor(isCancelled) {
         return isCancelled ? "red" : "green";
       },
       openModalCancelOrder(id,statusName) {
         console.log(statusName)
-        if(statusName.includes("Đang vận chuyển") || statusName.includes("Thành công")){ 
+        if(statusName.includes("Đang vận chuyển")  || statusName.includes("Đang giao hàng")){ 
           console.log(statusName)
           notification.error({
             message: "Thể hành động",

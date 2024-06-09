@@ -75,7 +75,7 @@
     methods: {
       async showModal(id) {
         const responseRole = await APIService.get(
-          "datacategory/get-list-by-parent-code/LY_DO_HUY_DONHANG"
+          "datacategory/get-list-by-parent-code/LY_DO_HUY_SHOP"
         );
         this.allReason = responseRole.data.data;
         this.id = id;
