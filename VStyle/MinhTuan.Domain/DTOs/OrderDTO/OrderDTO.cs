@@ -23,6 +23,7 @@ namespace MinhTuan.Domain.DTOs.OrderDTO
         public double TotalAmount { get; set; }
 
         public Guid? VoucherId { get; set; }
+        public string? VoucherCode { get; set; }
         public double ShippingCost { get; set; }
         public Guid CartId { get; set; }
         public DateTime? CreatedDate { get; set; }

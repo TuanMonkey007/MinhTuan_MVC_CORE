@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
 
 namespace MinhTuan.Service.Services.VoucherService
 {
@@ -78,6 +79,14 @@ namespace MinhTuan.Service.Services.VoucherService
                 //        query = query.Where(x => list.Contains(x.Code));
                 //    }
                 //}
+                if (!string.IsNullOrEmpty(searchDTO.sortQuery))
+                {
+                    query = query.OrderBy(searchDTO.sortQuery);
+                }
+                else
+                {
+                    query = query.OrderBy(x => x.Code);
+                }
                 var result = PagedList<VoucherDTO>.Create(query, searchDTO);
                 return new ResponseWithDataDto<PagedList<VoucherDTO>>()
                 {

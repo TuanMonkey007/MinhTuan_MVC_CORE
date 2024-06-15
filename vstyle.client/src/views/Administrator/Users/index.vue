@@ -145,6 +145,7 @@
             dataIndex: "lockoutEnd",
             key: "status",
             width: "10%",
+            sorter: true,
           },
           
           {
@@ -152,27 +153,31 @@
             dataIndex: "fullName",
             key: "fullName",
             width: "15%",
-            sorter: false,
+            sorter: true,
           },
           {
             title: "Giới tính",
             dataIndex: "nameGender",
             key: "nameGender",
             width: "15%",
-            sorter: false,
+            sorter: true,
+            showSorterTooltip: false
           },
           {
             title: "Email",
             dataIndex: "email",
             key: "email",
             width: "15%",
-            sorter: false,
+            sorter: true,
+            showSorterTooltip: false
           },
           {
             title: "Số điện thoại",
             dataIndex: "phoneNumber",
             key: "phone",
             width: "15%",
+            sorter: true,
+            showSorterTooltip: false
           },
 
           {
@@ -193,6 +198,7 @@
         searchParams: {
           PageIndex: 1,
           PageSize: 5,
+          sortQuery: null,
         },
       };
     }, //end data
@@ -223,6 +229,7 @@
           const response = await APIService.post("/account/get-all-user", {
             PageIndex: current,
             PageSize: pageSize,
+            sortQuery: this.searchParams.sortQuery,
           });
           this.dataSourceTable = response.data.data.items;
           this.pagination.total = response.data.data.totalCount;
@@ -292,6 +299,15 @@
             description: "Xóa thất bại",
           });
         }
+      },
+      handleTableChange(pagination, filters, sorter) {
+        if (sorter.field && sorter.order) {
+          this.searchParams.sortQuery = `${sorter.field} ${sorter.order === 'ascend' ? 'asc' : 'desc'}`;
+        } else {
+          // Nếu không có sắp xếp, đặt sortQuery về rỗng
+          this.searchParams.sortQuery = '';
+        }
+        this.fetchData(pagination.current, pagination.pageSize);
       },
     }, //end methods
   };

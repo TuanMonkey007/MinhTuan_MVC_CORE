@@ -19,5 +19,6 @@ public class AppUser : IdentityUser
     public int? ProvinceId { get; set; }
     public int? DistrictId { get; set; }
     public int? WardId { get; set; }
+    public DateTime? CreatedDate { get; set; }
 
 }

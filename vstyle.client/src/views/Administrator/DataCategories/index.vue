@@ -132,14 +132,16 @@
             dataIndex: "code",
             key: "code",
             width: "15%",
-            sorter: false,
+            sorter: true,
+            showSorterTooltip: false
           },
           {
             title: "Tên",
             dataIndex: "name",
             key: "name",
             width: "15%",
-            sorter: false,
+            sorter: true,
+            showSorterTooltip: false
           },
           {
             title: "Mô tả",
@@ -166,6 +168,7 @@
           parentId_Filter: "",
           code_Filter: "",
           name_Filter: "",
+          sortQuery: "",
         },
       };
     },
@@ -244,6 +247,7 @@
           ...params,
           pageIndex: pageIndex,
           pageSize: pageSize,
+          sortQuery: this.formSearch.sortQuery,
         };
 
         try {
@@ -263,7 +267,19 @@
       openModalUpdate(id) {
         this.$refs.modalUpdate.showModal(id);
       },
-    },
+      handleTableChange(pagination, filters, sorter) {
+        if (sorter.field && sorter.order) {
+          this.formSearch.sortQuery = `${sorter.field} ${sorter.order === 'ascend' ? 'asc' : 'desc'}`;
+        } else {
+          // Nếu không có sắp xếp, đặt sortQuery về rỗng
+          this.formSearch.sortQuery = '';
+        }
+        this.fetchData(pagination.current, pagination.pageSize, {
+          parentId_Filter: this.$route.params.id,
+        });
+      },
+
+    },//end methods
   };
 </script>
 <style scoped>

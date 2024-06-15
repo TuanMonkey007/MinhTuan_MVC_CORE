@@ -63,39 +63,44 @@
                         style="font-size: 14px;font-weight: 400;line-height: 22px;letter-spacing: 0;text-align: left;color: #807878;">
                         Mã sản phẩm: {{ this.productInfo.code }}</h4>
                     <p class="price-product" style="font-size: 24px; font-weight: 600; line-height: 36px;"> {{
-                        this.productPriceChange }}&#8363;</p>
+                        fomartPrice(this.productPriceChange) }}&#8363;</p>
 
                 </a-col>
 
                 <a-col :span="24">
-                    <span>Chọn màu: <span style="font-weight: 500;"> {{ getSelectedColorLabel() }}</span></span>
-                    <br>
+                    <h4>Chọn màu: <span style="font-weight: 500;"> {{ getSelectedColorLabel() }}</span></h4>
+
                     <a-radio-group v-model:value="selectedColor" :options="productColorOptions" button-style="solid"
                         optionType="button" @change="handleColorChange">
                     </a-radio-group>
                 </a-col>
                 <a-col :span="24">
-                    <span>Chọn size: <span style="font-weight: 500;"> {{ getSelectedSizeLabel() }} </span></span>
-                    <br>
-                    <a-radio-group v-model:value="selectedSize" :options="productSizeOptions" button-style="solid"
-                        optionType="button" @change="handleSizeChange">
-                    </a-radio-group>
-                    <br>
-                    <a-button @click="handleResetSizeColor">Chọn lại</a-button>
+                    <a-row justify="start">
+                        <a-col :xs="6" :sm="6" :md="3" :lg="3" :xl="3">
+                            <h4>Chọn size: <span style="font-weight: 500;"> {{ getSelectedSizeLabel() }}
+                                </span></h4>
+                     
+                            <a-radio-group v-model:value="selectedSize" :options="productSizeOptions"
+                                button-style="solid" optionType="button" @change="handleSizeChange">
+                            </a-radio-group>
+                        </a-col>
+                        <a-col :span="8" style="display: flex; align-items: flex-end;">
+                            <a-button @click="handleResetSizeColor">Chọn lại</a-button>
+                        </a-col>
+                    </a-row>
 
-
+                  
+                   
 
                 </a-col>
             </a-row>
             <a-row>
-                <a-col :span="24">
+                <a-col :span="24" style="margin-top: 10px; margin-bottom: -10px" >
                     <span>Số lượng: <span style="font-weight: 500;"> {{ this.quantity }} </span></span>
                 </a-col>
             </a-row>
             <a-row justify="flex-start" style="margin-top: 20px;">
-                <a-col :xs="24" :sm="24" :md="7" :lg="7" :xl="7">
-
-
+                <a-col :xs="24" :sm="24" :md="5" :lg="5" :xl="5">
                     <a-input-number v-model:value="quantity" min="1" max="10" size="small" :controls="false"
                         class="inputQuantity">
                         <template #addonBefore>
@@ -106,6 +111,9 @@
                         </template>
                     </a-input-number>
                 </a-col>
+                </a-row>
+                <a-divider></a-divider>    
+                <a-row>
                 <a-col :xs="10" :sm="10" :md="4" :lg="4" :xl="4">
                     <a-button @click="handleAddToCart" style="width: 120px;
     background-color: #fff;
@@ -176,6 +184,7 @@
             this.fetchProductColor();
             this.fetchProductSize();
             this.fetchProductInfo();
+
         },
         methods: {
             async fetchProductInfo() {
@@ -183,6 +192,7 @@
                     const response = await APIService.get(`product/${this.id}`);
                     this.productInfo = response.data.data.items[0];
                     this.productPriceChange = this.productInfo.price;
+                    document.title = this.productInfo.name
 
                 } catch (error) {
                     console.error('Error fetching product info:', error);
@@ -341,7 +351,7 @@
                         localStorage.setItem('userCartId', response.data.message);
                     }
                     else {
-                       
+
                         const response = await APIService.post('cart/add-to-cart', {
                             productVariantId: variant.id,
                             cartId: localStorage.getItem('cartId'),
@@ -366,6 +376,39 @@
                 }
 
 
+            },
+            async handleBuyNow() {
+                if (!this.selectedColor || !this.selectedSize) {
+                    notification.error({
+                        message: 'Lỗi',
+                        description: 'Vui lòng chọn màu và size',
+                    });
+                    return;
+                }
+                const variant = this.productVariant.find(
+                    v => v.colorId === this.selectedColor && v.sizeId === this.selectedSize
+                );
+                if (!variant) {
+                    notification.error({
+                        message: 'Lỗi',
+                        description: 'Không tìm thấy sản phẩm phù hợp',
+                    });
+                    return;
+                }
+                this.$router.push({
+                    name: 'BuyNow',
+                    params: {
+                        productVariantId: variant.id, // ID biến thể sản phẩm
+                        quantity: this.quantity,
+                        price: this.productPriceChange
+                    }
+                });
+
+
+            },
+
+            fomartPrice(price) {
+                return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
             },
 
 

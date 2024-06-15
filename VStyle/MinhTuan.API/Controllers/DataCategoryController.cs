@@ -222,5 +222,13 @@ namespace MinhTuan.API.Controllers
         {
             return Ok(_dataCategoryService.GetByParentId(parentId));
         }
+
+        [HttpGet("get-id-by-code-and-parent-code/{code}/{parentCode}")]
+        public async Task<IActionResult> GetIdByCodeAndParentCode(string code, string parentCode)
+        {
+            var res = new ResponseWithDataDto<Guid>();
+            res.Data = await _dataCategoryService.GetIdByCodeandParentCode(code, parentCode);
+            return Ok(res);
+        }
     }
 }

@@ -166,7 +166,7 @@ namespace MinhTuan.API.Controllers
                     }
                     var modelDTO = _mapper.Map<RegisterDTO>(model);
                     modelDTO.UserName = model.PhoneNumber;
-
+                    modelDTO.CreatedDate = DateTime.Now;
                     var result = await _accountService.RegisterAsync(modelDTO);
                     if (result.Succeeded)
                     {
@@ -434,7 +434,11 @@ namespace MinhTuan.API.Controllers
                             userWithImage.AvatarBase64 = null;
                         }
                     }
-                    userWithImage.NameGender = _dataCategoryService.GetNameById((Guid)result.Gender);
+                    if(result.Gender != null)
+                    {
+                        userWithImage.NameGender = _dataCategoryService.GetNameById((Guid)result.Gender);
+                    }
+                    
                     serverResponse.Data = userWithImage;
                 }
                 return Ok(serverResponse);
@@ -658,6 +662,21 @@ namespace MinhTuan.API.Controllers
             response.Message = result.Errors.First().Description;
             return Ok(response);
 
+        }
+
+        [HttpGet("count-user-regis-today")]
+        public async Task<IActionResult> CountUserRegisToday()
+        {
+            var response = new ResponseWithDataDto<int>();
+            response.Data = _accountService.CountUserRegisToday();
+            return Ok(response);
+        }
+        [HttpGet("count-total-user")]
+        public async Task<IActionResult> CountTotalUser()
+        {
+            var response = new ResponseWithDataDto<int>();
+            response.Data = _accountService.CountTotalUser();
+            return Ok(response);
         }
 
     }

@@ -25,4 +25,7 @@ public interface IAccountService
     public Task<string> ForgotPassword(ForgotPasswordDTO model);
     public Task<bool> ResetPassword(ResetPasswordDTO model);
 
+    int CountUserRegisToday();
+    int CountTotalUser();
+
 }

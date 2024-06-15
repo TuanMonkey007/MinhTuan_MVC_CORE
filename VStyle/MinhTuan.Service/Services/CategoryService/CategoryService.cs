@@ -8,14 +8,14 @@ using MinhTuan.Domain.Entities;
 using MinhTuan.Domain.Helper.Pagination;
 using MinhTuan.Domain.Repository.CategoryRepositoy;
 using MinhTuan.Service.Core;
-
+using System.Linq.Dynamic.Core;
 using MinhTuan.Service.SearchDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
+//using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 namespace MinhTuan.Service.Services.CategoryService
 {
@@ -96,6 +96,14 @@ namespace MinhTuan.Service.Services.CategoryService
                         var isNormal = searchDTO.Code_Filter.ToString().ToLower() != idSearch.ToLower();
                         var list = _categoryRepository.GetQueryable().Select(x => x.Code).ToList().Where(x => x.ToString().ToLower().Contains(idSearch.ToLower()));
                         query = query.Where(x => list.Contains(x.Code));
+                    }
+                    if (!string.IsNullOrEmpty(searchDTO.sortQuery))
+                    {
+                        query = query.OrderBy(searchDTO.sortQuery);
+                    }
+                    else
+                    {
+                        query = query.OrderBy(x => x.Name);
                     }
                 }
                 var result = PagedList<CategoryDTO>.Create(query, searchDTO);

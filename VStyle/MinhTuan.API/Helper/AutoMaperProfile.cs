@@ -64,5 +64,6 @@ public class AutoMapperProfile : Profile
         CreateMap<Order, OrderDTO>().ReverseMap();
         CreateMap<OrderDTO, CreateOrderViewModel>().ReverseMap();
         CreateMap<OrderItemDTO, OrderItem>().ReverseMap();
+        CreateMap<BuyNowViewModel, OrderDTO>().ReverseMap();
     }
 }

@@ -13,6 +13,20 @@ module.exports = defineConfig({
   },
   publicPath: '/',
 
+
+  css: {
+    loaderOptions: {
+      less: {
+        lessOptions: {
+          modifyVars: {
+            'primary-color': '#1DA57A', // For example, change the primary color
+          },
+          javascriptEnabled: true,
+        },
+      },
+    },
+  },
+
   
 })
 

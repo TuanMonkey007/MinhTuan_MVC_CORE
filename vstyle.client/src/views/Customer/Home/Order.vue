@@ -107,7 +107,7 @@
                         </a-col>
                         <a-col :span="24">
 
-                            <a-radio-group  style="display: flex; justify-content: space-around;"
+                            <a-radio-group style="display: flex; justify-content: space-around;"
                                 v-model:value="orderInfo.paymentMethod"
                                 :rules="[{ required: true, message: 'Chọn phương thức thanh toán' }]">
                                 <a-radio v-for="item in paymentMethods" :key="item.id" :value="item.id">{{ item.name
@@ -179,7 +179,7 @@
                             <a-row justify="space-around">
 
                                 <a-col :span="16">
-                                    <a-button @click="handleOrderSubmit"  type="primary" class="btn-buy-now"
+                                    <a-button @click="handleOrderSubmit" type="primary" class="btn-buy-now"
                                         style="border-radius: 20px; width: 100%; background-color: #c12227; height: 40px;">
                                         <a style="color: white;">Đặt
                                             hàng</a>
@@ -463,7 +463,7 @@
                 this.selectedWard = label;
             },
             async handleOrderSubmit() {
-                console.log(this.orderInfo);
+             
                 try {
                     await this.$refs.formOrder.validate();
                     if (this.orderInfo.paymentMethod == '') {
@@ -473,7 +473,7 @@
                         });
                         return;
                     }
-                  
+
                     const selectedProvince = this.provinceOptions.find(province => province.value == this.orderInfo.selectedProvince).label;
                     const selectedDistrict = this.districtOptions.find(district => district.value == this.orderInfo.selectedDistrict).label;
                     const selectedWard = this.wardOptions.find(ward => ward.value == this.orderInfo.selectedWard).label;
@@ -488,37 +488,45 @@
                         totalAmount: this.total,
                         cartId: userCartId
                     };
-                    if(this.voucherId != null){
+                    if (this.voucherId != null) {
                         payload.voucherId = this.voucherId
                     }
-                    if(localStorage.getItem('userEmail') != null){ //Lấy userId từ email nếu đã đăng nhập
+                    if (localStorage.getItem('userEmail') != null) { //Lấy userId từ email nếu đã đăng nhập
                         const resGetUserId = await APIService.get(`account/get-user-by-email/${localStorage.getItem('userEmail')}`);
                         payload.userId = resGetUserId.data.data.id;
                     }
                     const response = await APIService.post('order/create', payload);
-                    console.log(response)
-                    
+                  
+                
                     //Xử lý khi người dùng chưa đăng nhập
-                   if(userCartId == localStorage.getItem('cartId')){
-                       localStorage.removeItem('cartId'); //Xóa cartId trong localStorage
-                       localStorage.removeItem('userCartId'); //Xóa userCartId trong localStorage
-                       const orderIds = JSON.parse(localStorage.getItem('orderIds')) || [];
-                       orderIds.push(response.data.status);
-                       localStorage.setItem('orderIds', JSON.stringify(orderIds));
-                   }else{
-                       localStorage.removeItem('userCartId'); //Xóa userCartId trong localStorage
-                   }
-                   if(response.data.message.includes('http')){
-                       window.location.href = response.data.message
-                       
-                   }else{
-                    this.$router.push({ name: 'CustomerHome' });
-                    notification.success({
-                        message: 'Thống báo',
-                        description: 'Đặt hàng thành công'
-                    });
-                   }
-                    
+                    if (localStorage.getItem('userName') == null) {
+                        localStorage.removeItem('cartId'); //Xóa cartId trong localStorage
+                        localStorage.removeItem('userCartId'); //Xóa userCartId trong localStorage
+                        const orderIds = JSON.parse(localStorage.getItem('orderIds')) || [];
+                        orderIds.push(response.data.status);
+                        localStorage.setItem('orderIds', JSON.stringify(orderIds));
+                        
+                    } else {
+                        localStorage.removeItem('userCartId'); //Xóa userCartId trong localStorage
+                    }
+                    if (response.data.message.includes('http')) {
+                        window.location.href = response.data.message
+
+                    } else {
+                        this.$router.push({
+                            name: 'OrderSuccess',
+                            query: {
+                                success: 'true', // Hoặc 'false' tùy thuộc vào trạng thái đặt hàng
+                                ordercode: response.data.status // Mã đơn hàng
+                            }
+                        });
+
+                        notification.success({
+                            message: 'Thống báo',
+                            description: 'Đặt hàng thành công'
+                        });
+                    }
+
 
 
 

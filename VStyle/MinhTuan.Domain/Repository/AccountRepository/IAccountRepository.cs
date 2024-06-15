@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MinhTuan.Domain.Repository.AccountRepository;
 
-public interface IAccountRepository
+public interface IAccountRepository: IRepository<AppUser>
 {
     public Task<string> LogInAsync(LogInDTO model);
     public Task<IdentityResult> RegisterAsync(RegisterDTO model);

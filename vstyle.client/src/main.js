@@ -6,8 +6,6 @@ window.axios = axios;// Gán axios vào window để sử dụng axios ở bất
 import Antd from 'ant-design-vue'; // Đăng ký tất cả component của ant-design-vue
 //import icon của ant-design-vue
 
-import "@ant-design/icons-vue";
-//import 'ant-design-vue/dist/reset.css'; // Import css của ant-design-vue
 
 import { message,notification } from 'ant-design-vue'; // Import message từ ant-design-vue
 import '@ant-design/icons-vue'; // Import icon của ant-design-vue
@@ -15,13 +13,16 @@ import { library } from '@fortawesome/fontawesome-svg-core' // Import thư việ
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
+import VueApexCharts from "vue3-apexcharts"
+
+
 library.add(fas, far, fab)
 /* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 const app = createApp(App)
-
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.use(Antd)
+app.use(VueApexCharts);
 app.use(router)
 message.config({
   top: '24px', // Set the distance from the top of the screen

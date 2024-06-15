@@ -561,6 +561,7 @@
             },
         },
         async mounted() {
+            await this.fetchProvice();
             this.apiUrl = process.env.VUE_APP_URL + 'Account/valid-upload'; // Truy cập trong mounted
             const response = await APIService.get('datacategory/get-list-by-parent-code/GIOI_TINH');
             this.listGender = response.data.data;
@@ -586,7 +587,7 @@
                 this.checkLockOut = false;
             }
             this.checkEmailConfirmed = serverResponse.data.data.emailConfirmed;
-            await this.fetchProvice();
+           
 
 
             // Kiểm tra nếu có avatar và chuyển đổi thành fileList

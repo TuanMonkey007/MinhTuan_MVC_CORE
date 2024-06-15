@@ -1,15 +1,8 @@
 <template>
-    <a-row class="containerPage" justify="center">
-        <a-col :span="24" style="display: flex; justify-content: center">
-            <a-card class="login-card" style="
-          background: white;
-          margin-top: 20px;
-          max-width: fit-content;
-          padding: 20px;
-          border-radius: 10px;
-          box-shadow: rgba(150, 150, 150, 0.5) 0px 1px 20px 1px;
-        ">
-                <a-tabs v-model:activeKey="activeKey" centered size="large">
+    <a-modal v-model:open="open"  :footer="null" width="500px" style="top:50px">
+    <a-row justify="center">
+        <a-col :span="24" >
+                <a-tabs v-model:activeKey="activeKey" centered >
                     <a-tab-pane key="LoginTab" force-render>
                         <template #tab>
                             <span>
@@ -49,12 +42,12 @@
                                             <a-checkbox v-model:checked="formLogin.remember">Ghi nhớ đăng
                                                 nhập</a-checkbox>
                                         </a-form-item>
-                                        <a class="login-form-forgot" @click="handleBtnForgot">Quên mật khẩu?</a>
+                                        <a class="login-form-forgot" style="color: #db3a35; " @click="handleBtnForgot">Quên mật khẩu?</a>
                                     </a-form-item>
 
                                     <a-form-item>
                                         <a-button :disabled="disableBtnLogin" :loading="loading" type="primary"
-                                            html-type="submit" style="margin-right: 20px" class="login-form-button">
+                                            html-type="submit" style="width: 100%;margin-right: 20px" class="login-form-button">
                                             Đăng nhập
                                         </a-button>
                                     </a-form-item>
@@ -205,9 +198,10 @@
                         </a-row>
                     </a-tab-pane>
                 </a-tabs>
-            </a-card>
+            
         </a-col>
     </a-row>
+</a-modal>
 </template>
 <script>
     import { Avatar, message,notification } from "ant-design-vue";
@@ -239,6 +233,11 @@
             MailOutlined,
             FacebookOutlined,
             GoogleOutlined,
+        },
+        data() {
+            return {
+                open: false
+            }
         },
         setup() {
             const layout = {
@@ -311,6 +310,9 @@
         }, //end setup
 
         methods: {
+            showModal() {
+                this.open = true
+            },
             handleBtnForgot() {
                 this.activeKey = "ForgotTab";
             }, //end handleBtnForgot
@@ -489,4 +491,17 @@
         }, //end methods
     }); //end export default
 </script>
-<style scoped></style>
+<style scoped>
+.login-form-button {
+    width: 100%;
+    background-color: #db3a35;
+    color: #ffffff;
+    border-radius: 48px;
+    font-size: 14px;
+    font-weight: 500;
+}
+:deep(.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn) {
+    color: #db3a35;
+    text-shadow: 0 0 0.25px currentcolor;
+}
+</style>

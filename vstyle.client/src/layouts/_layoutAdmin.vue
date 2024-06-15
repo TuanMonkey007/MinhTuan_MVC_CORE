@@ -1,7 +1,7 @@
 <template>
   <a-layout style="min-height: 100vh">
-    <a-drawer v-model:open="visible" class="custom-class" style="color: red" :closable="false" placement="left"
-    :width="{ xs: '90%', sm: '90%', md: '350px' }">
+    <a-drawer v-model:open="visible"  :closable="false" placement="left"
+    :width="{ xs: '90%', sm: '90%', md: '400px', xl: '500px', xxl: '500px' }">
       <template #title>
         <a-row justify="space-between">
           <a-col :span="20">
@@ -17,7 +17,7 @@
           </a-col>
         </a-row>
       </template>
-      <a-menu v-model:selectedKeys="selectedMenu" mode="inline"
+      <a-menu forceSubMenuRender="true" v-model:selectedKeys="selectedMenu" mode="inline"
         style="border: none;padding-top: 10px;font-size: 16px;font-weight: 400">
         <a-menu-item key="Dashboard">
           <router-link :to="{ name: 'AdminHome' }">
@@ -43,14 +43,14 @@
             <span>  Mã giảm giá</span>
           </router-link>
         </a-menu-item>
-        <a-sub-menu key="Settings">
+        <a-sub-menu v-if="isAdmin" key="Settings">
           <template #title>
             <span>
               <setting-outlined />
               <span>Hệ thống</span>
             </span>
           </template>
-          <a-menu-item v-if="isAdmin" key="Account">
+          <a-menu-item  key="Account">
             <router-link :to="{ name: 'AccountHome' }">
               <font-awesome-icon icon="fa-regular fa-user" />
               <span>  Tài khoản</span>
@@ -69,16 +69,18 @@
     <a-layout-header
       style="background-color: #fff; position: fixed; z-index: 1;width: 100%;margin-bottom: 64px;  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05), 0 4px 16px rgba(0, 0, 0, 0.1);">
       <a-row justify="space-between" style="width: 100%">
-        <a-col :span="2">
-          <font-awesome-icon @click="showDrawer" :icon="['fas', 'bars']" style="margin-left: 20px; font-size:24px;" />
-        </a-col>
-        <a-col :span="2">
-          <router-link :to="{ name: 'CustomerHome' }">
+        <a-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4"  @click="showDrawer">
+          <a-row>
+            <a-col :span="12"> <font-awesome-icon  @click="showDrawer"  :icon="['fas', 'bars']" style="margin-left: 20px; font-size:24px;" />
+            </a-col>  
+            <a-col :span="12"> <router-link :to="{ name: 'AdminHome' }">
             <img src="@/assets/VStyleLogo_Option1.png" alt="VStyle"
-              style="width: 70px; height: 70px; margin-left: 50px" />
-          </router-link>
-        </a-col>
-        <a-col :span="20" style="justify-content: flex-end; display: flex">
+              style="width: 70px; height: 70px; object-fit: contain" />
+          </router-link></a-col>  
+          </a-row>
+            </a-col>
+        
+        <a-col :span="2" style="justify-content: flex-end; display: flex">
          
           
             <a-dropdown style="margin-bottom: 0px;">
@@ -124,10 +126,10 @@
       <a-layout>
         <a-row>
           <a-col :span="24">
-            <a-layout-content style="background-color: #ececec">
+            <a-layout-content style="background-color: #f6f9ff">
               <a-row :gutter="0">
 
-                <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" >
                   <router-view />
                   <a-layout-footer style="text-align: center">
                     VStyle ©2024 Tạo bởi
@@ -146,12 +148,11 @@
     </a-layout-content>
 
   </a-layout>
-  <a-back-top :visibilityHeight="100" style="background-color:#c21f24 ">
-  </a-back-top>
+  <a-back-top :visibilityHeight="100" style="background-color:#c21f24 "/>
 </template>
 <script>
+  import DashboardSidebar from "@/components/Layouts/DashboardSidebar.vue";
   import { ref, provide, onMounted, onUnmounted } from "vue";
-
   import {
     DesktopOutlined,
     UserOutlined,
@@ -185,6 +186,7 @@
       ShoppingCartOutlined,
       LogoutOutlined,
       CaretDownOutlined,
+      DashboardSidebar,
     },
     setup() {
       const visible = ref(false);
@@ -242,7 +244,7 @@
           localStorage.removeItem("userEmail");
           localStorage.removeItem("userCartId");
           localStorage.removeItem("jwt");
-          this.$router.push("/login");
+          this.$router.push("/");
           this.$notification.success({
             message: "Đăng xuất thành công",
             description: "Hẹn gặp lại bạn!",
@@ -261,7 +263,9 @@
     }, //end methods
   };
 </script>
+
 <style scoped>
+
   :deep(.table-striped) td {
     background-color: #ededed;
   }

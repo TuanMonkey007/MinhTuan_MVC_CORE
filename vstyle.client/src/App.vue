@@ -1,38 +1,32 @@
 <template>
  
 
-  <router-view> </router-view>
-
+  <router-view></router-view>
+  
 
 </template>
 
 <script>
+
   export default {
     name: 'App',
-    components: {
-    },//end components
+ 
    
   }
 </script>
 
+
 <style>
+
 body, html {
     margin: 0;
     padding: 0;
     background-color: #f6f9ff;;
     min-height: 100vh;
+    background: #f6f9ff
   }
- :deep(#app) {
-  font-family: 'Lora', serif !important;  /* Thay Merriweather thành Lora */
- 
-  /* -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; */
-  text-align: left;
-  color: #f6f9ff;
-  background-color: #f6f9ff;
-  min-height: 100vh;
-  max-width: 100%;
-}
+
+
 
 .route-enter-active {
   transition: all 0.2s ease-out; /* Transition mượt mà */
@@ -100,4 +94,5 @@ img {
   height: auto; /* Giữ tỷ lệ khung hình của ảnh */
   object-fit: contain; /* Hoặc object-fit: cover; */
 }
+
 </style>

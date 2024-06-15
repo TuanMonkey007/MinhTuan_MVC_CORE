@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using MinhTuan.Domain.Core.Repository;
 using MinhTuan.Domain.DTOs.AccountDTO;
 using MinhTuan.Domain.Entities;
 using System;
@@ -14,22 +15,34 @@ using System.Threading.Tasks;
 
 namespace MinhTuan.Domain.Repository.AccountRepository;
 
-public class AccountRepository : IAccountRepository
+public class AccountRepository : Repository<AppUser>, IAccountRepository
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly SignInManager<AppUser> _signInManager;
     private readonly IConfiguration _configuration;
     private readonly IMapper _mapper;
 
-    public AccountRepository(UserManager<AppUser> userManager,
-        SignInManager<AppUser> signInManager, IConfiguration configuration,
-        IMapper mapper)
+    public AccountRepository(VStyleContext context, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,
+        IConfiguration configuration, 
+        IMapper mapper
+        
+        ) : base(context)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _configuration = configuration;
         _mapper = mapper;
     }
+
+    //public AccountRepository(UserManager<AppUser> userManager,
+    //    SignInManager<AppUser> signInManager, IConfiguration configuration,
+    //    IMapper mapper)
+    //{
+    //    _userManager = userManager;
+    //    _signInManager = signInManager;
+    //    _configuration = configuration;
+    //    _mapper = mapper;
+    //}
 
     public async Task<string> LogInAsync(LogInDTO model)
     {

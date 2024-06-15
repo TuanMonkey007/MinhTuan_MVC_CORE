@@ -16,5 +16,7 @@
         public Guid? VoucherId { get; set; }
         public double ShippingCost { get; set; }
         public Guid CartId { get; set; }
+        public int? Quantity { get; set; }
+        public Guid? ProductVariantId { get; set; }
     }
 }

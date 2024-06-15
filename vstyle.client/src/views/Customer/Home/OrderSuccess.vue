@@ -50,9 +50,8 @@
         </a-col>
     </a-row>
     <transition name="route" mode="out-in" appear>
-        <a-row :gutter="[8,30]" align="center" justify="center" style="margin-top: 20px; " >
-            <a-col :span="24" style="text-align: center">
-
+        <a-row :gutter="[8, 30]" align="center" justify="center" style="margin-top: 20px; ">
+            <a-col v-if="this.success" :span="24" style="text-align: center">
                 <div><span
                         style="color: #c12227;font-family: Archivo;font-size: 24px;font-weight: 600;line-height: 36px;letter-spacing: 0;text-align: center;">ĐẶT
                         HÀNG THÀNH CÔNG!</span></div>
@@ -71,87 +70,90 @@
                     </p>
                 </div>
             </a-col>
-      
-            <a-col :xs="24" :sm="24" :md="10" :lg="10" :xl="10">
-                <h2>THÔNG TIN NHẬN HÀNG</h2>
-               <a-descriptions class="border-deptrai" style="padding:10px">
-                    <a-descriptions-item :span="24" label="Tên người nhận"></a-descriptions-item>
-                    <a-descriptions-item :span="24" label="Số điện thoại"></a-descriptions-item>
-                    <a-descriptions-item :span="24" label="Địa chỉ nhận hàng"></a-descriptions-item>
-                    <a-descriptions-item :span="24" label="Phương thức thanh toán"></a-descriptions-item>
-                    <a-descriptions-item :span="24" label="Trạng thái thanh toán"></a-descriptions-item>
-               </a-descriptions>
+            <a-col v-else :span="24" style="text-align: center">
+
+                <div><span
+                        style="color: #c12227;font-family: Archivo;font-size: 24px;font-weight: 600;line-height: 36px;letter-spacing: 0;text-align: center;">ĐƠN
+                        HÀNG CHƯA THANH TOÁN!</span></div>
+                <div>
+                    <p
+                        style="font-family: Archivo; font-size: 20px;font-weight: 400;line-height: 24px;letter-spacing: 0;text-align: center;margin-block-start: 5px;margin-block-end: 5px;">
+                        Cám ơn bạn đã lựa chọn mua sắm tại VStyle!
+                    </p>
+                    <p
+                        style="font-family: Archivo; font-size: 20px;font-weight: 400;line-height: 24px;letter-spacing: 0;text-align: center;margin-block-start: 5px;margin-block-end: 5px;">
+                        Đơn hàng của bạn CHẮC CHẮN đã được chuyển tới hệ thống xử lý đơn hàng của VStyle.
+                    </p>
+                    <p
+                        style="font-family: Archivo; font-size: 20px;font-weight: 400;line-height: 24px;letter-spacing: 0;text-align: center;margin-block-start: 5px;margin-block-end: 5px;">
+                        Vui lòng hoàn tất thanh toán để giao đơn hàng được gửi đi !!!.
+                    </p>
+                </div>
             </a-col>
 
-            <a-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8" style="  margin: 20px">
-                <h2>THÔNG TIN ĐƠN HÀNG</h2>
-                <a-card class="border-deptrai">
-                    <a-row justify="center">
-                        <a-col :span="12">
-                            <span style="font-weight: 600;text-align: left; font-size: 14px">Tổng tiền hàng</span>
+            <a-col v-if="this.success" :xs="24" :sm="24" :md="16" :lg="16" :xl="16" class="border-deptrai">
+                <a-row justify="center">
+                    <a-col :span="10">
 
-                        </a-col>
-                        <a-col :span="12" style="text-align: end;">
-                            <span style="font-weight: 600;text-align: right;color: #c12227; font-size: 14px;">
-                                {{ fomartPrice(this.totalPrice) }} &#8363;
-                            </span>
-                        </a-col>
-                        <a-col :span="12">
-                            <span style="font-weight: 600;text-align: left; font-size: 14px">Phí vận chuyển</span>
+                        <a-divider orientation="center" style="margin-top: 10px; font-size: 20px">THÔNG TIN NHẬN HÀNG</a-divider>
+                    </a-col>
+                </a-row>
+                <a-row>
+                    <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12"><a-descriptions style="padding:10px"
+                            title="Thông tin nhận hàng">
+                            <a-descriptions-item :span="24" label="Tên người nhận"> <b>{{ orderInfo.customerName
+                                    }}</b></a-descriptions-item>
+                            <a-descriptions-item :span="24" label="Số điện thoại"><b> {{ orderInfo.customerPhoneNumber
+                                    }}</b> </a-descriptions-item>
+                            <a-descriptions-item :span="24" label="Địa chỉ nhận hàng"><b> {{ orderInfo.shippingAddress
+                                    }}</b> </a-descriptions-item>
+                            <a-descriptions-item :span="24" label="Ghi chú cho người bán"> {{ orderInfo.customerNote
+                                }}</a-descriptions-item>
+                            <a-descriptions-item :span="24" label="Trang thái"> <a-tag color="green"> {{
+                                    orderInfo.statusName }}</a-tag></a-descriptions-item>
 
-                        </a-col>
-                        <a-col :span="12" style="text-align: end;">
-                            <span style="font-weight: 600;text-align: right;color: #c12227; font-size: 14px;">
-                                {{ fomartPrice(this.shipingCost) }} &#8363;
-                            </span>
-                        </a-col>
-                        <a-col :span="12">
-                            <span style="font-weight: 600;text-align: left; font-size: 14px">Áp dụng giảm giá</span>
-                        </a-col>
-                        <a-col :span="12" style="text-align: end;">
-                            <span style="font-weight: 600;text-align: right;color: green; font-size: 14px;">
-                                {{ fomartPrice(this.savingVoucher) }} &#8363;
-                            </span>
-                        </a-col>
-                    </a-row>
-                    <a-divider />
-                    <a-card-meta style="margin-top: 20px;">
-                        <template #title>
-                            <a-row>
-                                <a-col :span="12">
-                                    <span style="font-weight: 600;text-align: left; font-size: 16px">TỔNG THANH
-                                        TOÁN</span>
-                                </a-col>
-                                <a-col :span="12" style="text-align: end;">
-                                    <span style="font-weight: 600;text-align: right;color: #c12227; font-size: 20px;">
-                                        {{ fomartPrice(this.total) }} &#8363;
+                        </a-descriptions></a-col>
 
-                                    </span>
-                                </a-col>
-                            </a-row>
-                        </template>
-                        <template #description>
-                            <a-row justify="space-around">
-                                <a-col :span="10">
-                                <router-link :to="{name: 'CustomerHome'}">
-                                <a-button type="primary"
-                                    style="border-radius: 20px; width: 100%; background-color: #ffffff; border-color: #dc3a35; height: 40px">
-                                  <a  style="color: #dc3a35;"> Tiếp tục mua sắm</a>
-                                </a-button>
-                            </router-link> 
-                            </a-col>
-                                <a-col :span="10">
-                                    <a-button type="primary" class="btn-buy-now"
-                                        style="border-radius: 20px; width: 100%; background-color: #c12227; height: 40px;">
-                                        <router-link :to="{ name: 'CustomerHome' }"><a style="color: white;">Theo dõi đơn hàng</a></router-link>
-                                    </a-button>
-                                </a-col>
+                    <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+                        <a-descriptions style="padding:10px" title="Thông tin đơn hàng">
+                            <a-descriptions-item :span="24" label="Mã đơn"><b> {{ orderInfo.code }}
+                                </b></a-descriptions-item>
+                            <a-descriptions-item :span="24" label="Ngày tạo"><b> {{
+                                    formatCreatedDate(orderInfo.createdDate)
+                                    }} </b></a-descriptions-item>
+                            <a-descriptions-item :span="24" label="Phương thức thanh toán"><a-tag color="default"> {{
+                                    orderInfo.paymentMethodName }}</a-tag></a-descriptions-item>
+                            <a-descriptions-item :span="24" label="Trạng thái thanh toán"><a-tag color="green"> {{
+                                    orderInfo.paymentStatusName }}</a-tag></a-descriptions-item>
+                            <a-descriptions-item :span="24" label="Tổng thanh toán"><span style="color: red">{{
+                                    fomartPrice(orderInfo.totalAmount) }}&#8363;</span> </a-descriptions-item>
+                        </a-descriptions>
+                    </a-col>
+                </a-row>
+               
 
-
-                            </a-row>
-                        </template>
-                    </a-card-meta>
-                </a-card>
+            </a-col>
+            <a-col :span="16" style="margin-bottom: 20px">
+                <a-divider style="margin-top: 0px"></a-divider>
+                <a-row justify="space-around">
+                    <a-col :span="10">
+                        <router-link :to="{ name: 'CustomerHome' }">
+                            <a-button type="primary"
+                                style="border-radius: 20px; width: 100%; background-color: #ffffff; border-color: #dc3a35; height: 40px">
+                                <a style="color: #dc3a35;"> Tiếp tục mua sắm</a>
+                            </a-button>
+                        </router-link>
+                    </a-col>
+                    <a-col :span="10">
+                        <router-link :to="{ name: 'TrackingOrder' }">
+                        <a-button type="primary" class="btn-buy-now"
+                            style="border-radius: 20px; width: 100%; background-color: #c12227; height: 40px;">
+                           <a style="color: white;">Theo dõi
+                                    đơn hàng</a>
+                        </a-button>
+                    </router-link>
+                    </a-col>
+                </a-row>
             </a-col>
         </a-row>
     </transition>
@@ -162,7 +164,7 @@
     import { message, notification } from 'ant-design-vue';
     import { debounce } from 'lodash';
     import axios from 'axios';
-
+    import dayjs from 'dayjs';
     export default {
         components: {
             deleteOutlined
@@ -170,261 +172,54 @@
 
         data() {
             return {
-                provinceOptions: [],
-                selectedProvince: '',
-                districtOptions: [],
-                selectedDistrict: '',
-                wardOptions: [],
-                selectedWard: '',
+
                 orderInfo: {
-                    fullName: '',
-                    phoneNumber: '',
-                    selectedProvince: '',
-                    selectedDistrict: '',
-                    selectedWard: '',
-                    address: '',
-                    note: '',
-                    paymentMethod: ''
+                    code: '',
+                    customerName: '',
+                    customerPhoneNumber: '',
+                    statusName: '',
+                    shippingAddress: '',
+                    totalAmount: 0,
+                    shippingCost: 0,
+                    createdDate: '',
+                    paymentStatusName: '',
+                    paymentMethodName: '',
+
                 },
-                paymentMethods: [],
+                orderCode: '',
+                success: false,
+
                 dataSourceTable: [],
-                totalPrice: 0,
-                shipingCost: 0,
-                total: 0,
-                savingVoucher: 0,
-                searchVoucher: '',
-                loadingSearch: false,
+
 
 
 
             }
         },
         mounted() {
-            this.fetchProvice();
-            this.fetchPaymentMethods();
-            // this.fetchUserInfo();
+            this.orderCode = this.$route.query.ordercode;
+            this.success = this.$route.query.success;
+            console.log(this.success)
+            console.log(this.orderCode)
+            this.fetchOrderInfo();
+
         },
         methods: {
-            async onSearchVoucher() {
-                if (this.searchVoucher == '') {
-                    return;
-                }
-                try {
-                    this.loadingSearch = true;
-                    const response = await APIService.get(`voucher/get-voucher-by-code/${this.searchVoucher}`);
-                    if (response.data.data == null) {
-                        notification.error({
-                            message: 'Lỗi',
-                            description: 'Mã giảm giá không tồn tại'
-                        });
-                        return;
-                    }
-                    if (response.data.data.type == 1) { //Giảm theo số tiền
-                        if (this.getTotalPrice() >= response.data.data.minimumPurchaseAmount) {
-                            this.savingVoucher = response.data.data.discountAmount;
-                            this.total = this.getTotalPrice() + this.shipingCost - this.savingVoucher;
-                            notification.success({
-                                message: 'Thành công',
-                                description: `Áp dụng mã giảm giá thành công`
-                            });
-                            console.log(response.data.data.type)
-                            return;
-                        } else {
-                            notification.warning({
-                                message: 'Lỗi',
-                                description: `Đơn hàng phải có giá trị tối thiểu ${response.data.data.minimumPurchaseAmount}đ`
-                            });
-                        }
-
-                    } else {
-
-                        this.savingVoucher = this.getTotalPrice() * response.data.data.discountPercent / 100;
-                        if (this.savingVoucher > response.data.data.maxValue) {
-                            this.savingVoucher = response.data.data.maxValue;
-                        }
-                        this.total = this.getTotalPrice() + this.shipingCost - this.savingVoucher;
-                        notification.success({
-                            message: 'Thành công',
-                            description: `Áp dụng mã giảm giá thành công`
-                        });
-
-                        return
-
-
-                    }
-                } catch (error) {
-                    notification.error({
-                        message: 'Lỗi',
-                        description: error.message
-                    });
-                } finally {
-                    this.loadingSearch = false;
-                }
-
+            formatCreatedDate(date) {
+                return dayjs(date).format("HH:mm:ss DD/MM/YYYY ");
             },
+
             fomartPrice(price) {
                 return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
             },
-            getTotalPrice() {
-                return this.dataSourceTable.reduce((total, item) => total + item.productPrice * item.quantity, 0);
-            },
-            async fetchUserInfo() {
+            async fetchOrderInfo() {
                 try {
-                    const userCartId = localStorage.getItem('userCartId') ? localStorage.getItem('userCartId') : localStorage.getItem('cartId');
-                    if (userCartId != null) {
-                        const responseCart = await APIService.get(`cart/${userCartId}`);
-
-                        if (responseCart.data.data.length == 0) {
-                            this.$router.push({ name: 'CustomerHome' });
-                            return;
-                        } else {
-                            this.dataSourceTable = responseCart.data.data;
-                            this.totalPrice = this.dataSourceTable.reduce((total, item) => total + item.productPrice * item.quantity, 0);
-                            this.shipingCost = this.totalPrice > 300000 ? 0 : 30000; //Phí vận chuyển theo tổng tiền hàng
-                            this.total = this.totalPrice + this.shipingCost;
-                        }
-
-                    }
-
-
-                    const userEmail = localStorage.getItem('userEmail');
-
-                    if (userEmail != null) {
-                        const response = await APIService.get(`account/get-user-by-email/${userEmail}`);
-                        this.orderInfo.fullName = response.data.data.fullName;
-                        this.orderInfo.phoneNumber = response.data.data.phoneNumber;
-                        this.orderInfo.address = response.data.data.address;
-                        this.orderInfo.selectedProvince = response.data.data.provinceId;
-                        // Tạo Axios instance mới
-                        const apiClient = axios.create();
-
-                        apiClient.interceptors.request.use(config => {
-                            config.headers['token'] = process.env.VUE_APP_GHN_TOKEN; // Gán token trực tiếp
-                            return config;
-                        });
-                        if (this.orderInfo.selectedProvince != null) {
-                            const responseDistrict = await apiClient.get(`https://online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=${this.orderInfo.selectedProvince}`);
-                            this.districtOptions = responseDistrict.data.data.map(district => ({
-                                label: district.DistrictName,
-                                value: district.DistrictID,
-                                // selected: district.DistrictID == response.data.data.districtId // Đánh dấu selected
-
-
-                            }));
-                            this.orderInfo.selectedDistrict = response.data.data.districtId;
-                            this.orderInfo.selectedWard = response.data.data.wardId.toString();
-                            if (this.orderInfo.selectedDistrict != null) {
-                                const responseWard = await apiClient.get(`https://online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=${this.orderInfo.selectedDistrict}`);
-                                this.wardOptions = responseWard.data.data.map(ward => ({
-                                    label: ward.WardName,
-                                    value: ward.WardCode,
-
-                                }));
-
-
-                            }
-                        }
-
-
-                    }
-
+                    const response = await APIService.get(`order/get-order-info-by-code/${this.orderCode}`);
+                    this.orderInfo = response.data.data;
                 } catch (error) {
-                    notification.error({
-                        message: 'Lỗi',
-                        description: error.message
-                    });
+                    console.error('Error fetching order info:', error);
                 }
             },
-            async fetchPaymentMethods() {
-                try {
-                    const response = await APIService.get('datacategory/get-list-by-parent-code/PAYMENT_METHOD');
-
-                    this.paymentMethods = response.data.data;
-                } catch (error) {
-                    notification.error({
-                        message: 'Lỗi',
-                        description: 'Không thể lấy danh sách phương thức thanh toán'
-                    });
-                }
-            },
-            async fetchProvice() {
-                try {
-                    // Tạo Axios instance mới
-                    const apiClient = axios.create();
-
-                    apiClient.interceptors.request.use(config => {
-                        config.headers['token'] = process.env.VUE_APP_GHN_TOKEN; // Gán token trực tiếp
-                        return config;
-                    });
-                    const response = await apiClient.get('https://online-gateway.ghn.vn/shiip/public-api/master-data/province');
-                    this.provinceOptions = response.data.data.map(province => ({
-                        label: province.ProvinceName,
-                        value: province.ProvinceID
-                    }));
-
-
-                } catch (error) {
-                    notification.error({
-                        message: 'Lỗi',
-                        description: 'Không thể lấy danh sách tỉnh thành'
-                    });
-                }
-            },// Hàm xử lý khi chọn tỉnh
-            async handleChangeProvince(value, label) {
-                try {
-
-                    // Tạo Axios instance mới
-                    const apiClient = axios.create();
-
-                    apiClient.interceptors.request.use(config => {
-                        config.headers['token'] = process.env.VUE_APP_GHN_TOKEN; // Gán token trực tiếp
-                        return config;
-                    });
-                    this.selectedProvince = label;
-                    this.orderInfo.selectedDistrict = null;
-                    this.orderInfo.selectedWard = null;
-                    this.districtOptions = [];
-                    this.wardOptions = [];
-                    const response = await apiClient.get(`https://online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=${value}`);
-                    this.districtOptions = response.data.data.map(district => ({
-                        label: district.DistrictName,
-                        value: district.DistrictID
-                    }));
-                } catch (error) {
-                    notification.error({
-                        message: 'Lỗi',
-                        description: 'Không thể lấy danh sách huyện'
-                    });
-                }
-            },// Hàm xử lý khi chọn huyện
-            async handleChangeDistrict(value, label) {
-                try {
-                    // Tạo Axios instance mới
-                    const apiClient = axios.create();
-
-                    apiClient.interceptors.request.use(config => {
-                        config.headers['token'] = process.env.VUE_APP_GHN_TOKEN; // Gán token trực tiếp
-                        return config;
-                    });
-                    this.selectedDistrict = label;
-                    this.orderInfo.selectedWard = null;
-                    this.wardOptions = [];
-                    const response = await apiClient.get(`https://online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=${value}`);
-                    this.wardOptions = response.data.data.map(ward => ({
-                        label: ward.WardName,
-                        value: ward.WardCode
-                    }));
-                } catch (error) {
-                    notification.error({
-                        message: 'Lỗi',
-                        description: 'Không thể lấy danh sách xã'
-                    });
-                }
-            },// Hàm xử lý khi chọn xã
-            handleChangeWard(label) {
-                this.selectedWard = label;
-            }
-
         }
     }
 </script>

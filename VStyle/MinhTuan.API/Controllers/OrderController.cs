@@ -6,6 +6,8 @@ using MinhTuan.API.ViewModels.OrderViewModel;
 using MinhTuan.Domain.Core.DTO;
 using MinhTuan.Domain.DTOs.CategoryDTO;
 using MinhTuan.Domain.DTOs.OrderDTO;
+using MinhTuan.Domain.DTOs.ProductDTO;
+using MinhTuan.Domain.DTOs.StatisticDTO;
 using MinhTuan.Domain.DTOs.VNPayDTO;
 using MinhTuan.Domain.Entities;
 using MinhTuan.Domain.Helper.Pagination;
@@ -16,9 +18,11 @@ using MinhTuan.Service.Services.DataCategoryService;
 using MinhTuan.Service.Services.OrderItemService;
 using MinhTuan.Service.Services.OrderService;
 using MinhTuan.Service.Services.PaymentInfoService;
+using MinhTuan.Service.Services.ProductService;
 using MinhTuan.Service.Services.VNPAY;
 using MinhTuan.Service.Services.VoucherService;
 using Newtonsoft.Json;
+using System.Net.WebSockets;
 
 namespace MinhTuan.API.Controllers
 {
@@ -38,6 +42,7 @@ namespace MinhTuan.API.Controllers
         private readonly IVnPayService _vnpayService;
         private readonly IConfiguration _config;
         private readonly IPaymentInfoService _paymentInfoService;
+        private readonly IProductService _productService;
 
         public OrderController(
              IMapper mapper,
@@ -51,7 +56,8 @@ namespace MinhTuan.API.Controllers
                 UserManager<AppUser> userManager,
                 IVnPayService vnPayService,
                 IConfiguration config,
-                IPaymentInfoService paymentInfoService
+                IPaymentInfoService paymentInfoService,
+                IProductService productService
                )
         {
             _mapper = mapper;
@@ -66,6 +72,7 @@ namespace MinhTuan.API.Controllers
             _vnpayService = vnPayService;
             _config = config;
             _paymentInfoService = paymentInfoService;
+            _productService = productService;
             
         }
 
@@ -210,6 +217,111 @@ namespace MinhTuan.API.Controllers
             return Ok(serverResponse);
         }
 
+        [HttpGet("get-link-pay-vnpay/{id}")]
+        public async Task<IActionResult> GetLinkPayVNPay(Guid id)
+        {
+            var serverResponse = new ResponseWithMessageDto();
+            var orderInfo = await _orderService.GetByIdAsync(id);
+            var vnpayModel = new VnPaymentRequestDTO
+            {
+                Amount = orderInfo.TotalAmount,
+                CreatedDate = DateTime.Now,
+                Description = $"{orderInfo.CustomerName} {orderInfo.CustomerPhoneNumber}",
+                FullName = orderInfo.CustomerName,
+                OrderCode = orderInfo.Code
+            };
+            serverResponse.Message = _vnpayService.CreatePaymentUrl(HttpContext, vnpayModel);
+            return Ok(serverResponse);
+        }
+
+        [HttpPost("buy-now")]
+        public async Task<IActionResult> BuyNow([FromBody] BuyNowViewModel model)
+        {
+            var serverResponse = new ResponseWithMessageDto() { Message = "Tạo đơn hàng mới thành công" };
+
+            try
+            {
+                //Tạo giỏ hàng chứa 1 sản phẩm
+                var newCart = new Cart()
+                {
+                    IsOrder = true
+                };
+                if (model.UserId.HasValue)
+                {
+                    newCart.UserId = model.UserId.Value;
+                }
+                await _cartService.CreateAsync(newCart);
+                //Thêm mới cartItem
+                var newCartItem = new CartItem() { CartId = newCart.Id, Quantity = model.Quantity, ProductVariantId = model.ProductVariantId };
+                await _cartItemService.CreateAsync(newCartItem);
+
+                var modelDTO = _mapper.Map<OrderDTO>(model);
+                var newCode = await _orderService.AutoGenOrderCode();
+                modelDTO.Code = newCode;
+                var entity = _mapper.Map<Order>(modelDTO);
+                entity.CartId = newCart.Id;
+                //Tạo được rồi thì đổi trạng thái giỏ hàng
+                //dựa trên cartid
+           
+                var namePaymentMethod = _dataCategoryService.GetCodeById(model.PaymentMethod);
+                entity.Status = namePaymentMethod == "TIEN_MAT" ? _dataCategoryService.GetIdByCode("CHO_XAC_NHAN") : _dataCategoryService.GetIdByCode("CHO_THANH_TOAN");
+
+                await _orderService.CreateAsync(entity);
+               
+                if (model.VoucherId != null)
+                {
+                    var updateVoucher = await _voucherService.GetByIdAsync(model.VoucherId);
+                    updateVoucher.Quantity -= 1;
+                    await _voucherService.UpdateAsync(updateVoucher);
+                }
+                
+                    var newOrderItem = new OrderItem()
+                    {
+                        OrderId = entity.Id,
+                        ProductVariantId = model.ProductVariantId,
+                        Quantity = model.Quantity,
+                        Price = (double)model.Price
+                    };
+                    await _orderItemService.CreateAsync(newOrderItem);
+                
+                var newPaymentInfo = new PaymentInfo()
+                {
+                    OrderId = entity.Id,
+                    PaymentMethodId = model.PaymentMethod,
+                    TotalAmount = modelDTO.TotalAmount,
+                    PaymentStatusId = _dataCategoryService.GetIdByCodeandParentCode("CHO_THANH_TOAN", "PAYMENT_STATUS").Result
+
+                };
+                if (namePaymentMethod != "TIEN_MAT")//Nếu thanh toán bằng VNPay
+                {
+                    var vnpayModel = new VnPaymentRequestDTO
+                    {
+                        Amount = modelDTO.TotalAmount,
+                        CreatedDate = DateTime.Now,
+                        Description = $"{modelDTO.CustomerName} {modelDTO.CustomerPhoneNumber}",
+                        FullName = modelDTO.CustomerName,
+                        OrderCode = modelDTO.Code
+                    };
+
+                    await _paymentInfoService.CreateAsync(newPaymentInfo);
+                    serverResponse.Message = _vnpayService.CreatePaymentUrl(HttpContext, vnpayModel);
+                }
+                else
+                {
+                    await _paymentInfoService.CreateAsync(newPaymentInfo);
+                }
+                serverResponse.Status = newCode; //Trả về mã đơn hàng
+            }
+            catch (Exception ex)
+            {
+                serverResponse.Message = "Có lỗi xảy ra khi tạo đơn hàng";
+                // Có thể tùy chỉnh phản hồi lỗi cụ thể hơn dựa trên loại exception (ex)
+                return StatusCode(500, serverResponse); // Trả về mã lỗi 500 (Internal Server Error)
+            }
+
+            return Ok(serverResponse);
+        }
+
 
         [HttpDelete("soft-delete/{id}")]
         public async Task<IActionResult> SoftDelete(Guid id)
@@ -249,6 +361,11 @@ namespace MinhTuan.API.Controllers
                 baseInfoDTO.UserEmail = userInfo.Email;
                 baseInfoDTO.UserAddress = userInfo.Address;
             }
+            if(baseInfo.VoucherId != null)
+            {
+                var voucher = await _voucherService.GetByIdAsync(baseInfo.VoucherId);
+                baseInfoDTO.VoucherCode = voucher.Code;
+            }
             baseInfoDTO.PaymentMethodName = _dataCategoryService.GetNameById((Guid)baseInfoDTO.PaymentMethod);
             baseInfoDTO.StatusName = _dataCategoryService.GetNameById((Guid)baseInfoDTO.Status);
             var paymentInfo = await _paymentInfoService.FindByAsync(x => x.OrderId.Equals(id) && x.IsDelete != true);
@@ -257,6 +374,92 @@ namespace MinhTuan.API.Controllers
             response.Data = baseInfoDTO;
             return Ok(response);
         }
+
+
+        [HttpGet("get-order-info-by-user-email/{email}")]
+        public async Task<IActionResult> GetOrderInfoByUser(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            var id = Guid.Parse(user.Id); //user.Id
+            var response = new ResponseWithDataDto<List<OrderDTO>>();
+            var baseInfo = await _orderService.FindByAsync(x => x.UserId.Equals(id) && x.IsDelete != true);
+            baseInfo = baseInfo.OrderByDescending(x => x.CreatedDate).ToList();
+            
+            response.Data = _mapper.Map<List<OrderDTO>>(baseInfo);
+            foreach(var item in response.Data)
+            {
+                item.PaymentMethodName = _dataCategoryService.GetNameById((Guid)item.PaymentMethod);
+                item.StatusName = _dataCategoryService.GetNameById((Guid)item.Status);
+                var paymentInfo = await _paymentInfoService.FindByAsync(x => x.OrderId.Equals(item.Id) && x.IsDelete != true);
+                var paymentStatusId = paymentInfo.FirstOrDefault().PaymentStatusId;
+                item.PaymentStatusName = _dataCategoryService.GetNameById((Guid)paymentStatusId);
+                if (item.VoucherId != null)
+                {
+                    var voucher = await _voucherService.GetByIdAsync(item.VoucherId);
+                    item.VoucherCode = voucher.Code;
+                }
+            }
+            return Ok(response);
+        }
+
+        [HttpPost("get-order-info-by-list-order-code")]
+        public async Task<IActionResult> GetOrderInfoByListOrderCode([FromBody] List<string> orderCodes)
+        {
+           
+            var response = new ResponseWithDataDto<List<OrderDTO>>();
+            response.Data = new List<OrderDTO>();
+            foreach(var item in orderCodes)
+            {
+                var baseInfoItem = await _orderService.FindByAsync(x => x.Code.Equals(item) && x.IsDelete != true);
+                if(baseInfoItem.FirstOrDefault() != null)
+                {
+                    var baseInfoDTO = _mapper.Map<OrderDTO>(baseInfoItem.FirstOrDefault());
+                    response.Data.Add(baseInfoDTO);
+                }
+
+            }
+
+            foreach (var item in response.Data)
+            {
+                item.PaymentMethodName = _dataCategoryService.GetNameById((Guid)item.PaymentMethod);
+                item.StatusName = _dataCategoryService.GetNameById((Guid)item.Status);
+                var paymentInfo = await _paymentInfoService.FindByAsync(x => x.OrderId.Equals(item.Id) && x.IsDelete != true);
+                var paymentStatusId = paymentInfo.FirstOrDefault().PaymentStatusId;
+                item.PaymentStatusName = _dataCategoryService.GetNameById((Guid)paymentStatusId);
+                if (item.VoucherId != null)
+                {
+                    var voucher = await _voucherService.GetByIdAsync(item.VoucherId);
+                    item.VoucherCode = voucher.Code;
+                }
+            }
+            return Ok(response);
+        }
+
+
+        [HttpGet("get-order-info-by-code/{orderCode}")]
+        public async Task<IActionResult> GetOrderInfoByCode(string orderCode)
+        {
+            var response = new ResponseWithDataDto<OrderDTO>();
+            var baseInfo1 = await _orderService.FindByAsync(x=>x.Code.Equals(orderCode) && x.IsDelete != true);
+            var baseInfo = baseInfo1.FirstOrDefault();
+            var baseInfoDTO = _mapper.Map<OrderDTO>(baseInfo);
+            if (baseInfo.UserId != null)//Nếu là người dùng đã đăng nhập mua thì sẽ xuất thông tin
+            {
+                var userInfo = await _userManager.FindByIdAsync(baseInfo.UserId.ToString());
+                baseInfoDTO.UserName = userInfo.FullName;
+                baseInfoDTO.UserPhoneNumber = userInfo.PhoneNumber;
+                baseInfoDTO.UserEmail = userInfo.Email;
+                baseInfoDTO.UserAddress = userInfo.Address;
+            }
+            baseInfoDTO.PaymentMethodName = _dataCategoryService.GetNameById((Guid)baseInfoDTO.PaymentMethod);
+            baseInfoDTO.StatusName = _dataCategoryService.GetNameById((Guid)baseInfoDTO.Status);
+            var paymentInfo = await _paymentInfoService.FindByAsync(x => x.OrderId.Equals(baseInfo.Id) && x.IsDelete != true);
+            var paymentStatusId = paymentInfo.FirstOrDefault().PaymentStatusId;
+            baseInfoDTO.PaymentStatusName = _dataCategoryService.GetNameById((Guid)paymentStatusId);
+            response.Data = baseInfoDTO;
+            return Ok(response);
+        }
+
         [HttpGet("get-order-item-by-id/{id}")]
         public async Task<IActionResult> GetOrderItemsById(Guid id)
         {
@@ -317,11 +520,11 @@ namespace MinhTuan.API.Controllers
             var orderId = order.FirstOrDefault().Id;
             if(response == null || response.VnPayResponseCode != "00")
             {
-                returnUrl += "?success=false";
+                returnUrl += $"?success=false&ordercode={orderCode}";
             }
             else
             {
-                returnUrl += $"?success=true?orderCode={orderCode}";
+                returnUrl += $"?success=true&ordercode={orderCode}";
                 //Cập nhật trạng thái thanh toán của VNPAY
                var payinfo =  await _paymentInfoService.FindByAsync(x => x.OrderId.Equals(orderId) && x.IsDelete !=true);
                var updateInfo = payinfo.FirstOrDefault();
@@ -332,10 +535,109 @@ namespace MinhTuan.API.Controllers
                 await _paymentInfoService.UpdateAsync(updateInfo);
                 //Cập nhật trạng thái đơn hàng
 
-                
+                var newStatus = await _dataCategoryService.GetIdByCodeandParentCode("CHUAN_BI_HANG", "STATUS_VNPAY");
+                var orderUpdate = await _orderService.GetByIdAsync(orderId);
+                orderUpdate.Status = newStatus;
+                await _orderService.UpdateAsync(orderUpdate);
+
+
             }
             return Redirect(returnUrl);
         }
+
+
+        [HttpGet("get-all-order-today")]
+        public async Task<IActionResult> GetAllOrderToday()
+        {
+            
+            var searchDTO = new OrderSearchDTO()
+            {
+                CreatedTime_Filter = DateTime.Today
+            };
+           var response = _orderService.GetDataByPage(searchDTO);
+            return Ok(response);
+        }
+        [HttpGet("count-order-today")]
+        public async Task<IActionResult> CountOrderToday()
+        {
+
+            var response = new ResponseWithDataDto<int>();
+            response.Data = _orderService.CountNumberOfOrderToday();
+           
+            return Ok(response);
+        }
+        [HttpGet("count-order-yesterday")]
+        public async Task<IActionResult> CountOrderYesterday()
+        {
+
+            var response = new ResponseWithDataDto<int>();
+            response.Data = _orderService.CountNumberOfOrderYesterday();
+
+            return Ok(response);
+        }
+        [HttpGet("count-order-waiting-confirm")]
+        public async Task<IActionResult> CountOrderWaitingConfirm()
+        {
+
+            var response = new ResponseWithDataDto<int>();
+            var statusId = await _dataCategoryService.GetIdByCodeandParentCode("CHO_XAC_NHAN", "STATUS_COD");
+            response.Data = _orderService.CountNumberOfOrderWaitingConfirm(statusId);
+
+            return Ok(response);
+        }
+
+        [HttpGet("get-revenue-today")]
+        public async Task<IActionResult> GetRevenueToday()
+        {
+           
+            var response = new ResponseWithDataDto<double>();
+            response.Data = _orderService.GetRevenueToday();
+            return Ok(response);
+        }
+
+        [HttpGet("get-revenue-of-month")]
+        public async Task<IActionResult> GetRevenueOfMonth()
+        {
+            var response = new ResponseWithDataDto<List<RevenueDTO>>();
+            response.Data = _orderService.GetRevenueOfMonth();
+            return Ok(response);
+        }
+
+        [HttpGet("get-revenue-of-category")]
+        public async Task<IActionResult> GetRevenueOfCategory()
+        {
+            var response = new ResponseWithDataDto<List<RevenueCategoryDTO>>();
+            var listCategoryId = new List<Guid>();
+           var itemNam =await _dataCategoryService.GetIdByCodeandParentCode("DO_NAM", "SAN_PHAM");
+            var itemNu = await _dataCategoryService.GetIdByCodeandParentCode("DO_NU", "SAN_PHAM");
+           
+            listCategoryId.Add(itemNam);
+            listCategoryId.Add(itemNu);
+
+            response.Data = _orderService.GetRevenueCategories(listCategoryId);
+            return Ok(response);
+        }
+
+        [HttpGet("get-top-product-selling")] //Lấy sản phẩm bán chạy trong tuần
+        public async Task<IActionResult> GetTopProductSelling()
+        {
+            var response = new ResponseWithDataDto<List<ProductTopSellingDTO>>();
+            response.Data =  _orderService.GetProductTopSellingOfWeek();
+            //Lấy ảnh từ productId
+            foreach(var item in response.Data)
+            {
+                var product = await _productService.GetProductById(item.ProductId);
+              var productItem =  product.Data.Items.FirstOrDefault();
+                item.ThumbnailPath = productItem.Thumbnail;
+                item.ThumbnailBase64 = productItem.ThumbnailBase64;
+                item.ThumbnailContentType = productItem.ThumbnailContentType;
+            }
+
+            return Ok(response);
+        }
+
+
+
 
 
     }

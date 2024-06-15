@@ -22,6 +22,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
 using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
+using System.Linq.Dynamic.Core;
 
 namespace MinhTuan.Service.Services.ProductService
 {
@@ -133,6 +134,7 @@ namespace MinhTuan.Service.Services.ProductService
                                 Description = product.Description ?? string.Empty,
                                 Price = product.Price,
                                 StockQuantity = product.StockQuantity,
+                                CreatedDate = product.CreatedDate,
                                
                             };
 
@@ -170,6 +172,24 @@ namespace MinhTuan.Service.Services.ProductService
                     {
                         var categoryId = _dataCategoryRepository.FindBy(x => x.Code.Equals(searchDTO.CategoryCode_Filter)).FirstOrDefault().Id;
                         query = query.Where(p => _productCategoryRepository.GetQueryable().Any(pc => pc.ProductId == p.Id && pc.CategoryId.Equals(categoryId)));
+                    }
+                    if (searchDTO.Size_Filter != null && searchDTO.Size_Filter.Length > 0)
+                    {
+                        query = query.Where(p => _productVariantRepository.GetQueryable().Any(pc => pc.ProductId == p.Id && searchDTO.Size_Filter.Contains(pc.SizeId)));
+                    }
+                    if (searchDTO.Color_Filter != null && searchDTO.Color_Filter.Length > 0)
+                    {
+                        query = query.Where(p => _productVariantRepository.GetQueryable().Any(pc => pc.ProductId == p.Id && searchDTO.Color_Filter.Contains(pc.ColorId)));
+                    }
+
+
+                    if (!string.IsNullOrEmpty(searchDTO.sortQuery))
+                    {
+                        query = query.OrderBy(searchDTO.sortQuery);
+                    }
+                    else
+                    {
+                        query = query.OrderByDescending(x => x.CreatedDate);
                     }
 
 
@@ -266,10 +286,16 @@ namespace MinhTuan.Service.Services.ProductService
                 var existingProductImages = _productImageRepository.FindBy(pc => pc.ProductId.Equals(id) &&pc.IsThumbnail==false ).ToList();
                 if (existingProductImages.Any())
                 {
-                    //foreach(var item in existingProductImages)
-                    //{
-                    //    //Viết hàm xóa trong này
-                    //}
+                    string webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "Product");
+                    foreach (var productImage in existingProductImages)
+                    {
+                        // Xóa ảnh cũ trên máy chủ
+                        var imagePath = Path.Combine(webRootPath, productImage.Path);
+                        if (File.Exists(imagePath))
+                        {
+                            File.Delete(imagePath);
+                        }
+                    }
                     _productImageRepository.DeleteRange(existingProductImages);
                 }
                 if(listImageFileName.Count > 0)
@@ -307,6 +333,16 @@ namespace MinhTuan.Service.Services.ProductService
                 var existingProductImages = _productImageRepository.FindBy(pc => pc.ProductId.Equals(id) && pc.IsThumbnail==true).ToList();
                 if (existingProductImages.Any())
                 {
+                    string webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "Product");
+                    foreach (var productImage in existingProductImages)
+                    {
+                        // Xóa ảnh cũ trên máy chủ
+                        var imagePath = Path.Combine(webRootPath, productImage.Path);
+                        if (File.Exists(imagePath))
+                        {
+                            File.Delete(imagePath);
+                        }
+                    }
                     _productImageRepository.DeleteRange(existingProductImages);
                 }
                 if(!string.IsNullOrEmpty(thumbnailFileName))

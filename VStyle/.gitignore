@@ -7,3 +7,5 @@ obj/
 *.dll
 *.exe
 *.pdb
+appsettings.json
+uploads/

@@ -7,9 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinhTuan.Domain", "MinhTuan
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinhTuan.Service", "MinhTuan.Service\MinhTuan.Service.csproj", "{DEBE580D-242F-4837-B819-CDA1B198B7A4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinhTuan.Application", "MinhTuan.Application\MinhTuan.Application.csproj", "{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinhTuan.API", "MinhTuan.API\MinhTuan.API.csproj", "{2BF5BFBC-67E6-4C16-9095-FE4C8B98522A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinhTuan.API", "MinhTuan.API\MinhTuan.API.csproj", "{2BF5BFBC-67E6-4C16-9095-FE4C8B98522A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +23,6 @@ Global
 		{DEBE580D-242F-4837-B819-CDA1B198B7A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DEBE580D-242F-4837-B819-CDA1B198B7A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DEBE580D-242F-4837-B819-CDA1B198B7A4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{58A9B62F-5A5A-4E40-81CC-C9866C9066B2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2BF5BFBC-67E6-4C16-9095-FE4C8B98522A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2BF5BFBC-67E6-4C16-9095-FE4C8B98522A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BF5BFBC-67E6-4C16-9095-FE4C8B98522A}.Release|Any CPU.ActiveCfg = Release|Any CPU

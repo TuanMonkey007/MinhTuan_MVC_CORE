@@ -2,6 +2,8 @@
 using MinhTuan.Domain.DTOs.CartDTO;
 using MinhTuan.Domain.DTOs.CategoryDTO;
 using MinhTuan.Domain.DTOs.OrderDTO;
+using MinhTuan.Domain.DTOs.ProductDTO;
+using MinhTuan.Domain.DTOs.StatisticDTO;
 using MinhTuan.Domain.Entities;
 using MinhTuan.Domain.Helper.Pagination;
 using MinhTuan.Service.Core.Services;
@@ -20,5 +22,12 @@ namespace MinhTuan.Service.Services.OrderService
         Task<ResponseWithDataDto<List<OrderItemDTO>>> GetOrderItemsById(Guid id);
 
         Task<string> AutoGenOrderCode();
+        int CountNumberOfOrderToday();
+        int CountNumberOfOrderYesterday();
+        int CountNumberOfOrderWaitingConfirm(Guid statusId);
+        double GetRevenueToday();
+        List<RevenueDTO> GetRevenueOfMonth();
+        List<RevenueCategoryDTO> GetRevenueCategories(List<Guid> categoryIdList);
+        List<ProductTopSellingDTO> GetProductTopSellingOfWeek();
     }
 }

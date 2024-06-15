@@ -44,14 +44,14 @@
                 @change="handleTableChange">
                 <template #bodyCell="{ column, record }">
                   <template v-if="column.key == 'code'">
-                    <router-link :to="{
+                    <router-link style="color: #c21f24" :to="{
                           name: 'DetailOrder',
                           params: { id: record.id },
                         }">
                       {{ record.code }}</router-link>
                     </template> 
                   <template v-if="column.key == 'status'">
-                    <a-tag :color="getColor(record.isCancelled)">
+                    <a-tag :color="getColor(record.isCancelled,record.statusName)">
                       {{ record.isCancelled == true ? 'Đơn huỷ' : record.statusName }}
                     </a-tag>
                     </template> 
@@ -76,7 +76,7 @@
                       </a-tooltip>
                       <a-tooltip title="Hủy đơn" placement="leftTop">
                         
-                          <a-button type="link" @click="openModalCancelOrder(record.id, record.statusName)" shape="circle">
+                          <a-button type="link" @click="openModalCancelOrder(record.id, record.statusName, record.isCancelled)" shape="circle">
                             <font-awesome-icon icon="fa-solid fa-ban" style="color: #0253de;" />
 
                             <template #icon></template>
@@ -94,7 +94,7 @@
 
 
                       <a-popconfirm title="Xác nhận xóa?" ok-text="Xóa" cancel-text="Hủy"
-                        @confirm="deleteObj(record.id)">
+                        @confirm="deleteObj(record.id, record.isCancelled)">
                         <a-tooltip title="Xóa" placement="rightBottom">
                           <a-button type="link" shape="circle">
                             <template #icon><font-awesome-icon icon="fa-solid fa-trash-alt"
@@ -154,40 +154,47 @@
             dataIndex: "code",
             key: "code",
             width: "15%",
-            sorter: false,
+            sorter: true,
+            showSorterTooltip: false,
           },
           {
             title: "Người mua",
             dataIndex: "customerName",
             key: "customerName",
             width: "15%",
-            sorter: false,
+            sorter: true,
+            showSorterTooltip: false,
           },
           {
             title: "Địa chỉ",
             dataIndex: "shippingAddress",
             key: "shippingAddress",
             width: "15%",
-            sorter: false,
+            sorter: true,
+            showSorterTooltip: false,
           },
           {
             title: "Trạng thái",
-            dataIndex: "statusName",
+            dataIndex: "status",
             key: "status",
             width: "15%",
-            sorter: false,
+         
           },
           {
             title: "Tổng tiền",
             dataIndex: "totalAmount",
             key: "totalAmount",
             width: "10%",
+            sorter: true,
+            showSorterTooltip: false,
           },
           {
             title: "Ngày đặt",
             dataIndex: "createdDate",
             key: "createdDate",
             width: "10%",
+            sorter: true,
+            showSorterTooltip: false,
           },
 
           {
@@ -207,6 +214,7 @@
         formSearch: {
           code_Filter: "",
           name_Filter: "",
+          sortQuery: "",
         },
       };
     },
@@ -221,7 +229,7 @@
     methods: {
       openModalUpdateStatus(id,statusName,isCancelled) {
         if(isCancelled == true){
-          notification.error({
+          notification.warning({
             message: "Không thể hành động",
             description: "Đơn hàng đã bị hủy",
           })
@@ -229,14 +237,26 @@
         }
         this.$refs.modalUpdateStatus.showModal(id,statusName);
       },
-      getColor(isCancelled) {
-        return isCancelled ? "red" : "green";
+      getColor(isCancelled,statusName) {
+       if(isCancelled == true){
+         return "red"
+       }
+       if(statusName.includes("Chờ xác nhận")){
+         return "yellow"
+       }
+       return "green"
       },
-      openModalCancelOrder(id,statusName) {
-        console.log(statusName)
+      openModalCancelOrder(id,statusName,isCancelled) {
+        if(isCancelled == true){
+          notification.warning({
+            message: "Không thể hành động",
+            description: "Đơn hàng đã bị hủy",
+          })
+          return
+        }
         if(statusName.includes("Đang vận chuyển")  || statusName.includes("Đang giao hàng")){ 
           console.log(statusName)
-          notification.error({
+          notification.warning({
             message: "Thể hành động",
             description: "Đơn hàng không thể hủy trong thời gian này",
           })
@@ -253,8 +273,15 @@
       openModalCreate() {
         this.$refs.modalCreate.showModal();
       },
-      async deleteObj(id) {
+      async deleteObj(id,isCancelled) {
         try {
+          if(isCancelled != true){
+          notification.warning({
+            message: "Không thể hành động",
+            description: "Đơn hàng không thể xóa",
+          })
+          return
+        }
           const response = await APIService.delete(`order/soft-delete/${id}`);
           if (response.data.message == "Xóa thành công") {
             notification.success({
@@ -296,6 +323,7 @@
           ...params,
           pageIndex: pageIndex,
           pageSize: pageSize,
+          sortQuery: this.formSearch.sortQuery,
         };
 
         try {
@@ -316,7 +344,16 @@
 
       formatCreatedDate(date) {
         return dayjs(date).format("HH:mm:ss DD/MM/YYYY ");
-      }
+      },
+      handleTableChange(pagination, filters, sorter) {
+        if (sorter.field && sorter.order) {
+          this.formSearch.sortQuery = `${sorter.field} ${sorter.order === 'ascend' ? 'asc' : 'desc'}`;
+        } else {
+          // Nếu không có sắp xếp, đặt sortQuery về rỗng
+          this.formSearch.sortQuery = '';
+        }
+        this.fetchData(pagination.current, pagination.pageSize);
+      },
     },//end methods
 
   };

@@ -18,5 +18,6 @@ namespace MinhTuan.Domain.DTOs.ProductDTO
         public string? ThumbnailBase64 { get; set; } // Chuỗi base64 của ảnh
 
         public string? ThumbnailContentType { get; set; } // Loại nội dung của ảnh (ví dụ: image/jpeg)
+        public DateTime? CreatedDate { get; set; }
     }
 }

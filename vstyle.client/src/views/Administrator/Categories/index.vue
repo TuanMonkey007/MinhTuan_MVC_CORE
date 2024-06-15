@@ -1,4 +1,4 @@
-<template >
+<template>
   <a-row>
     <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
       <a-page-header style="
@@ -29,93 +29,85 @@
           </a-breadcrumb>
         </template>
       </a-page-header>
-</a-col>
-</a-row>
-<transition name="route" mode="out-in" appear>
-  <a-row>
-    <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-      <a-card :bordered="true" title="Danh sách danh mục" style="margin: 30px;">
-        <template #extra>
-        <a-button @click="openModalCreate" type="primary"
-          ><font-awesome-icon icon="fa-solid fa-plus" /> Thêm mới</a-button
-        >
-      </template>
-
-        <a-row style="margin-bottom: 20px" :gutter="24">
-          
-          <a-col :span="12">
-            <a-input v-model:value="formSearch.code_Filter"  @keyup.enter="SearchData" placeholder="Mã danh mục">
-            </a-input>
-          </a-col>
-          <a-col :span="12">
-            <a-input v-model:value="formSearch.name_Filter"  @keyup.enter="SearchData" placeholder="Tên danh mục">
-            </a-input>
-          </a-col>
-        </a-row>
-        <a-row>
-          <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-            <a-table bordered :columns="tableColumns" :dataSource="dataSourceTable" :pagination="false" :loading="loadingTable"
-            :scroll="{ x: 1000 }"   :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : null)"
-              @change="handleTableChange">
-              <template #bodyCell="{ column, record }">
-          <template v-if="column.key === 'action'">
-            <a-space>
-              <a-tooltip title="Cấu hình" placement="leftTop">
-                <a-button type="link" shape="circle">
-                  <router-link
-                    :to="{
-                      name: 'DataCategoryHome',
-                      params: { id: record.id },
-                    }"
-                  >
-                    <font-awesome-icon
-                      icon="fa-solid fa-list-check"
-                      style="color: #01a214"
-                    />
-                  </router-link>
-                  <template #icon></template>
-              </a-button>
-              </a-tooltip>
-
-              <a-tooltip title="Chỉnh sửa">
-                <a-button type="link" shape="circle" @click="openModalUpdate(record.id)">
-                  <template #icon><font-awesome-icon
-                      icon="fa-solid fa-pen-to-square"
-                      style="color: #ffd43b"
-                  /></template>
-                </a-button>
-              </a-tooltip>
-
-              <a-popconfirm title="Xác nhận xóa?" ok-text="Xóa" cancel-text="Hủy" @confirm="deleteObj(record.id)">
-                <a-tooltip title="Xóa" placement="rightBottom">
-                  <a-button type="link" shape="circle">
-                    <template #icon><font-awesome-icon
-                        icon="fa-solid fa-trash-alt"
-                        style="color: #ff4d4f"
-                    /></template>
-                  </a-button>
-                </a-tooltip>
-              </a-popconfirm>
-              </a-space>
-              </template>
-              </template>
-            </a-table>
-          </a-col>
-        </a-row>
-        <a-row>
-          <a-col :span="24">
-            <a-pagination v-if="pagination.total > 0" style="margin-top: 20px; text-align: center"
-              v-model:current="pagination.current" :pageSize="pagination.pageSize" :total="pagination.total"
-              :showSizeChanger="false" :show-total="(total) => `Tổng ${total} bản ghi`"
-              @change="handlePaginationChange" />
-          </a-col>
-        </a-row>
-      </a-card>
     </a-col>
-        </a-row>
-</transition>
-<ModalCreate @addSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalCreate" />
-<ModalUpdate @updateSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalUpdate" />
+  </a-row>
+  <transition name="route" mode="out-in" appear>
+    <a-row>
+      <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+        <a-card :bordered="true" title="Danh sách danh mục" style="margin: 30px;">
+          <template #extra>
+            <a-button @click="openModalCreate" type="primary"><font-awesome-icon icon="fa-solid fa-plus" /> Thêm
+              mới</a-button>
+          </template>
+
+          <a-row style="margin-bottom: 20px" :gutter="24">
+
+            <a-col :span="12">
+              <a-input v-model:value="formSearch.code_Filter" @keyup.enter="SearchData" placeholder="Mã danh mục">
+              </a-input>
+            </a-col>
+            <a-col :span="12">
+              <a-input v-model:value="formSearch.name_Filter" @keyup.enter="SearchData" placeholder="Tên danh mục">
+              </a-input>
+            </a-col>
+          </a-row>
+          <a-row>
+            <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+              <a-table bordered :columns="tableColumns" :dataSource="dataSourceTable" :pagination="false"
+                :loading="loadingTable" :scroll="{ x: 1000 }"
+                :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : null)"
+                @change="handleTableChange">
+                <template #bodyCell="{ column, record }">
+                  <template v-if="column.key === 'action'">
+                    <a-space>
+                      <a-tooltip title="Cấu hình" placement="leftTop">
+                        <a-button type="link" shape="circle">
+                          <router-link :to="{
+                            name: 'DataCategoryHome',
+                            params: { id: record.id },
+                          }">
+                            <font-awesome-icon icon="fa-solid fa-list-check" style="color: #01a214" />
+                          </router-link>
+                          <template #icon></template>
+                        </a-button>
+                      </a-tooltip>
+
+                      <a-tooltip title="Chỉnh sửa">
+                        <a-button type="link" shape="circle" @click="openModalUpdate(record.id)">
+                          <template #icon><font-awesome-icon icon="fa-solid fa-pen-to-square"
+                              style="color: #ffd43b" /></template>
+                        </a-button>
+                      </a-tooltip>
+
+                      <a-popconfirm title="Xác nhận xóa?" ok-text="Xóa" cancel-text="Hủy"
+                        @confirm="deleteObj(record.id)">
+                        <a-tooltip title="Xóa" placement="rightBottom">
+                          <a-button type="link" shape="circle">
+                            <template #icon><font-awesome-icon icon="fa-solid fa-trash-alt"
+                                style="color: #ff4d4f" /></template>
+                          </a-button>
+                        </a-tooltip>
+                      </a-popconfirm>
+                    </a-space>
+                  </template>
+                </template>
+              </a-table>
+            </a-col>
+          </a-row>
+          <a-row>
+            <a-col :span="24">
+              <a-pagination v-if="pagination.total > 0" style="margin-top: 20px; text-align: center"
+                v-model:current="pagination.current" :pageSize="pagination.pageSize" :total="pagination.total"
+                :showSizeChanger="false" :show-total="(total) => `Tổng ${total} bản ghi`"
+                @change="handlePaginationChange" />
+            </a-col>
+          </a-row>
+        </a-card>
+      </a-col>
+    </a-row>
+  </transition>
+  <ModalCreate @addSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalCreate" />
+  <ModalUpdate @updateSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalUpdate" />
 </template>
 <script>
   import ModalCreate from "./ModalCreate.vue";
@@ -145,14 +137,16 @@
             dataIndex: "code",
             key: "code",
             width: "15%",
-            sorter: false,
+            sorter: true,
+            showSorterTooltip: false
           },
           {
             title: "Tên danh mục",
             dataIndex: "name",
             key: "name",
             width: "15%",
-            sorter: false,
+            sorter: true,
+            showSorterTooltip: false
           },
           {
             title: "Mô tả",
@@ -178,6 +172,7 @@
         formSearch: {
           code_Filter: "",
           name_Filter: "",
+          sortQuery: "",
         },
       };
     },
@@ -218,9 +213,9 @@
           }
         } catch (error) {
           notification.error({
-              message: "Thất bại",
-              description: "Xóa không thành công",
-            });
+            message: "Thất bại",
+            description: "Xóa không thành công",
+          });
         }
       },
       handlePaginationChange() {
@@ -239,6 +234,7 @@
           ...params,
           pageIndex: pageIndex,
           pageSize: pageSize,
+          sortQuery: this.formSearch.sortQuery,
         };
 
         try {
@@ -258,6 +254,17 @@
       openModalUpdate(id) {
         this.$refs.modalUpdate.showModal(id);
       },
+      handleTableChange(pagination, filters, sorter) {
+        if (sorter.field && sorter.order) {
+          this.formSearch.sortQuery = `${sorter.field} ${sorter.order === 'ascend' ? 'asc' : 'desc'}`;
+        } else {
+          // Nếu không có sắp xếp, đặt sortQuery về rỗng
+          this.formSearch.sortQuery = '';
+        }
+        this.fetchData(pagination.current, pagination.pageSize);
+      },
+
+
     },
   };
 </script>
@@ -275,6 +282,7 @@
       display: none;
     }
   }
+
   .ant-page-header {
     padding: 0px;
     /* Giảm padding */

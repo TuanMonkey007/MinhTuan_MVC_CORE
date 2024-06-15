@@ -132,7 +132,7 @@
                     <img v-if="record.thumbnailBase64"
                       :src="'data:' + record.thumbnailContentType + ';base64,' + record.thumbnailBase64"
                       style="max-width: 100px; max-height: 100px; object-fit: contain;" />
-                    <span v-else>Chưa cập nhật</span>
+                    <a-tag color="yellow" v-else>Chọn cập nhật</a-tag>
                   </template>
                   <template v-if="column.key === 'price'">
                     <span style="color: red">{{ fomartPrice(record.price) }}&#8363;</span>
@@ -195,26 +195,32 @@
             dataIndex: "code",
             key: "code",
             width: "15%",
-            sorter: false,
+            sorter: true,
+            showSorterTooltip: false,
           },
           {
             title: "Tên sản phẩm",
             dataIndex: "name",
             key: "name",
             width: "15%",
-            sorter: false,
+            sorter: true,
+            showSorterTooltip: false,
           },
           {
             title: "Giá tiền",
             dataIndex: "price",
             key: "price",
             width: "10%",
+            sorter: true,
+            showSorterTooltip: false,
           },
           {
             title: "Số lượng",
             dataIndex: "stockQuantity",
             key: "stockQuantity",
             width: "10%",
+            sorter: true,
+            showSorterTooltip: false,
           },
           {
             title: "Mô tả",
@@ -241,7 +247,8 @@
           code_Filter: "",
           name_Filter: "",
           price_Filter: [0, 1000000],
-          category_Filter: []
+          category_Filter: [],
+          sortQuery: "",
         },
       };
     },
@@ -318,6 +325,7 @@
           ...params,
           pageIndex: pageIndex,
           pageSize: pageSize,
+          sortQuery: this.formSearch.sortQuery,
         };
 
         try {
@@ -342,6 +350,15 @@
       },
       openModalVariant(id) {
         this.$refs.modalVariant.showModal(id);
+      },
+      handleTableChange(pagination, filters, sorter) {
+        if (sorter.field && sorter.order) {
+          this.formSearch.sortQuery = `${sorter.field} ${sorter.order === 'ascend' ? 'asc' : 'desc'}`;
+        } else {
+          // Nếu không có sắp xếp, đặt sortQuery về rỗng
+          this.formSearch.sortQuery = '';
+        }
+        this.fetchData(pagination.current, pagination.pageSize);
       },
     },
   };

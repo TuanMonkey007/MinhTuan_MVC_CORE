@@ -179,6 +179,9 @@ namespace MinhTuan.Domain.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("DistrictId")
                         .HasColumnType("int");
 

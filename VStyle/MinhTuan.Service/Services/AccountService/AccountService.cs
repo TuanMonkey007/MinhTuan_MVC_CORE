@@ -25,8 +25,9 @@ using MinhTuan.Domain.Helper.Pagination;
 
 using MinhTuan.Domain.Core.DTO;
 using MinhTuan.Service.SearchDTO;
-
+using System.Linq.Dynamic.Core;
 using System.Data.Entity;
+using MinhTuan.Domain.Repository.AccountRepository;
 
 namespace MinhTuan.Service.Services.AccountService;
 
@@ -42,6 +43,7 @@ public class AccountService : IAccountService
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IEmailService _emailService;
     private readonly LinkGenerator _linkGenerator;
+    private readonly IAccountRepository _accountRepository;
 
     public AccountService(
     
@@ -52,6 +54,7 @@ public class AccountService : IAccountService
         IMapper mapper,
         IUnitOfWork unitOfWork,
         IEmailService emailService,
+        IAccountRepository accountRepository,
         LinkGenerator linkGenerator
         )
     {
@@ -65,6 +68,7 @@ public class AccountService : IAccountService
         _httpContextAccessor = httpContextAccessor;
         _emailService = emailService;
         _linkGenerator = linkGenerator;
+        _accountRepository = accountRepository;
     }
     public ResponseWithDataDto<PagedList<UserDTO>> GetDataByPage(AccountSearchDTO searchDTO)
     {
@@ -93,6 +97,14 @@ public class AccountService : IAccountService
                     var isNormal = searchDTO.FullName_Filter.ToString().ToLower() != idSearch.ToLower();
                     var list = _userManager.Users.AsQueryable().Select(x => x.FullName).ToList().Where(x => x.ToString().ToLower().Contains(idSearch.ToLower()));
                     query = query.Where(x => list.Contains(x.FullName));
+                }
+                if (!string.IsNullOrEmpty(searchDTO.sortQuery))
+                {
+                    query = query.OrderBy(searchDTO.sortQuery);
+                }
+                else
+                {
+                    query = query.OrderBy(x => x.FullName);
                 }
             }
             var result = PagedList<UserDTO>.Create(query, searchDTO);
@@ -194,6 +206,7 @@ public class AccountService : IAccountService
     {
         var user = _mapper.Map<AppUser>(model);
         user.AccountType = AccountType.NORMAL;
+        user.CreatedDate = DateTime.Now;
         var result = await _userManager.CreateAsync(user, model.Password);
         if (result.Succeeded)
         {
@@ -505,5 +518,16 @@ public class AccountService : IAccountService
         }
     }
 
-   
+    public  int CountUserRegisToday()
+    {
+        var today = DateTime.Now.Date;
+        var res= _accountRepository.FindBy(x => x.CreatedDate.Value.Date.Equals(today)).Count();
+        return res;
+            
+    }
+    public int CountTotalUser()
+    {
+        var res = _accountRepository.GetAll().Count();
+        return res;
+    }
 }

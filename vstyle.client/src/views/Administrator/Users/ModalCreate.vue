@@ -103,14 +103,14 @@
 
 
 
-                <a-row>
+                <!-- <a-row>
                     <a-col :span="24">
                         <a-form-item label="Địa chỉ" name="address">
                             <a-input type="text" v-model:value="account.address" />
                         </a-form-item>
                     </a-col>
 
-                </a-row>
+                </a-row> -->
                 <a-row>
                     <a-col :span="24" style="justify-content: center">
                         <a-form-item>

@@ -7,7 +7,7 @@ using MinhTuan.Domain.Helper.Pagination;
 using MinhTuan.Domain.Repository.CategoryRepositoy;
 using MinhTuan.Domain.Repository.DataCategoryRepository;
 using MinhTuan.Service.Core;
-
+using System.Linq.Dynamic.Core;
 using MinhTuan.Service.SearchDTO;
 using System;
 using System.Collections.Generic;
@@ -59,7 +59,7 @@ namespace MinhTuan.Service.Services.DataCategoryService
             {
                 Guid parentId = _categoryRepository.FindBy(x => x.Code.Contains(parentCode) && x.IsDelete != true).FirstOrDefault().Id;
                 var dataCategories = _dataCategoryRepository.FindBy(x => x.ParentId.Equals(parentId) && x.IsDelete != true).ToList(); // Lấy danh sách danh mục con
-
+               
                 if (dataCategories == null || !dataCategories.Any()) // Kiểm tra xem có danh mục con nào không
                 {
                     serverResponse.Message = "Không tìm thấy danh mục con";
@@ -67,7 +67,7 @@ namespace MinhTuan.Service.Services.DataCategoryService
                 }
 
                 // Sử dụng AutoMapper để chuyển đổi danh sách DataCategory thành DataCategoryDTO
-                var dataCategoryDTOs = _mapper.Map<List<DataCategoryDTO>>(dataCategories);
+                var dataCategoryDTOs = _mapper.Map<List<DataCategoryDTO>>(dataCategories.OrderBy(x => x.Name));
                 serverResponse.Data = dataCategoryDTOs;
                 serverResponse.Status = "Success"; // Đặt trạng thái thành công
 
@@ -150,6 +150,14 @@ namespace MinhTuan.Service.Services.DataCategoryService
                         var isNormal = searchDTO.Code_Filter.ToString().ToLower() != idSearch.ToLower();
                         var list = _dataCategoryRepository.GetQueryable().Select(x => x.Code).ToList().Where(x => x.ToString().ToLower().Contains(idSearch.ToLower()));
                         query = query.Where(x => list.Contains(x.Code));
+                    }
+                    if (!string.IsNullOrEmpty(searchDTO.sortQuery))
+                    {
+                        query = query.OrderBy(searchDTO.sortQuery);
+                    }
+                    else
+                    {
+                        query = query.OrderBy(x => x.Name);
                     }
                 }
                 var result = PagedList<DataCategoryDTO>.Create(query, searchDTO);

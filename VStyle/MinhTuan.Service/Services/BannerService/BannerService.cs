@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
 
 namespace MinhTuan.Service.Services.BannerService
 {
@@ -87,6 +88,14 @@ namespace MinhTuan.Service.Services.BannerService
                 }
                 if (searchDTO.IsDisplay_Filter ==true){
                     query = query.Where(x => x.IsDisplay.Equals(searchDTO.IsDisplay_Filter));
+                }
+                if (!string.IsNullOrEmpty(searchDTO.sortQuery))
+                {
+                    query = query.OrderBy(searchDTO.sortQuery);
+                }
+                else
+                {
+                    query = query.OrderBy(x => x.CategoryName);
                 }
 
                 var result = PagedList<BannerDTO>.Create(query, searchDTO);

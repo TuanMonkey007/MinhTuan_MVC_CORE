@@ -7,18 +7,22 @@ import { Role } from "@/helpers/Constants";
 const routes=[
     ...adminRouter,
     ...customerRouter,
+    
    
  
     {
-        path: '/unauthorized',
+        path: '/403',
         name: 'Unauthorized',
-        component:()=> import("../views/Auth/Unauthorized.vue"),
+        component:()=> import("../views/403.vue"),
+        meta: {title: '403' }
     },
-    // Tuyến đường cuối cùng chuyển hướng tất cả các đường dẫn không xác định về trang chủ
-    // {
-    // path: '/:pathMatch(.*)*',
-    // redirect: '/'
-    // }
+   // Tuyến đường cuối cùng chuyển hướng tất cả các đường dẫn không xác định về trang chủ
+    {
+    path: '/:pathMatch(.*)*',
+    component: () => import('../views/404.vue'),
+    meta: {title: '404' }
+    }
+    
 ]
 const router = createRouter({ 
     history: createWebHistory(),

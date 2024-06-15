@@ -61,6 +61,40 @@ namespace MinhTuan.API.Controllers
             
             return Ok(response);
         }
+        [HttpPost("buy-now")]
+        public async Task<IActionResult> BuyNow([FromBody] AddToCartViewModel model)
+        {
+            var response = new ResponseWithMessageDto() { Message = "Thêm thất bại" };
+            //Khách lần đầu mua hàng thì tạo mới một giỏ hàng
+            if (model.CartId == null)
+            {
+                var newCart = new Cart() { UserId = Guid.Empty, IsOrder = false };
+                await _cartService.CreateAsync(newCart);
+                //Thêm mới
+                var newCartItem = new CartItem() { CartId = newCart.Id, Quantity = model.Quantity, ProductVariantId = model.ProductVariantId };
+                await _cartItemService.CreateAsync(newCartItem);
+                response.Message = newCartItem.CartId.ToString();
+            }
+            else
+            {
+                var check = _cartItemService.FindByAsync(x => x.ProductVariantId.Equals(model.ProductVariantId) && x.IsDelete != true);
+                await check;
+                if (check.Result.Any())
+                {
+                    var updateCartItem = check.Result.FirstOrDefault();
+                    updateCartItem.Quantity += model.Quantity;
+                    await _cartItemService.UpdateAsync(updateCartItem);
+                    response.Message = updateCartItem.CartId.ToString();
+                    return Ok(response);
+                }
+                //Thêm mới
+                var newCartItem = new CartItem() { CartId = (Guid)model.CartId, Quantity = model.Quantity, ProductVariantId = model.ProductVariantId };
+                await _cartItemService.CreateAsync(newCartItem);
+                response.Message = newCartItem.CartId.ToString();
+            }
+
+            return Ok(response);
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAllCartItemInCart(Guid id)
@@ -86,6 +120,25 @@ namespace MinhTuan.API.Controllers
             }
 
         }
+        [HttpDelete("hard-delete/{id}")]
+        public async Task<IActionResult> DeleteCard(Guid id)
+        {
+            var response = new ResponseWithMessageDto() { Message = "Xóa thành công" };
+            try
+            {
+                var item = await _cartService.GetByIdAsync(id);
+
+                await _cartService.DeleteAsync(item);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                response.Message = e.Message;
+                return Ok(e);
+            }
+
+        }
+
         [HttpPut("update-quantity/{id}")]
         public async Task<IActionResult> UpdateQuantity(Guid id, [FromQuery] int quantity )
         {

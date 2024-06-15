@@ -1,6 +1,7 @@
 import { Role } from "@/helpers/Constants";
 
 const adminRouter=[
+    
     { 
         path: "/Administrator",
         component: ()=> import("../layouts/_layoutAdmin.vue"),
@@ -9,7 +10,7 @@ const adminRouter=[
                 path:"",
                 name:"AdminHome",
                 component:()=>import("../views/Administrator/Statistics/index.vue"),
-                meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF], title:"Trang quản trị" } //Thêm meta để kiểm tra quyền truy cập
+                meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF], title:"Dashboard" } //Thêm meta để kiểm tra quyền truy cập
             },
             {
                 path:"Profile",

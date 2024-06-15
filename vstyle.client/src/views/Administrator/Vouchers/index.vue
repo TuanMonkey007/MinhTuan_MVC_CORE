@@ -135,50 +135,65 @@ import dayjs from "dayjs";
             dataIndex: "code",
             key: "code",
             width: "15%",
-            sorter: false,
+            sorter: true,
+            showSorterTooltip: false,
           },
           {
             title: "Loại giảm giá",
             dataIndex: "type",
             key: "type",
             width: "30%",
+            sorter: true,
+            showSorterTooltip: false,
           },
           {
             title: "Số lượng",
             dataIndex: "quantity",
             key: "quantity",
             width: "30%",
+            sorter: true,
+            showSorterTooltip: false,
           },
           {
             title: "Đơn tối thiểu",
             dataIndex: "minimumPurchaseAmount",
             key: "minimumPurchaseAmount",
             width: "30%",
+            sorter: true,
+            showSorterTooltip: false,
           },
           {
             title: "Tỷ lệ giảm",
             dataIndex: "discountPercent",
             key: "discountPercent",
             width: "30%",
+            sorter: true,
+            showSorterTooltip: false,
           },
           {
             title: "Giá trị",
             dataIndex: "discountAmount",
             key: "discountAmount",
             width: "30%",
+            sorter: true,
+            showSorterTooltip: false,
           },
           {
             title: "Thời gian bắt đầu",
             dataIndex: "timeStart",
             key: "timeStart",
             width: "15%",
-            sorter: false,
+            sorter: true,
+            showSorterTooltip: false,
+
           },
           {
             title: "Thời gian kết thúc",
             dataIndex: "timeEnd",
             key: "timeEnd",
             width: "30%",
+            sorter: true,
+            showSorterTooltip: false,
           },
 
           {
@@ -198,6 +213,7 @@ import dayjs from "dayjs";
         formSearch: {
           code_Filter: "",
           name_Filter: "",
+          sortQuery: "",
         },
       };
     },
@@ -262,6 +278,7 @@ import dayjs from "dayjs";
           ...params,
           pageIndex: pageIndex,
           pageSize: pageSize,
+          sortQuery: this.formSearch.sortQuery,
         };
 
         try {
@@ -280,6 +297,15 @@ import dayjs from "dayjs";
       }, //end fetchData
       openModalUpdate(id) {
         this.$refs.modalUpdate.showModal(id);
+      },
+      handleTableChange(pagination, filters, sorter) {
+        if (sorter.field && sorter.order) {
+          this.formSearch.sortQuery = `${sorter.field} ${sorter.order === 'ascend' ? 'asc' : 'desc'}`;
+        } else {
+          // Nếu không có sắp xếp, đặt sortQuery về rỗng
+          this.formSearch.sortQuery = '';
+        }
+        this.fetchData(pagination.current, pagination.pageSize);
       },
     },
   };

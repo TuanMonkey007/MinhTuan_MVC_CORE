@@ -1,5 +1,6 @@
-<template lang="">
-    <!-- Main Sidebar -->
+<template>
+	
+	<!-- Main Sidebar -->
 	<a-layout-sider
 		collapsible
 		class="sider-primary"
@@ -108,19 +109,16 @@
 				</a-menu-item>
 			</a-menu>
 			<!-- / Sidebar Navigation Menu -->
-
-			
-
-		
-
 	</a-layout-sider>
 	<!-- / Main Sidebar -->
+
 </template>
+
 <script>
-export default {
-    name: 'DashboardSidebar',
-    props:{
-        // Sidebar collapsed status.
+
+	export default ({
+		props: {
+			// Sidebar collapsed status.
 			sidebarCollapsed: {
 				type: Boolean,
 				default: false,
@@ -137,9 +135,12 @@ export default {
 				type: String,
 				default: "light",
 			},
-    }
-}
+		},
+		data() {
+			return {
+				// sidebarCollapsedModel: this.sidebarCollapsed,
+			}
+		},
+	})
+
 </script>
-<style lang="">
-    
-</style>

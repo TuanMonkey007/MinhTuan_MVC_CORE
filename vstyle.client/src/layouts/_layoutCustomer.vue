@@ -1,5 +1,5 @@
 <template>
-  <a-layout >
+  <a-layout>
     <a-drawer v-model:visible="visible" class="custom-class" style="color: red" :closable="false" placement="left"
       :width="250">
       <template #title>
@@ -34,7 +34,7 @@
       alignItems: 'center',
       boxShadow: 'rgba(87, 104, 110, 0.5) 2px 0px 9px 0px',
       backgroundColor: 'white',
-      fontStyle: 'italic',
+
       fontSize: '20px',
       fontWeight: 'Medium',
     }">
@@ -42,23 +42,37 @@
         <a-col :xs="4" :sm="4" :md="4" :lg="0" :xl="0" :xxl="0">
           <font-awesome-icon @click="showDrawer" :icon="['fas', 'bars']" style=" font-size:24px;" />
         </a-col>
-        <a-col :xs="6" :sm="6" :md="6" :lg="6" :xl="6" :xxl="6">
+        <a-col :xs="6" :sm="6" :md="6" :lg="2" :xl="2" :xxl="2">
           <router-link :to="{ name: 'CustomerHome' }">
             <img src="@/assets/VStyleLogo_Option1.png" alt="VStyle"
               style="width: 64px; height: 64px; margin: 0px;padding: 0px;display: block" />
           </router-link>
 
         </a-col>
-        <a-col :xs="0" :sm="0" :md="0" :lg="13" :xl="13" :xxl="13" style="justify-content: flex-start; display: flex">
-          <a-menu v-model:selectedKeys="selectedKeys" mode="horizontal" v-if="isLargeScreen"
-            style="height: max-content;border: none">
-            <a-menu-item key="1"> <router-link to="/">
-                Trang chủ </router-link></a-menu-item>
-            <a-menu-item key="2"><router-link to="/">Nữ</router-link></a-menu-item>
-            <a-menu-item key="3"> <router-link to="/">Nam</router-link></a-menu-item>
-            <a-menu-item key="5"> <router-link to="/">Về chúng tôi</router-link></a-menu-item>
-            <a-menu-item key="6"> <router-link to="/sdfdf">Liên hệ </router-link></a-menu-item>
-          </a-menu>
+        <a-col :xs="0" :sm="0" :md="0" :lg="16" :xl="16" :xxl="16" style="justify-content: flex-start; display: flex;">
+          <a-row>
+            <a-col :xs="0" :lg="24" :xl="24" :xxl="24" style="width: 100%">
+              <a-menu  mode="horizontal"  selectable="true" forceSubMenuRender="true" v-model:selectedKeys="selectedMenu"
+                style="height: max-content;border: none;font-size:16px" >
+                <a-menu-item key="1"> <router-link to="/">
+                    Trang chủ </router-link></a-menu-item>
+                <a-menu-item key="2">
+                  <router-link :to="{ name: 'ProductList', params: { gender: 'Nữ' } }">
+                    Nữ
+                  </router-link>
+                </a-menu-item>
+                <a-menu-item key="3">
+                  <router-link :to="{ name: 'ProductList', params: { gender: 'Nam' } }">
+                    Nam
+                  </router-link>
+                </a-menu-item>
+
+                <a-menu-item key="5"> <router-link :to="{ name: 'ProductList' }">Về chúng tôi</router-link></a-menu-item>
+                <a-menu-item key="6"> <router-link :to="{ name: 'ProductList' }">Liên hệ </router-link></a-menu-item>
+              </a-menu>
+            </a-col>
+          </a-row>
+
         </a-col>
         <a-col :xs="14" :sm="14" :md="14" :lg="3" :xl="3" :xxl="3">
           <a-row justify="end">
@@ -72,21 +86,15 @@
             <a-col :span="6">
               <a-tooltip title="Giỏ hàng" placement="bottomRight" color="#de2e21">
                 <a class="ant-dropdown-link" @click.prevent style="color: #383838">
-                  <router-link :to="{name:'Cart'}" style="color: #383838">
+                  <router-link :to="{ name: 'Cart' }" style="color: #383838">
                     <shopping-cart-outlined :style="{ fontSize: '20px' }" />
                   </router-link>
-                  
+
                 </a>
               </a-tooltip>
             </a-col>
             <a-col :span="6">
-              <a-tooltip title="Đăng nhập/Đăng ký" placement="bottomRight" color="#de2e21">
-                <a v-if="!isLoggedIn" class="ant-dropdown-link" @click.prevent>
-                  <router-link to="/login" style="color: #383838">
-                    <UserOutlined :style="{ fontSize: '20px' }" />
-                  </router-link>
-                </a>
-              </a-tooltip>
+
 
               <a-dropdown v-if="isLoggedIn">
                 <a class="ant-dropdown-link" @click.prevent style="color: #383838">
@@ -94,22 +102,41 @@
                 </a>
                 <template #overlay>
                   <a-menu style="margin-top: 10px">
-                    <a-menu-item>
+                    <a-menu-item >
                       <UserOutlined :style="{ fontSize: '20px' }" />
-                      <router-link :to="{name: 'CustomerProfile'}"> Trang cá nhân</router-link>
+                      <router-link :to="{ name: 'CustomerProfile' }"> Trang cá nhân</router-link>
                     </a-menu-item>
                     <a-menu-item>
                       <font-awesome-icon icon="fa-solid fa-boxes-stacked" :style="{ fontSize: '20px' }" />
-                      <router-link :to="{name: 'CustomerProfile'}"> Đơn hàng</router-link>
+                      <router-link :to="{ name: 'TrackingOrder' }"> Đơn hàng</router-link>
                     </a-menu-item>
                     <a-menu-item v-if="role != 'CUSTOMER'">
                       <font-awesome-icon icon="fa-solid fa-wrench" :style="{ fontSize: '20px' }" />
-                      <router-link :to="{name: 'AdminHome'}"> Quản trị</router-link>
+                      <router-link :to="{ name: 'AdminHome' }"> Quản trị</router-link>
                     </a-menu-item>
                     <a-menu-item @click="logout">
                       <logout-outlined :style="{ fontSize: '20px' }" />
                       <a @click="logout"> Đăng xuất</a>
                     </a-menu-item>
+
+                  </a-menu>
+                </template>
+              </a-dropdown>
+              <a-dropdown v-else>
+                <a class="ant-dropdown-link" @click.prevent style="color: #383838">
+                  <UserOutlined :style="{ fontSize: '20px' }" />
+                </a>
+                <template #overlay>
+                  <a-menu style="margin-top: 10px">
+                    <a-menu-item @click="openModalLogin">
+                      <UserOutlined :style="{ fontSize: '20px' }" />
+                       Đăng nhập 
+                    </a-menu-item>
+                    <a-menu-item>
+                      <font-awesome-icon icon="fa-solid fa-boxes-stacked" :style="{ fontSize: '20px' }" />
+                      <router-link :to="{ name: 'TrackingOrder' }"> Đơn hàng</router-link>
+                    </a-menu-item>
+
 
                   </a-menu>
                 </template>
@@ -194,15 +221,15 @@
               <a-col :xs="0" :sm="0" :md="8">
                 <span style="font-size: 16px; font-weight: bold;">Chính sách</span>
                 <br>
-                      <a class="footer-link">  Chính sách thanh toán</a> 
-                      <br>
-                      <a class="footer-link">  Chính sách bảo hành, đổi trả</a> 
-                      <br>
-                      <a class="footer-link">  Chính sách giao, nhận hàng và kiếm hàng</a> 
-                      <br>
-                      <a class="footer-link">  Chính sách bảo mật thông tin</a> 
-                      <br>
-                      <a class="footer-link">  Chính sách mua hàng</a> 
+                <a class="footer-link"> Chính sách thanh toán</a>
+                <br>
+                <a class="footer-link"> Chính sách bảo hành, đổi trả</a>
+                <br>
+                <a class="footer-link"> Chính sách giao, nhận hàng và kiếm hàng</a>
+                <br>
+                <a class="footer-link"> Chính sách bảo mật thông tin</a>
+                <br>
+                <a class="footer-link"> Chính sách mua hàng</a>
               </a-col>
 
             </a-row>
@@ -245,11 +272,13 @@
   </a-layout>
   <a-back-top :visibilityHeight="100" style="background-color:#c21f24 ">
   </a-back-top>
+<ModalLogin ref="modalCreate"></ModalLogin>
 </template>
 
 <script>
+import ModalLogin from "@/views/Auth/login.vue"
   import EventBus from "@/helpers/EventBus.js";
-  import { ref, onMounted, onUnmounted, reactive, beforeMount, computed } from "vue";
+  import { ref, onMounted, onUnmounted, reactive, beforeMount, computed,provide } from "vue";
   import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -261,6 +290,7 @@
     CaretDownOutlined,
     ShoppingCartOutlined,
     SearchOutlined,
+    
   } from "@ant-design/icons-vue";
   import { message, notification } from "ant-design-vue";
 
@@ -277,11 +307,15 @@
       CaretDownOutlined,
       ShoppingCartOutlined,
       SearchOutlined,
+      ModalLogin
     },
     beforeUnmount() {
       window.removeEventListener("scroll", this.handleScroll);
     },
     methods: {
+      openModalLogin() {
+        this.$refs.modalCreate.showModal();
+      },
       handleScroll() {
         this.$nextTick(() => {
           // Sử dụng nextTick để đảm bảo header đã được render
@@ -313,7 +347,7 @@
           localStorage.removeItem("userEmail");
           localStorage.removeItem("userCartId");
           this.isLoggedIn = false;
-          this.$router.push({ name: "Login" });
+          this.$router.push({ name: "CustomerHome" });
           notification.success({
             message: "Đăng xuất thành công!",
           });
@@ -350,6 +384,16 @@
       const isLargeScreen = computed(() => {
         return window.innerWidth > 768; // Ví dụ: ẩn menu khi màn hình nhỏ hơn 768px
       });
+      const selectedMenu = ref(["Dashboard"]);
+  
+      const changeSelectedMenu = (newKeys) => {
+        selectedMenu.value = [newKeys];
+      };
+
+      // Cung cấp selectedMenu và changeSelectedMenu cho các component con
+      provide("selectedMenu", selectedMenu);
+      provide("changeSelectedMenu", changeSelectedMenu);
+
 
 
       return {
@@ -365,6 +409,7 @@
 </script>
 
 <style scoped>
+
   /* .logo {
     float: right;
 
@@ -376,6 +421,9 @@
     float: right;
     margin: 16px 0 16px 24px;
   } */
+  :deep() {
+    font-family: 'Archivo', serif !important;
+  }
 
   .close-icon:hover {
     animation: spin 1s linear infinite;
@@ -415,5 +463,5 @@
     color: #de2128;
   }
 
-  
+
 </style>

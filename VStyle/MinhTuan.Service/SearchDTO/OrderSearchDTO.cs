@@ -9,5 +9,6 @@ namespace MinhTuan.Service.SearchDTO
 {
     public class OrderSearchDTO :SearchBase
     {
+        public DateTime?  CreatedTime_Filter { get; set; }
     }
 }
