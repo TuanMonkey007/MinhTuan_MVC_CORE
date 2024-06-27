@@ -65,7 +65,7 @@ namespace MinhTuan.API.Controllers
                     }
                 }
 
-                var resultGetted = _productService.GetDataByPage(searchDTO);
+                var resultGetted =await _productService.GetDataByPage(searchDTO);
 
                 // Kiểm tra resultGetted.Data trước khi serialize
                 if (resultGetted != null && resultGetted.Data != null && resultGetted.Data.Items != null)
@@ -83,6 +83,13 @@ namespace MinhTuan.API.Controllers
             }
         }
 
+
+        [HttpPost("get-data-by-list-image-path")]
+        public async Task<IActionResult> GetDataByListImagePath([FromForm] ImageSearchDTO searchDTO)
+        {
+            var result = _productService.GetDataByListImagePath(searchDTO);
+            return Ok(result);
+        }
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromForm] CreateProductViewModel model)
         {
@@ -200,8 +207,13 @@ namespace MinhTuan.API.Controllers
                         listImageFileName.Add(itemFileName);
                     }
                 }
-                var productNeedUpdate = _mapper.Map<Product>(modelDTO);
-                productNeedUpdate.Id = id;
+             //   var productNeedUpdate = _mapper.Map<Product>(modelDTO);
+                var productNeedUpdate = await _productService.GetByIdAsync(id);
+                productNeedUpdate.Name = model.Name;
+                productNeedUpdate.Code = model.Code;
+                productNeedUpdate.Description = model.Description;
+                productNeedUpdate.Price = model.Price;
+              
                 await _productService.UpdateAsync(productNeedUpdate);
                 await _productService.UpdateProductImageThumbnail(id, thumbnailFileName);//Cập nhật lại ảnh đại diện
                 await _productService.UpdateProductImage(id, listImageFileName);//Cập nhật tất cả ảnh sản phẩm
@@ -348,6 +360,15 @@ namespace MinhTuan.API.Controllers
             {
                 return BadRequest(e);
             }
+        }
+
+        [HttpGet("get-relative-product-by-id/{id}")]
+        public async Task<IActionResult> GetRelativeProductById(Guid id)
+        {
+            
+            var response =await _productService.GetRelativeProductById(id);
+
+            return Ok(response);
         }
     }
 }

@@ -187,6 +187,16 @@ public class BannerController : Controller
         try
         {
             var modelDTO = _mapper.Map<BannerDTO>(model);
+           
+            var bannerNeedUpdate = await _bannerService.GetByIdAsync(id);
+            if(bannerNeedUpdate != null)
+            {
+                bannerNeedUpdate.IsDisplay = modelDTO.IsDisplay;
+                bannerNeedUpdate.OrderDisplay = modelDTO.OrderDisplay;
+       
+                bannerNeedUpdate.CategoryId = modelDTO.CategoryId;
+           
+            }
             string bannerFileName = string.Empty;
             if (model.BannerImage != null)
             {
@@ -196,17 +206,10 @@ public class BannerController : Controller
                     serverResponse.Message = bannerFileName;
                     return Ok(serverResponse);
                 }
-            }
-            var bannerNeedUpdate = await _bannerService.GetByIdAsync(id);
-            if(bannerNeedUpdate != null)
-            {
-                bannerNeedUpdate.IsDisplay = modelDTO.IsDisplay;
-                bannerNeedUpdate.OrderDisplay = modelDTO.OrderDisplay;
                 bannerNeedUpdate.Path = bannerFileName;
-                bannerNeedUpdate.CategoryId = modelDTO.CategoryId;
             }
            
-           var  result =  _bannerService.UpdateAsync(bannerNeedUpdate);
+            var  result =  _bannerService.UpdateAsync(bannerNeedUpdate);
             await result;
             if (result.IsCompleted)
             {

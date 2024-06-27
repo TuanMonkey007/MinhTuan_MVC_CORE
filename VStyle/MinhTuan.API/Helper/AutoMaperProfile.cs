@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MinhTuan.API.ViewModels;
 using MinhTuan.API.ViewModels.AccountViewModel;
+using MinhTuan.API.ViewModels.ArticleViewModel;
 using MinhTuan.API.ViewModels.BannerViewModel;
 using MinhTuan.API.ViewModels.CategoryViewModel;
 using MinhTuan.API.ViewModels.DataCategoryViewModel;
@@ -8,6 +9,7 @@ using MinhTuan.API.ViewModels.OrderViewModel;
 using MinhTuan.API.ViewModels.ProductViewModel;
 using MinhTuan.API.ViewModels.VoucherViewModel;
 using MinhTuan.Domain.DTOs.AccountDTO;
+using MinhTuan.Domain.DTOs.ArticleDTO;
 using MinhTuan.Domain.DTOs.BannerDTO;
 using MinhTuan.Domain.DTOs.CartDTO;
 using MinhTuan.Domain.DTOs.CategoryDTO;
@@ -65,5 +67,9 @@ public class AutoMapperProfile : Profile
         CreateMap<OrderDTO, CreateOrderViewModel>().ReverseMap();
         CreateMap<OrderItemDTO, OrderItem>().ReverseMap();
         CreateMap<BuyNowViewModel, OrderDTO>().ReverseMap();
+
+        //Mapper article
+        CreateMap<Article, ArticleDTO>().ReverseMap();
+        CreateMap<ArticleDTO, CreateArticleViewModel>().ReverseMap();
     }
 }

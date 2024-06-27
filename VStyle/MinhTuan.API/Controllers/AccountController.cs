@@ -28,6 +28,7 @@ using MinhTuan.API.Helper;
 using System.IO;
 using MinhTuan.Service.Services.DataCategoryService;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNet.Identity;
 
 namespace MinhTuan.API.Controllers
 {
@@ -40,17 +41,19 @@ namespace MinhTuan.API.Controllers
         private readonly IDataCategoryService _dataCategoryService;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly UserManager<AppUser> _userManager;
+        private readonly Microsoft.AspNetCore.Identity.UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly Microsoft.AspNetCore.Identity.RoleManager<IdentityRole> _roleManager;
         public AccountController(
           
             IAccountService accountService,
             IDataCategoryService dataCategoryService,
             IMapper mapper,
-              UserManager<AppUser> userManager,
+              Microsoft.AspNetCore.Identity.UserManager<AppUser> userManager,
              SignInManager<AppUser> signInManager,
             IHttpContextAccessor httpContextAccessor,
-            IEmailService emailService
+            IEmailService emailService,
+            Microsoft.AspNetCore.Identity.RoleManager<IdentityRole> roleManger
 
             )
         {
@@ -62,6 +65,7 @@ namespace MinhTuan.API.Controllers
             _signInManager = signInManager;
             _emailService = emailService;
             _dataCategoryService = dataCategoryService;
+            _roleManager = roleManger;
         }
         
 
@@ -320,6 +324,8 @@ namespace MinhTuan.API.Controllers
                             {
                                 ".jpg" or ".jpeg" => "image/jpeg",
                                 ".png" => "image/png",
+                                ".bmp" => "image/bmp", // Thêm định dạng BMP
+                                ".webp" => "image/webp", // Thêm định dạng WebP
                                 _ => "application/octet-stream",
                             };
                         }
@@ -373,6 +379,8 @@ namespace MinhTuan.API.Controllers
                             {
                                 ".jpg" or ".jpeg" => "image/jpeg",
                                 ".png" => "image/png",
+                                ".bmp" => "image/bmp", // Thêm định dạng BMP
+                                ".webp" => "image/webp", // Thêm định dạng WebP
                                 _ => "application/octet-stream",
                             };
                         }
@@ -426,6 +434,8 @@ namespace MinhTuan.API.Controllers
                             {
                                 ".jpg" or ".jpeg" => "image/jpeg",
                                 ".png" => "image/png",
+                                ".bmp" => "image/bmp", // Thêm định dạng BMP
+                                ".webp" => "image/webp", // Thêm định dạng WebP
                                 _ => "application/octet-stream",
                             };
                         }
@@ -578,6 +588,8 @@ namespace MinhTuan.API.Controllers
                 {
                     listRole = new List<string> { "CUSTOMER" };
                 }
+               
+
 
                 var currentRoles = await _userManager.GetRolesAsync(user);
 

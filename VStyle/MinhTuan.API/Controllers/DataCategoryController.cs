@@ -230,5 +230,12 @@ namespace MinhTuan.API.Controllers
             res.Data = await _dataCategoryService.GetIdByCodeandParentCode(code, parentCode);
             return Ok(res);
         }
+        [HttpGet("get-data-by-code-and-parent-code/{code}/{parentCode}")]
+        public async Task<IActionResult> GetDataByCodeAndParentCode(string code, string parentCode)
+        {
+            var res = new ResponseWithDataDto<DataCategoryDTO>();
+            res.Data = await _dataCategoryService.GetDataByCodeandParentCode(code, parentCode);
+            return Ok(res);
+        }
     }
 }

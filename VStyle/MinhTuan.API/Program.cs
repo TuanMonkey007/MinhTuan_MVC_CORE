@@ -18,6 +18,7 @@ using MinhTuan.Service.Core.Services;
 using MinhTuan.Service.Services.CategoryService;
 using System.Text;
 using MinhTuan.Service.Services.VNPAY;
+using MinhTuan.Service.Services.ImageSearch;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -45,6 +46,7 @@ builder.Services.AddSwaggerGen(config =>
 //
 
 builder.Services.AddHttpContextAccessor(); // đăng ký để truy cập thông tin
+builder.Services.AddHttpClient();
 //Add service identity
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<VStyleContext>()
     .AddDefaultTokenProviders();  // Đăng ký provider với tên "Xác thực email"
@@ -116,6 +118,7 @@ foreach (var intf in serviceTypes.Where(t => t.IsInterface))
 }
 //builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddSingleton<IVnPayService, VnPayService>(); //Inject VNPay service
+builder.Services.AddScoped<IImageSearchSevice, ImageSearchService>(); //Inject ImageSearch service>
 // Thêm logging vào container dịch vụ
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
@@ -129,6 +132,7 @@ var emailConfiguration = configuration.GetSection("EmailConfiguration")
     .Get<EmailConfiguration>();
 builder.Services.AddSingleton(emailConfiguration);
 builder.Services.AddScoped<IEmailService, EmailService>();
+
 
 
 // Đăng ký Data Protection

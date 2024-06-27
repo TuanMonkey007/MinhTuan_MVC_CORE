@@ -10,6 +10,11 @@
                 string extention = Path.GetExtension(file.FileName);
                 string fileName = Guid.NewGuid().ToString() + extention;
                 string path = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "Avatar");
+                // Đảm bảo thư mục tồn tại
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
                 using FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create);
                 file.CopyTo(stream);
                 return fileName;
@@ -23,12 +28,37 @@
                 string extention = Path.GetExtension(file.FileName);
                 string fileName = Guid.NewGuid().ToString() + extention;
                 string path = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "Product");
+                // Đảm bảo thư mục tồn tại
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
                 using FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create);
                 file.CopyTo(stream);
                 return fileName;
             }
             return isValid;
            
+        }
+        public string UploadArticleThumbnail(IFormFile file)
+        {
+            var isValid = ValidateImage(file);
+            if (isValid.Contains("Ảnh hợp lệ"))
+            {
+                string extention = Path.GetExtension(file.FileName);
+                string fileName = Guid.NewGuid().ToString() + extention;
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "ArticleThumbnail");
+                // Đảm bảo thư mục tồn tại
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                using FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create);
+                file.CopyTo(stream);
+                return fileName;
+            }
+            return isValid;
+
         }
         public string UploadBannerImage(IFormFile file)
         {
@@ -38,6 +68,11 @@
                 string extention = Path.GetExtension(file.FileName);
                 string fileName = Guid.NewGuid().ToString() + extention;
                 string path = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "Banner");
+                // Đảm bảo thư mục tồn tại
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
                 using FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create);
                 file.CopyTo(stream);
                 return fileName;
@@ -66,8 +101,18 @@
         //}
         public string ValidateImage(IFormFile file)
         {
+
             // Kiểm tra ContentType
-            List<string> validContentTypes = new List<string>() { "image/png", "image/jpeg", "image/gif" }; // Add image/jpg
+            List<string> validContentTypes = new List<string>()
+    {
+        "image/png",
+        "image/jpeg",
+        "image/jpg", // Thêm image/jpg 
+        "image/gif",
+        "image/bmp", // Thêm image/bmp
+        "image/webp" // Thêm image/webp
+    };
+
             if (!validContentTypes.Contains(file.ContentType))
             {
                 return $"Định dạng ảnh không phù hợp ({string.Join(',', validContentTypes)})";

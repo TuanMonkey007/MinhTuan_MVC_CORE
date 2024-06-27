@@ -602,6 +602,13 @@ namespace MinhTuan.API.Controllers
             response.Data = _orderService.GetRevenueOfMonth();
             return Ok(response);
         }
+        [HttpGet("get-revenue-day-to-day/{startDay}/{endDay}")]
+        public async Task<IActionResult> GetRevenueDayToDay(DateTime startDay, DateTime endDay)
+        {
+            var response = new ResponseWithDataDto<List<RevenueDTO>>();
+            response.Data = _orderService.GetRevenueDayToDay(startDay,endDay);
+            return Ok(response);
+        }
 
         [HttpGet("get-revenue-of-category")]
         public async Task<IActionResult> GetRevenueOfCategory()
@@ -617,6 +624,20 @@ namespace MinhTuan.API.Controllers
             response.Data = _orderService.GetRevenueCategories(listCategoryId);
             return Ok(response);
         }
+        [HttpGet("get-revenue-of-category-day-to-day/{startDay}/{endDay}")]
+        public async Task<IActionResult> GetRevenueOfCategoryDayToDay(DateTime startDay, DateTime endDay)
+        {
+            var response = new ResponseWithDataDto<List<RevenueCategoryDTO>>();
+            var listCategoryId = new List<Guid>();
+            var itemNam = await _dataCategoryService.GetIdByCodeandParentCode("DO_NAM", "SAN_PHAM");
+            var itemNu = await _dataCategoryService.GetIdByCodeandParentCode("DO_NU", "SAN_PHAM");
+
+            listCategoryId.Add(itemNam);
+            listCategoryId.Add(itemNu);
+
+            response.Data = _orderService.GetRevenueCategoriesDayToDay(listCategoryId, startDay,endDay);
+            return Ok(response);
+        }
 
         [HttpGet("get-top-product-selling")] //Lấy sản phẩm bán chạy trong tuần
         public async Task<IActionResult> GetTopProductSelling()
@@ -628,6 +649,24 @@ namespace MinhTuan.API.Controllers
             {
                 var product = await _productService.GetProductById(item.ProductId);
               var productItem =  product.Data.Items.FirstOrDefault();
+                item.ThumbnailPath = productItem.Thumbnail;
+                item.ThumbnailBase64 = productItem.ThumbnailBase64;
+                item.ThumbnailContentType = productItem.ThumbnailContentType;
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet("get-top-product-selling-day-to-day/{startDay}/{endDay}")] //Lấy sản phẩm bán chạy trong tuần
+        public async Task<IActionResult> GetTopProductSellingDayToDay(DateTime startDay, DateTime endDay)
+        {
+            var response = new ResponseWithDataDto<List<ProductTopSellingDTO>>();
+            response.Data = _orderService.GetProductTopSellingDayToDay(startDay,endDay);
+            //Lấy ảnh từ productId
+            foreach (var item in response.Data)
+            {
+                var product = await _productService.GetProductById(item.ProductId);
+                var productItem = product.Data.Items.FirstOrDefault();
                 item.ThumbnailPath = productItem.Thumbnail;
                 item.ThumbnailBase64 = productItem.ThumbnailBase64;
                 item.ThumbnailContentType = productItem.ThumbnailContentType;
