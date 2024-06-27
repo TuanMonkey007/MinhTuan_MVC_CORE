@@ -31,52 +31,75 @@
     <transition name="route" mode="out-in" appear>
 
 
-        <a-row v-if="isNoOrder == true" align="center" justify="center" style="margin-top: 20px;">
-
-            <a-col :span="24">
-                <a-result status="404" title="Không có đơn hàng nào" sub-title="Hãy mua hàng tại VStyle trước ">
-                    <template #extra>
-                        <router-link class="btn-buy-now"
-                            style="border-radius: 20px; display: inline-flex;align-items: center;justify-content: center;background-color: #c12227; height: 40px;"
-                            to="/">Ghé thăm cửa hàng</router-link>
-                    </template>
-                </a-result>
-            </a-col>
-        </a-row>
-        <a-row v-else>
+        
+        <a-row>
             <a-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
-                <a-card :bordered="true" style="margin:20px; min-height: 25vh">
-                    <a-row justify="center" align="center">
-                        <a-col :span="24" style="display: flex;align-items: center;justify-content: center;">
-                            <a-badge>
-                                <template #count>
-                                    <font-awesome-icon v-if="checkEmailConfirmed" icon="fa-regular fa-thumbs-up"
-                                        style="color: #015efe; font-size: 16px;" />
-                                    <font-awesome-icon v-else icon="fa-regular fa-thumbs-down"
-                                        style="color: #aaaeb6;" />
-                                </template>
-                                <a-avatar v-if="avatarBase64"
-                                    :src="'data:' + avatarContentType + ';base64,' + avatarBase64"
-                                    :size="100"></a-avatar>
-                                <a-avatar v-else :size="100">
-                                    <template #icon><font-awesome-icon icon="fa-regular fa-user" /></template>
-                                </a-avatar>
-                            </a-badge>
-                        </a-col>
-                        <a-col style="display: flex;align-items: center;justify-content: center;" :span="24">
-                            <h3>{{ this.account.fullName }}</h3>
-                        </a-col>
-                        <a-col style="display: flex;align-items: center; justify-content: center;" :span="24">{{
-                            this.account.email }}</a-col>
-                        <a-col style="display: flex;align-items: center; justify-content: center;    font-size: 12px;
+                <a-row justify="center">
+                    <a-col :span="24"> <a-card :bordered="true" style="margin:20px; min-height: 25vh">
+                            <a-row justify="center" align="center">
+                                <a-col :span="24" style="display: flex;align-items: center;justify-content: center;">
+                                    <a-badge>
+                                        <template #count>
+                                            <font-awesome-icon v-if="checkEmailConfirmed" icon="fa-regular fa-thumbs-up"
+                                                style="color: #015efe; font-size: 16px;" />
+                                            <font-awesome-icon v-else icon="fa-regular fa-thumbs-down"
+                                                style="color: #aaaeb6;" />
+                                        </template>
+                                        <a-avatar v-if="avatarBase64"
+                                            :src="'data:' + avatarContentType + ';base64,' + avatarBase64"
+                                            :size="100"></a-avatar>
+                                        <a-avatar v-else :size="100">
+                                            <template #icon><font-awesome-icon icon="fa-regular fa-user" /></template>
+                                        </a-avatar>
+                                    </a-badge>
+                                </a-col>
+                                <a-col style="display: flex;align-items: center;justify-content: center;" :span="24">
+                                    <h3>{{ this.account.fullName }}</h3>
+                                </a-col>
+                                <a-col style="display: flex;align-items: center; justify-content: center;" :span="24">{{
+                                    this.account.email }}</a-col>
+                                <a-col style="display: flex;align-items: center; justify-content: center;    font-size: 12px;
     font-style: italic;
     font-weight: 300;" :span="24">{{
         checkEmailConfirmed ? "Đã xác thực" : " Chưa xác thực" }}</a-col>
 
-                    </a-row>
-                </a-card>
+                            </a-row>
+                        </a-card>
+                    </a-col>
+                    <a-col :span="16">
+                            <a-input-search :loading="loadingSearch" class="input-voucher" v-model:value="searchOrder"
+                                placeholder="Nhập mã đơn hàng" style="width: 100%;border-radius: 20px;"
+                                @search="onSearchOrder">
+                                <template #enterButton>
+                                    <a-button type="primary"
+                                        style="border-end-end-radius: 20px;border-start-end-radius: 20px; background-color: #c12227">Tra cứu</a-button>
+                                </template>
+
+                            </a-input-search>
+                        </a-col>
+                </a-row>
+
+
+
             </a-col>
-            <a-col :xs="24" :sm="24" :md="16" :lg="16" :xl="16">
+            <a-col  v-if="isNoOrder == true" :xs="24" :sm="24" :md="16" :lg="16" :xl="16">
+                <a-card :bordered="true" style="margin:0px;min-height: 50vh">
+                <a-row align="center" justify="center" style="margin-top: 20px;">
+
+<a-col :span="24">
+    <a-result status="404" title="Không tìm thấy đơn hàng" sub-title="Hãy mua hàng tại VStyle trước ">
+        <template #extra>
+            <router-link class="btn-buy-now"
+                style="border-radius: 20px; max-width:200px; display: inline-flex;align-items: center;justify-content: center;background-color: #c12227; height: 40px;"
+                :to="{ name: 'CustomerHome' }">Ghé thăm cửa hàng</router-link>
+        </template>
+    </a-result>
+</a-col>
+</a-row>
+</a-card>
+            </a-col>
+           
+            <a-col v-else :xs="24" :sm="24" :md="16" :lg="16" :xl="16">
                 <a-card :bordered="true" style="margin:0px;min-height: 50vh">
                     <a-row>
                         <a-col :span="24">
@@ -86,7 +109,7 @@
                                     <template #header>
                                         <a-row justify="space-between">
                                             <a-col :span="7">
-                                                <span>MÃ ĐƠN HÀNG: </span>
+                                                <span>MÃ: </span>
                                                 <span style="font-weight: 600;text-align: left; font-size: 16px"> {{
                                                     item.code }}
                                                 </span>
@@ -147,7 +170,7 @@
                                                         item.customerPhoneNumber }}</a-descriptions-item>
                                                     <a-descriptions-item span="24" label="Địa chỉ">{{
                                                         item.shippingAddress
-                                                        }}</a-descriptions-item>
+                                                    }}</a-descriptions-item>
                                                     <a-descriptions-item span="24" label="Ghi chú ">{{ item.customerNote
                                                         }}
                                                     </a-descriptions-item>
@@ -188,6 +211,17 @@
 
     export default {
         methods: {
+            async onSearchOrder() {
+                
+                let orderIds = [this.searchOrder]
+                const xxx = JSON.stringify(orderIds)
+               
+                
+                const response = await APIService.post(`order/get-order-info-by-list-order-code`, JSON.parse(xxx));
+                this.orderInfo = response.data.data;
+               
+                this.isNoOrder = this.orderInfo.length == 0 ? true : false
+            },
             getColorTag(isCancelled) {
                 if (isCancelled == true) {
                     return 'red'
@@ -371,6 +405,7 @@
                 activeKeyVNPay: [],
                 currentSteps: [],
                 isNoOrder: false,
+                searchOrder: '',
 
             }
         },//end data

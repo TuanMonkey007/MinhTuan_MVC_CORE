@@ -142,10 +142,38 @@ namespace MinhTuan.Service.Services.OrderService
                                 IsCancelled = entityTbl.IsCancelled,
                                 ReasonCancelled = entityTbl.ReasonCancelled,
                             };
-                if (searchDTO.CreatedTime_Filter.HasValue) {
-                    query = query.Where(x => x.CreatedDate.Value.Date == searchDTO.CreatedTime_Filter.Value.Date);
+                if (searchDTO != null)
+                {
 
-                  } 
+
+                    if (searchDTO.CreatedTime_Filter.HasValue)
+                    {
+                        query = query.Where(x => x.CreatedDate.Value.Date == searchDTO.CreatedTime_Filter.Value.Date);
+
+                    }
+                    if(searchDTO.NameCustomer_Filter != null)
+                    {
+                        var idSearch = searchDTO.NameCustomer_Filter.ToString().RemoveAccentsUnicode();
+                        var list = _orderRepository.GetQueryable().Select(x => x.CustomerName).ToList().Where(x => x.ToString().ToLower().RemoveAccentsUnicode().Contains(idSearch.ToLower()));
+                        query = query.Where(x => list.Contains(x.CustomerName));
+                       // query = query.Where(x => x.CustomerName.Contains(searchDTO.NameCustomer_Filter));
+                    }
+                    if (searchDTO.OrderCode_Filter != null)
+                    {
+                        var idSearch = searchDTO.OrderCode_Filter.ToString().RemoveAccentsUnicode();
+                        var list = _orderRepository.GetQueryable().Select(x => x.Code).ToList().Where(x => x.ToString().ToLower().RemoveAccentsUnicode().Contains(idSearch.ToLower()));
+                        query = query.Where(x => list.Contains(x.Code));
+                        // query = query.Where(x => x.CustomerName.Contains(searchDTO.NameCustomer_Filter));
+                    }
+                    if (searchDTO.StartTime_Filter.HasValue)
+                    {
+                        query = query.Where(x => x.CreatedDate.Value.Date >= searchDTO.StartTime_Filter.Value.Date);
+                    }
+                    if (searchDTO.EndTime_Filter.HasValue)
+                    {
+                        query = query.Where(x => x.CreatedDate.Value.Date <= searchDTO.EndTime_Filter.Value.Date);
+                    }
+                }
                 if (!string.IsNullOrEmpty(searchDTO.sortQuery))
                 {
                     query = query.OrderBy(searchDTO.sortQuery);
@@ -281,12 +309,112 @@ namespace MinhTuan.Service.Services.OrderService
             try
             {
                 var endDate = DateTime.Now; // Kết thúc tuần hiện tại
-                var startDate = endDate.AddDays(-7); // Bắt đầu tuần hiện tại (7 ngày trước)
+                var startDate = endDate.AddDays(-365); // Bắt đầu tuần hiện tại (7 ngày trước)
                 var query = (from order in _orderRepository.GetQueryable()
                              join orderItem in _orderItemRepository.GetQueryable() on order.Id equals orderItem.OrderId
                              join productVariant in _productVariantRepository.GetQueryable() on orderItem.ProductVariantId equals productVariant.Id
                              join product in _productRepository.GetQueryable() on productVariant.ProductId equals product.Id
-                             where order.CreatedDate >= startDate && order.CreatedDate <= endDate && order.IsDelete != true && order.IsCancelled != true
+                             where order.CreatedDate.Value.Date >= startDate.Date && order.CreatedDate.Value.Date <= endDate.Date && order.IsDelete != true && order.IsCancelled != true
+                             group orderItem by product into productGroup
+                             orderby productGroup.Sum(oi => oi.Quantity) descending
+                             select new ProductTopSellingDTO
+                             {
+                                 ProductId = productGroup.Key.Id,
+                                 ProductName = productGroup.Key.Name,
+                                 ProductPrice = productGroup.Select(oi => oi.Price).FirstOrDefault(), // Lấy giá của biến thể đầu tiên
+                                 TotalQuantitySold = productGroup.Sum(oi => oi.Quantity)
+                             }).Take(10);
+
+
+
+                return query.ToList();
+
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public List<RevenueDTO> GetRevenueDayToDay(DateTime startDay, DateTime endDay)
+        {
+            try
+            {
+                var query = from entityTbl in _orderRepository.GetQueryable()
+                            where entityTbl.IsDelete != true && entityTbl.IsCancelled != true
+                                   && entityTbl.CreatedDate.Value.Date >= startDay.Date
+                  && entityTbl.CreatedDate.Value.Date <= endDay.Date
+                            group entityTbl by entityTbl.CreatedDate.Value.Date into g // Nhóm theo ngày
+                            select new RevenueDTO
+                            {
+                                Label_Day = g.Key, // Ngày đã được nhóm
+                                Revenue = g.Sum(x => x.TotalAmount), // Tổng doanh thu của ngày đó
+                                CountOrder = g.Count() // Số lượng đơn hàng trong ngày đó
+                            };
+
+                return query.ToList();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public List<RevenueCategoryDTO> GetRevenueCategoriesDayToDay(List<Guid> categoryIdList, DateTime startDay, DateTime endDay)
+        {
+            try
+            {
+                var query = from order in _orderRepository.GetQueryable()
+                            join orderItem in _orderItemRepository.GetQueryable() on order.Id equals orderItem.OrderId
+                            join productVariant in _productVariantRepository.GetQueryable() on orderItem.ProductVariantId equals productVariant.Id
+                            join product in _productRepository.GetQueryable() on productVariant.ProductId equals product.Id
+                            join productCategory in _productCategoryRepository.GetQueryable() on product.Id equals productCategory.ProductId
+                            where order.IsDelete != true 
+                                 && order.IsCancelled != true
+                                 && order.CreatedDate.Value.Date >= startDay.Date
+                                 && order.CreatedDate.Value.Date <= endDay.Date
+                                  && (productCategory.CategoryId.Equals(categoryIdList[0]) || productCategory.CategoryId.Equals(categoryIdList[1])) // Khoảng tìm kiếm theo giờ tính
+                            group new { order, productCategory } by productCategory.CategoryId into g
+                            select new RevenueCategoryDTO
+                            {
+                                CategoryId = g.Key, // Giới tính (NAM hoặc NU)
+                                Revenue = g.Sum(x => x.order.TotalAmount) // Tổng doanh thu của giới tính đó
+                            };
+
+                // Chuyển đổi query thành List
+                var revenueList = query.ToList();
+
+                foreach (var item in revenueList)
+                {
+                    if (item.CategoryId.Equals(categoryIdList[0]))
+                    {
+                        item.CategoryName = "Đồ nam";
+                    }
+                    else
+                    {
+                        item.CategoryName = "Đồ nữ";
+                    }
+                }
+
+                return revenueList;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public List<ProductTopSellingDTO> GetProductTopSellingDayToDay(DateTime startDay, DateTime endDay)
+        {
+
+            try
+            {
+         
+                var query = (from order in _orderRepository.GetQueryable()
+                             join orderItem in _orderItemRepository.GetQueryable() on order.Id equals orderItem.OrderId
+                             join productVariant in _productVariantRepository.GetQueryable() on orderItem.ProductVariantId equals productVariant.Id
+                             join product in _productRepository.GetQueryable() on productVariant.ProductId equals product.Id
+                             where order.CreatedDate.Value.Date >= startDay && order.CreatedDate.Value.Date <= endDay && order.IsDelete != true && order.IsCancelled != true
                              group orderItem by product into productGroup
                              orderby productGroup.Sum(oi => oi.Quantity) descending
                              select new ProductTopSellingDTO

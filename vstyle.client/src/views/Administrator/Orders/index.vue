@@ -34,6 +34,47 @@
       <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
         <a-card :bordered="true" title="Danh sách đơn hàng" style="margin: 30px;">
           
+          
+          <a-row style="margin-bottom: 20px" :gutter="24">
+              <a-col :span="24">
+                <a-collapse v-model:activateKey="activateKey" :accordion="true" :bordered="false"
+                  style="background-color:rgb(206 213 225)">
+                  <a-collapse-panel key="1" :show-arrow="false" ref="searchCollapse">
+                    <template #header>
+                      <a-row>
+                        <a-col :span="24">
+                          <a-space>
+                            <font-awesome-icon icon="fa-solid fa-filter" />
+                            <span>Bộ lọc</span>
+                          </a-space>
+                        </a-col>
+                      </a-row>
+                    </template>
+                    <a-row style="margin-bottom: 20px" :gutter="24">
+
+                      <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+                        <a-input v-model:value="formSearch.orderCode_Filter" @keyup.enter="SearchData"
+                          placeholder="Mã đơn hàng">
+                        </a-input>
+                      </a-col>
+                      <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+                        <a-range-picker style="width: 100%" :placeholder="['Từ ngày','Đến ngày']" v-model:value="formSearch.rangeTime_Filter" format="YYYY-MM-DD"
+                        />
+                      </a-col>
+                    </a-row>
+                 
+                    <a-row style="justify-content: contents;margin-top: 10px">
+                      <a-col :span="24" style="justify-items: center; display: grid;">
+                        <a-button type="primary" @click="SearchData" class="btnSearch">
+                          <font-awesome-icon icon="fa-solid fa-search" />
+                          Tìm kiếm
+                        </a-button>
+                      </a-col>
+                    </a-row>
+                  </a-collapse-panel>
+                </a-collapse>
+              </a-col>
+            </a-row>
 
 
           <a-row>
@@ -212,8 +253,10 @@
           total: 0,
         },
         formSearch: {
-          code_Filter: "",
-          name_Filter: "",
+          orderCode_Filter: "",
+          rangeTime_Filter: [],
+          startTime_Filter: "",
+          endTime_Filter: "",
           sortQuery: "",
         },
       };
@@ -311,6 +354,8 @@
         this.fetchData(this.pagination.current, this.pagination.pageSize);
       },
       SearchData() {
+        this.formSearch.startTime_Filter=this.formSearch.rangeTime_Filter[0]
+        this.formSearch.endTime_Filter=this.formSearch.rangeTime_Filter[1]
         this.fetchData(
           this.pagination.current,
           this.pagination.pageSize,

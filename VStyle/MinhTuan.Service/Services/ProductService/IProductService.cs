@@ -7,6 +7,7 @@ using MinhTuan.Domain.Entities;
 using MinhTuan.Domain.Helper.Pagination;
 using MinhTuan.Service.Core.Services;
 using MinhTuan.Service.SearchDTO;
+using Org.BouncyCastle.Bcpg.Attr;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,8 @@ namespace MinhTuan.Service.Services.ProductService
 {
     public interface IProductService : IService<Product>
     {
-        ResponseWithDataDto<PagedList<ProductDTO>> GetDataByPage(ProductSearchDTO searchDTO);
+        Task<ResponseWithDataDto<PagedList<ProductDTO>>> GetDataByPage(ProductSearchDTO searchDTO);
+        ResponseWithDataDto<PagedList<ProductDTO>> GetDataByListImagePath(ImageSearchDTO searchDTO);
         Task<bool> UpdateProductCategory(Guid id, List<Guid> listCategory);
         Task<bool> UpdateProductImage(Guid id, List<string> listImageFileName);
         Task<bool> UpdateProductImageThumbnail(Guid id, string thumbnailFileName);
@@ -28,6 +30,7 @@ namespace MinhTuan.Service.Services.ProductService
         bool CheckExistName(string name, Guid id);
         Task<ResponseWithDataDto<List<ImageResponseDTO>>> GetAllImageOfProduct(Guid id);
         Task<ResponseWithDataDto<PagedList<ProductDTO>>> GetProductById(Guid id);
+        Task<ResponseWithDataDto<PagedList<ProductDTO>>> GetRelativeProductById(Guid id);
         Task<ResponseWithDataDto<List<Guid>>> GetCategoryByProductId(Guid id);
         Task<ResponseWithDataDto<List<DataCategoryDTO>>> GetAllSizeOfProductById(Guid id);
         Task<ResponseWithDataDto<List<DataCategoryDTO>>> GetAllColorOfProductById(Guid id);

@@ -29,7 +29,7 @@
                 <a-row>
                     <a-col :span="24">
                         <a-form-item ref="description" label="Khoảng thời gian">
-                            <a-range-picker show-time v-model:value="rangeTime" format="YYYY-MM-DD HH:mm:ss"
+                            <a-range-picker :placeholder="['Ngày bắt đầu','Ngày kết thúc']" show-time v-model:value="rangeTime" format="YYYY-MM-DD HH:mm:ss"
                                 @change="handleChangeRangeTime" />
                         </a-form-item>
                     </a-col>

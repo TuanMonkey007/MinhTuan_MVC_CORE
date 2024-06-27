@@ -70,7 +70,7 @@
                     <a-row>
                         <a-col :span="24">
                             <a-tabs v-model:activeKey="activeKey">
-                                <a-tab-pane key="1" tab="Tổng quan">
+                                <a-tab-pane key="1" tab="Tổng quan" force-render>
                                     <a-row>
                                         <a-col :span="24">
                                             <a-descriptions title="Thông tin cá nhân">
@@ -214,10 +214,10 @@
                                     </a-form>
 
                                 </a-tab-pane>
-                                <a-tab-pane key="3" tab="Đổi mật khẩu">
+                                <a-tab-pane key="3" tab="Đổi mật khẩu" force-render>
                                     <a-row justify="center">
                                         <a-col :span="18" style="margin-top: 30px;">
-                                            <a-form :model="formChangePassword" :ref="formChangePassword">
+                                            <a-form  ref="formRefChangePassword" :model="formChangePassword">
                                                 <a-form-item label="Mật khẩu cũ" name="password"
                                                     :rules="[{ required: true, message: 'Nhập mật khẩu cũ' }]">
                                                     <a-input-password v-model:value="formChangePassword.password">
@@ -288,6 +288,7 @@
 
 </template>
 <script>
+import { inject } from 'vue';
     import axios from 'axios';
     import { ref, reactive } from 'vue';
     import dayjs from 'dayjs';
@@ -390,7 +391,7 @@
                         birthDay: this.account.birthDay
                             ? this.account.birthDay.format('YYYY-MM-DD') // Format nếu birthDay có giá trị
                             : null, // Hoặc một giá trị mặc định khác nếu birthDay là null
-                     
+
                         avatar: this.account.avatar,
                         address: `${this.addressChange} | ${this.selectedWard}, ${this.selectedDistrict}, ${this.selectedProvince}`,
                         provinceId: this.account.provinceId,
@@ -443,8 +444,8 @@
 
             },
             async handleChangePassword() {
-
-                notification.info({
+                this.$refs.formRefChangePassword.validate().then(async () => {
+                    notification.info({
                     message: 'Đang xử lý...',
                     key: 'loadingKey',
                     duration: 0
@@ -472,6 +473,12 @@
                     });
                     window.location.reload();
                 }
+            }).catch(error => {
+                    console.log('error', error);
+                }).finally(() => {
+                    this.isLoading = false;
+                })
+                
 
 
             },
@@ -555,7 +562,7 @@
                     });
                 }
             },// Hàm xử lý khi chọn xã
-            handleChangeWard(value,label) {
+            handleChangeWard(value, label) {
                 this.selectedWard = label.label;
             }
         },
@@ -565,6 +572,12 @@
             },
         },
         async mounted() {
+            const selectedMenu = inject("selectedMenu");
+            const changeSelectedMenu = inject("changeSelectedMenu");
+            if (this.$route.name === "AdminProfile") {
+                changeSelectedMenu("");
+            }
+            await this.fetchProvice();
             this.apiUrl = process.env.VUE_APP_URL + 'Account/valid-upload'; // Truy cập trong mounted
             const response = await APIService.get('datacategory/get-list-by-parent-code/GIOI_TINH');
             this.listGender = response.data.data;
@@ -575,9 +588,15 @@
                 birthDay: serverResponse.data.data.birthDay ? dayjs(serverResponse.data.data.birthDay) : null
             }; // Gán lại account.birthDay sau khi chuyển đổi
             const fullAddress = this.account.address
-            const addressParts = fullAddress.split('|');
-            this.addressChange = addressParts[0].trim(); // Lấy phần tử đầu tiên và loại bỏ khoảng trắng thừa
+            if (fullAddress != null && fullAddress.includes('|')) {
+                const addressParts = fullAddress.split('|');
+                this.addressChange = addressParts[0].trim(); // Lấy phần tử đầu tiên và loại bỏ khoảng trắng thừa
+            } else {
+                this.addressChange = fullAddress
+            }
+
             this.id = serverResponse.data.data.id;
+
             this.avatarBase64 = serverResponse.data.data.avatarBase64;
             this.avatarContentType = serverResponse.data.data.avatarContentType;
             if (serverResponse.data.data.lockoutEnd && dayjs(serverResponse.data.data.lockoutEnd) > dayjs()) {
@@ -586,7 +605,7 @@
                 this.checkLockOut = false;
             }
             this.checkEmailConfirmed = serverResponse.data.data.emailConfirmed;
-            await this.fetchProvice()   
+            await this.fetchProvice()
 
             // Kiểm tra nếu có avatar và chuyển đổi thành fileList
             if (this.avatarBase64) {
@@ -639,7 +658,7 @@
                     }));
                     this.selectedWard = this.wardOptions.find(ward => ward.value === this.account.wardId).label
                 }
-            
+
             }
 
         },

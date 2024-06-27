@@ -27,7 +27,10 @@ namespace MinhTuan.Service.Services.OrderService
         int CountNumberOfOrderWaitingConfirm(Guid statusId);
         double GetRevenueToday();
         List<RevenueDTO> GetRevenueOfMonth();
+        List<RevenueDTO> GetRevenueDayToDay(DateTime startDay, DateTime endDay);
         List<RevenueCategoryDTO> GetRevenueCategories(List<Guid> categoryIdList);
+        List<RevenueCategoryDTO> GetRevenueCategoriesDayToDay(List<Guid> categoryIdList,DateTime startDay, DateTime endDay);
         List<ProductTopSellingDTO> GetProductTopSellingOfWeek();
+        List<ProductTopSellingDTO> GetProductTopSellingDayToDay(DateTime startDay, DateTime endDay);
     }
 }

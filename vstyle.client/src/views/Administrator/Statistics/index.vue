@@ -2,18 +2,18 @@
   <div style="min-height: 100vh">
     <transition name="route" mode="out-in" appear>
       <a-row style="justify-content: space-evenly;">
-        <a-col :xs="20" :md="10" :lg="5" :xl="5" style="margin: 20px;">
-          <a-card style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.08);">
+        <a-col :xs="20" :md="10" :lg="5" :xl="5" style="margin: 15px;">
+          <a-card :loading="isLoadingCard" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.08);">
             <a-row :gutter="20" justify="space-around">
               <a-col :span="6"
                 style="display: flex; align-items: center; justify-content: center;background: #ffc107;border-radius: 10px;">
-                <ClockCircleOutlined style="color: #1f2d3d; font-size: 50px" />
+                <ClockCircleOutlined style="color: #1f2d3d; font-size: 50px;object-fit: contain" />
               </a-col>
               <a-col :span="18">
                 <a-statistic :value="this.countNumberOrderWaitingConfirm" :precision="0"
                   :value-style="{ color: '#db3027' }" style="margin-right: 50px">
                   <template #title>
-                    <span style="font-size: 18px; font-weight: bold; color: #1f2d3d">Đơn chưa duyệt</span>
+                    <span style="font-size: 18px; font-weight: bold; color: #1f2d3d">Đợi duyệt</span>
                   </template>
                 </a-statistic>
               </a-col>
@@ -21,8 +21,8 @@
 
           </a-card>
         </a-col>
-        <a-col :xs="20" :md="10" :lg="5" :xl="5" style="margin: 20px;">
-          <a-card style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.08);">
+        <a-col :xs="20" :md="10" :lg="5" :xl="5" style="margin: 15px;">
+          <a-card :loading="isLoadingCard" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.08);">
             <a-row :gutter="20" justify="space-around">
               <a-col :span="6"
                 style="display: flex; align-items: center; justify-content: center; background: #28a645;border-radius: 10px;">
@@ -42,8 +42,8 @@
           </a-card>
         </a-col>
 
-        <a-col :xs="20" :md="10" :lg="5" :xl="5" style="margin: 20px;">
-          <a-card style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.08);">
+        <a-col :xs="20" :md="10" :lg="5" :xl="5" style="margin: 15px;">
+          <a-card :loading="isLoadingCard" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.08);">
             <a-row :gutter="20" justify="space-around">
               <a-col :span="6"
                 style="display: flex; align-items: center; justify-content: center; background: #16a2b8;border-radius: 10px;">
@@ -63,19 +63,19 @@
           </a-card>
         </a-col>
 
-        <a-col :xs="20" :md="10" :lg="5" :xl="5" style="margin: 20px;">
-          <a-card style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.08);">
+        <a-col :xs="20" :md="10" :lg="5" :xl="5" style="margin: 15px;">
+          <a-card :loading="isLoadingCard" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.08);">
             <a-row :gutter="20" justify="space-around">
               <a-col :span="6"
                 style="display: flex; align-items: center; justify-content: center; background: #f2bbc1;border-radius: 10px;">
 
-                <UserAddOutlined style="color: #1f2d3d; font-size: 50px" />
+                <UserAddOutlined style="color: #1f2d3d; font-size: 50px;object-fit: contain" />
               </a-col>
               <a-col :span="18">
                 <a-statistic :value="this.countUserRegisterToday" :precision="0" :value-style="{ color: '#db3027' }"
                   style="margin-right: 50px">
                   <template #title>
-                    <span style="font-size: 18px; font-weight: bold; color: #1f2d3d">Người dùng mới</span>
+                    <span style="font-size: 18px; font-weight: bold; color: #1f2d3d">Người mới</span>
                   </template>
                   <template #suffix>
                     <span style="font-size: 18px; font-weight: bold; color: #db3027">| {{ this.totalUser }}</span>
@@ -98,18 +98,27 @@
     <transition name="route" mode="in-out" appear>
       <a-row :gutter="20" style="margin: 20px;">
         <a-col :xs="24" :sm="24" :md="24" :lg="16" :xl="16">
-          <a-card>
-
+          <a-card :loading="isLoadingMixChart">
+            <template #title>Doanh thu và đơn hàng</template>
+            <template #extra>
+              <a-range-picker :placeholder="['Ngày bắt đầu','Ngày kết thúc']" v-model:value="rangeTimeMixChart" format="YYYY-MM-DD"
+              @change="handleChangeRangeTimeMixChart" />
+            </template>  
             <apexchart ref="chartRef" type="line" height="350" :options="mixChartOptions" :series="mixSeries">
             </apexchart>
 
           </a-card>
         </a-col>
         <a-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8">
-          <a-card>
-
-            <apexchart type="donut" ref="donutRef" :options="donutChartOptions" :series="donutSeries"></apexchart>
-
+          <a-card :loading="isLoadingDonutChart">
+           
+            <template #extra>
+              <a-range-picker :placeholder="['Ngày bắt đầu','Ngày kết thúc']" v-model:value="rangeTimeDonutChart" format="YYYY-MM-DD"
+              @change="handleChangeRangeTimeDonutChart" />
+            </template>  
+            <a-result status="warning" title="Không có dữ liệu" v-if="this.isNoDataDonutChart"></a-result> 
+            <apexchart v-else type="donut" ref="donutRef" :options="donutChartOptions" :series="donutSeries"></apexchart>
+            
           </a-card>
         </a-col>
       </a-row>
@@ -119,7 +128,11 @@
     <transition name="route" mode="in-out" appear>
       <a-row justify="center">
         <a-col :xs="22" :sm="22" :md="16" :lg="16" :xl="16" >
-          <a-card title="Sản phẩm bán chạy trong 7 ngày">
+          <a-card  title="Top sản phẩm bán chạy">
+            <template #extra>
+              <a-range-picker :placeholder="['Ngày bắt đầu','Ngày kết thúc']" v-model:value="rangeTimeTopSelling" format="YYYY-MM-DD"
+              @change="handleChangeRangeTimeTopSelling" />
+            </template>  
             <a-table :columns="columns" :data-source="dataTableTopSelling" :pagination="false" :row-key="record => record.id"
               :scroll="{ x: 800, y: 500 }">
               <template #bodyCell="{ column, record }">
@@ -159,7 +172,14 @@
     },
     data() {
       return {
-        
+
+        isNoDataDonutChart: false,
+        isLoadingCard: false,
+        isLoadingDonutChart: false,
+        isLoadingMixChart: false,
+        rangeTimeMixChart:[],
+        rangeTimeDonutChart:[],
+        rangeTimeTopSelling:[],
         countNumberOrderToday: 0,
         countNumberOrderYesterday: 0,
         countNumberOrderWaitingConfirm: 0,
@@ -213,6 +233,7 @@
           data: []
         }],
         mixChartOptions: {
+          colors: ['#00215E', '#FC4100'],
           responsive: [
             {
               breakpoint: 480, // Kích thước màn hình tối đa
@@ -231,7 +252,7 @@
             type: 'line',
             toolbar: {
               tools: {
-                download: false,
+                download: true,
                 selection: true,
                 zoom: true,
                 zoomin: true,
@@ -245,21 +266,8 @@
           stroke: {
             width: [0, 4]
           },
-          title: {
-            text: 'Doanh thu và đơn mua',
-            align: 'left',
-            position: 'bottom', // Đặt tiêu đề ở dưới cùng
-            margin: 10,
-            offsetX: 0,
-            offsetY: 0,
-            floating: false,
-            style: {
-              fontSize: '16px',
-              fontWeight: 'bold',
-              fontFamily: 'Archirvo, Helvetica, Arial, sans-serif',
-              color: '#263238'
-            },
-          },
+          
+          
           dataLabels: {
             enabled: true,
             enabledOnSeries: [1]
@@ -313,17 +321,87 @@
 
       };
     },
-    mounted() {
-      this.fetchCountNumberOrderToday();
-      this.fetchCountNumberOrderYesterday();
-      this.fetchCountNumberOrderWaitingConfirm();
-      this.fetchRevenueToday();
-      this.fetchCountUser();
-      this.fetchRevenueForMixChart();
-      this.fetchRevenueForDonutChart();
-      this.fetchDataTableTopSelling();
-    },
+    async mounted() {
+    this.isLoadingCard = true;
+
+    try {
+        await Promise.all([
+            this.fetchCountNumberOrderToday(),
+            this.fetchCountNumberOrderYesterday(),
+            this.fetchCountNumberOrderWaitingConfirm(),
+            this.fetchRevenueToday(),
+            this.fetchCountUser(),
+            this.fetchRevenueForMixChart(),
+            this.fetchRevenueForDonutChart(),
+            this.fetchDataTableTopSelling()
+        ]);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+
+    this.isLoadingCard = false;
+},
+
     methods: {
+     async handleChangeRangeTimeTopSelling(){
+      try{
+          const response = await APIService.get(`order/get-top-product-selling-day-to-day/${this.rangeTimeTopSelling[0]}/${this.rangeTimeTopSelling[1]}`);
+          this.dataTableTopSelling = response.data.data
+        }catch(error){
+          console.log(error);
+        }
+      },
+      async handleChangeRangeTimeDonutChart(){
+        this.isLoadingDonutChart= true
+        try {
+          const response = await APIService.get(`order/get-revenue-of-category-day-to-day/${this.rangeTimeDonutChart[0]}/${this.rangeTimeDonutChart[1]}`);
+
+          this.donutSeries = response.data.data.map(item => {
+            return item.revenue
+          })
+          if(this.donutSeries.length > 0){
+            this.isNoDataDonutChart = false
+          }
+          else{
+            this.isNoDataDonutChart = true
+          }
+          this.donutChartOptions.labels = response.data.data.map(item => {
+            return item.categoryName.toString()
+          })
+        
+          this.$refs.donutRef.updateOptions({
+            labels: this.donutChartOptions.labels
+          });
+          
+        } catch (error) {
+          console.log(error);
+        }finally{
+          this.isLoadingDonutChart = false
+        }
+      },
+     async handleChangeRangeTimeMixChart(){
+        this.isLoadingMixChart= true
+      try {
+          const response = await APIService.get(`order/get-revenue-day-to-day/${this.rangeTimeMixChart[0]}/${this.rangeTimeMixChart[1]}`);
+          this.mixChartOptions.labels = response.data.data.map(item => {
+            return dayjs(item.label_Day).format('DD-MM-YYYY')
+          })
+          this.mixSeries[0].data = response.data.data.map(item => {
+            return item.revenue
+          })
+          this.mixSeries[1].data = response.data.data.map(item => {
+            return item.countOrder
+          })
+
+          this.$refs.chartRef.updateOptions({
+            labels: this.mixChartOptions.labels
+          });
+        } catch (error) {
+          console.log(error);
+        }finally{
+          this.isLoadingMixChart = false
+        }
+      },
       async fetchCountNumberOrderToday() {
         try {
           const response = await APIService.get('order/count-order-today');
@@ -367,6 +445,7 @@
         }
       },
       async fetchRevenueForMixChart() {
+        this.isLoadingMixChart =true
         try {
           const response = await APIService.get('order/get-revenue-of-month');
           this.mixChartOptions.labels = response.data.data.map(item => {
@@ -387,10 +466,13 @@
 
         } catch (error) {
           console.log(error);
+        }finally{
+          this.isLoadingMixChart = false
         }
       },
 
       async fetchRevenueForDonutChart() {
+        this.isLoadingDonutChart = true
         try {
           const response = await APIService.get('order/get-revenue-of-category');
 
@@ -400,12 +482,20 @@
           this.donutChartOptions.labels = response.data.data.map(item => {
             return item.categoryName.toString()
           })
+          if(this.donutSeries.length > 0){
+            this.isNoDataDonutChart = false
+          }
+          else{
+            this.isNoDataDonutChart = true
+          }
           this.$refs.donutRef.updateOptions({
             labels: this.donutChartOptions.labels
           });
 
         } catch (error) {
           console.log(error);
+        }finally{
+          this.isLoadingDonutChart = false
         }
       },
 

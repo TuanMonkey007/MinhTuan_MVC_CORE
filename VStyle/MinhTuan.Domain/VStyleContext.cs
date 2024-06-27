@@ -50,7 +50,7 @@ namespace MinhTuan.Domain
                                 if (entity.IsDelete == true)
                                 {
                                     // Nếu là soft delete, cập nhật thông tin xóa
-                                    entity.DeleteBy = _user.FullName;
+                                    entity.DeleteBy = userName;
                                     entity.DeleteId = Guid.Parse(_user.Id);
                                     entity.DeleteTime = DateTime.Now;
                                 }
@@ -58,7 +58,7 @@ namespace MinhTuan.Domain
                                 {
                                     // Nếu không phải soft delete, cập nhật thông tin sửa đổi
                                     entity.UpdatedDate = DateTime.Now;
-                                    entity.UpdatedBy = _user.FullName;
+                                    entity.UpdatedBy = userName;
                                     entity.UpdatedID = Guid.Parse(_user.Id);
                                 }
                             }
@@ -67,7 +67,7 @@ namespace MinhTuan.Domain
 							entity.CreatedDate = DateTime.Now;
 							if (_user != null)
 							{
-								entity.CreatedBy = _user.FullName;
+								entity.CreatedBy = userName;
 								entity.CreatedID = Guid.Parse(_user.Id);
 							}
 							break;
@@ -99,6 +99,8 @@ namespace MinhTuan.Domain
 
         public DbSet<OrderItem> orderItems { get; set; }
         public DbSet<PaymentInfo> paymentInfos { get; set; }
+		public DbSet<Article> articles { get; set; }
+		public DbSet<Article_Category> article_Categories { get; set; }
 
     }
 }

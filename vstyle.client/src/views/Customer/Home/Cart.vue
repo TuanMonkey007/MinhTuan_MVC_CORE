@@ -49,7 +49,7 @@
     <a-row v-if="isHasItem" align="center" justify="center" style="margin-top: 20px; ">
         <a-col :xs="0" :sm="0" :md="12" :lg="12" :xl="12" class="border-deptrai">
             <a-table :columns="tableColumns" :dataSource="dataSourceTable" :pagination="false" :loading="false"
-                style="margin: 5px;">
+                style="margin: 5px; height:100%">
                 <template #bodyCell="{ column, record }">
                     <template v-if="column.key == 'action'">
                         <a-row>
@@ -78,7 +78,7 @@
                     </template>
                     <template v-if="column.key == 'productPrice'">
                         <span class="price-product" style="font-size:14px ; font-weight: 600; color: #292929">{{
-                            record.productPrice }}&#8363;</span>
+                           fomartPrice(record.productPrice) }}&#8363;</span>
                     </template>
                     <template v-if="column.key == 'quantity'">
                         <a-input-number v-model:value="record.quantity" min="1" max="10" size="small" :controls="false">
@@ -95,7 +95,7 @@
                         <a-row>
                             <a-col :span="24">
                                 <span class="price-product" style="font-size:14px ; font-weight: 600;">{{
-                                    record.productPrice * record.quantity }}&#8363;</span>
+                                   fomartPrice(record.productPrice * record.quantity) }}&#8363;</span>
 
                             </a-col>
                         </a-row>
@@ -120,7 +120,7 @@
                                 <span style="font-size: 14px; font-weight: 400;">{{ record.productName }}</span>
                                 <br>
                                 <span class="price-product" style="font-size:14px ; font-weight: 600;">{{
-                                    record.productPrice }}&#8363;</span>
+                                   fomartPrice(record.productPrice) }}&#8363;</span>
                             </a-col>
                             <a-col :span="2">
                                 <a-popconfirm title="Xác nhận xóa?" ok-text="Xóa" cancel-text="Hủy"
@@ -321,6 +321,9 @@
             this.fetchData();
         },
         methods: {
+            fomartPrice(price) {
+                return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            },
             async fetchData() {
                 try {
                     //    Nếu là khách chưa đăng nhập
@@ -403,7 +406,7 @@
                 this.TotalPayment = this.dataSourceTable.reduce((total, item) => {
                     return total + item.productPrice * item.quantity;
                 }, 0);
-                return this.TotalPayment;
+                return this.fomartPrice(this.TotalPayment);
             }
         }
     }

@@ -334,8 +334,16 @@
                         const response = await APIService.get(`account/get-user-by-email/${userEmail}`);
                         this.orderInfo.fullName = response.data.data.fullName;
                         this.orderInfo.phoneNumber = response.data.data.phoneNumber;
-                        this.orderInfo.address = response.data.data.address;
+                       
                         this.orderInfo.selectedProvince = response.data.data.provinceId;
+
+                        const fullAddress = response.data.data.address
+            if(fullAddress != null && fullAddress.includes('|')){
+                const addressParts = fullAddress.split('|');
+                this.orderInfo.address = addressParts[0].trim(); // Lấy phần tử đầu tiên và loại bỏ khoảng trắng thừa
+            }else{
+                this.orderInfo.address = fullAddress
+            }
                         // Tạo Axios instance mới
                         const apiClient = axios.create();
 

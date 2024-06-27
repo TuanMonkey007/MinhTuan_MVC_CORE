@@ -9,6 +9,11 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
+    "@ckeditor/ckeditor5-build-classic": "^41.4.2",
+    "@ckeditor/ckeditor5-build-decoupled-document": "^41.4.2",
+    "@ckeditor/ckeditor5-image": "^41.4.2",
+    "@ckeditor/ckeditor5-ui": "^41.4.2",
+    "@ckeditor/ckeditor5-vue": "^5.1.0",
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/free-brands-svg-icons": "^6.5.2",
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
@@ -21,10 +26,13 @@
     "dotenv": "^16.4.5",
     "jwt-decode": "^4.0.0",
     "mitt": "^3.0.1",
+    "slugify": "^1.6.6",
+    "swiper": "^11.1.4",
     "vue": "^3.2.13",
     "vue-apexcharts": "^1.6.2",
     "vue-router": "^4.3.2",
-    "vue3-apexcharts": "^1.5.3"
+    "vue3-apexcharts": "^1.5.3",
+    "weaviate-ts-client": "^2.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

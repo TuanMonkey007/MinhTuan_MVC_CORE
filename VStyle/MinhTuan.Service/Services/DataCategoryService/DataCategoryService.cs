@@ -202,5 +202,13 @@ namespace MinhTuan.Service.Services.DataCategoryService
             return _dataCategoryRepository.FindBy(x => x.Code.Equals(code) && x.ParentId.Equals(parentId)  && x.IsDelete != true).FirstOrDefault().Id;
 
         }
+
+        public async Task<DataCategoryDTO> GetDataByCodeandParentCode(string code, string parentCode)
+        {
+            var find = await _categoryRepository.FindByAsync(x => x.Code.Equals(parentCode));
+            var parentId = find.FirstOrDefault().Id;
+            var res= _dataCategoryRepository.FindBy(x => x.Code.Equals(code) && x.ParentId.Equals(parentId) && x.IsDelete != true).FirstOrDefault();
+            return _mapper.Map<DataCategoryDTO>(res);
+        }
     }
 }

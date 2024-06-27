@@ -210,11 +210,19 @@ public class AccountService : IAccountService
         var result = await _userManager.CreateAsync(user, model.Password);
         if (result.Succeeded)
         {
+            if (!await _roleManager.RoleExistsAsync(AppRole.ADMINISTRATOR))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(AppRole.ADMINISTRATOR));
+            }
+            if (!await _roleManager.RoleExistsAsync(AppRole.STAFF))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(AppRole.STAFF));
+            }
             if (!await _roleManager.RoleExistsAsync(AppRole.CUSTOMER))
             {
                 await _roleManager.CreateAsync(new IdentityRole(AppRole.CUSTOMER));
             }
-         
+
             //Tìm user đã tạo
             var createdUser = await _userManager.FindByEmailAsync(user.Email);
            
@@ -222,7 +230,7 @@ public class AccountService : IAccountService
             //Gửi email chứa token xác thực tài khoản
             var verifyToken = await _userManager.GenerateEmailConfirmationTokenAsync(createdUser);
 
-            var confirmationLink = $"http://localhost:8080/confirm-email?token={WebUtility.UrlEncode(verifyToken)}&email={WebUtility.UrlEncode(model.Email)}";
+            var confirmationLink = $"http://localhost:8081/confirm-email?token={WebUtility.UrlEncode(verifyToken)}&email={WebUtility.UrlEncode(model.Email)}";
 
             var message = new Message(new string[] { createdUser.Email! }, "Xác thực tài khoản", confirmationLink);
              _emailService.SendEmail(message);
@@ -467,7 +475,7 @@ public class AccountService : IAccountService
         
         var verifyToken = await _userManager.GeneratePasswordResetTokenAsync(user);
         // Tạo confirmation link
-        var confirmationLink = $"http://localhost:8080/reset-password?token={WebUtility.UrlEncode(verifyToken)}&email={WebUtility.UrlEncode(model.Email)}";
+        var confirmationLink = $"http://localhost:8081/reset-password?token={WebUtility.UrlEncode(verifyToken)}&email={WebUtility.UrlEncode(model.Email)}";
      
         var message = new Message(new string[] { user.Email! }, "Lấy lại mật khẩu", confirmationLink);
         _emailService.SendForgotPasswordEmail(message);

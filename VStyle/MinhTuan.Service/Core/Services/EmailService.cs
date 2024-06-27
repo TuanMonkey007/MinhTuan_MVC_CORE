@@ -61,7 +61,7 @@ namespace MinhTuan.Service.Core.Services
 
             // Load the template
                
-            string relativePath = Path.Combine(Directory.GetCurrentDirectory(), "Helper", "EmailTemplates", nameTemplate);
+            string relativePath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "EmailTemplate", nameTemplate);
             string emailTemplate = File.ReadAllText(relativePath);
 
             // Replace the placeholder with the actual confirmation link

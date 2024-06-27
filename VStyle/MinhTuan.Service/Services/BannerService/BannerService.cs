@@ -16,6 +16,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
+using MinhTuan.Service.Services.CategoryService;
+using MinhTuan.Domain.Repository.CategoryRepositoy;
 
 namespace MinhTuan.Service.Services.BannerService
 {
@@ -24,13 +26,15 @@ namespace MinhTuan.Service.Services.BannerService
         private readonly IBannerRepository _bannerRepository;
         private readonly IMapper _mapper;
         private readonly IDataCategoryRepository _dataCategoryRepository;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public BannerService(IUnitOfWork unitOfWork,IBannerRepository bannerRepository, IMapper mapper,IDataCategoryRepository dataCategoryRepository) : base(unitOfWork)
+        public BannerService(IUnitOfWork unitOfWork,IBannerRepository bannerRepository, IMapper mapper,IDataCategoryRepository dataCategoryRepository,ICategoryRepository categoryRepository) : base(unitOfWork)
         {
             _unitOfWork = unitOfWork;
             _bannerRepository = bannerRepository;
             _mapper = mapper;
             _dataCategoryRepository = dataCategoryRepository;
+            _categoryRepository = categoryRepository;
         }
         private static string ImageToBase64(string imagePath)
         {
@@ -79,7 +83,9 @@ namespace MinhTuan.Service.Services.BannerService
                             };
                 if (!searchDTO.CategoryCode_Filter.IsNullOrEmpty())
                 {
-                    searchDTO.CategoryId_Filter = _dataCategoryRepository.FindBy(x => x.Code.Equals(searchDTO.CategoryCode_Filter)).FirstOrDefault().Id;
+                    var parentCategory = _categoryRepository.FindByAsync(x => x.Code.Equals("BANNER"));
+                    var parentId = parentCategory.Result.FirstOrDefault().Id;
+                    searchDTO.CategoryId_Filter = _dataCategoryRepository.FindBy(x => x.Code.Equals(searchDTO.CategoryCode_Filter) && x.ParentId.Equals(parentId)).FirstOrDefault().Id;
                     if (!searchDTO.CategoryCode_Filter.IsNullOrEmpty())
                     {
                         query = query.Where(x => x.CategoryId.Equals(searchDTO.CategoryId_Filter));

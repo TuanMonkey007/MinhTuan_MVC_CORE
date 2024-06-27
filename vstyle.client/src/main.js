@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import { createApp, reactive } from 'vue'
 import router from './router';
 import App from './App.vue'
 import axios from 'axios'; // Import axios
@@ -14,6 +14,8 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import VueApexCharts from "vue3-apexcharts"
+import CKEditor from '@ckeditor/ckeditor5-vue';
+import '@ckeditor/ckeditor5-build-classic/build/translations/vi';
 
 
 library.add(fas, far, fab)
@@ -22,8 +24,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 const app = createApp(App)
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.use(Antd)
+app.use(CKEditor)
 app.use(VueApexCharts);
 app.use(router)
+
 message.config({
   top: '24px', // Set the distance from the top of the screen
   right: '100px', // Set the distance from the right of the screen
@@ -36,8 +40,11 @@ app.config.globalProperties.$notification = notification;// Đăng ký notificat
 notification.config({
   placement: 'topRight',
   top: '50px',
-  duration: 2,
-  maxCount: 3
+  duration: 1,
+  maxCount: 3,
+  zIndex: 99999999
  
 });
+
+
 app.mount('#app')

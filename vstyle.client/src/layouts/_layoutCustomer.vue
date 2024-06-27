@@ -17,13 +17,45 @@
           </a-col>
         </a-row>
       </template>
-      <a-menu v-model:selectedKeys="selectedKeys" mode="vertical" style="height: max-content;border: none">
+      <a-menu mode="inline" selectable="true" forceSubMenuRender="true" v-model:selectedKeys="selectedMenu"
+        style="height: max-content;border: none;font-size:16px">
         <a-menu-item key="1"> <router-link to="/">
             Trang chủ </router-link></a-menu-item>
-        <a-menu-item key="2"><router-link to="/fdfdf">Sản phẩm</router-link></a-menu-item>
-        <a-menu-item key="3"> <router-link to="/sdfsdf">Khuyến mãi </router-link></a-menu-item>
-        <a-menu-item key="5"> <router-link to="/">Giới thiệu </router-link></a-menu-item>
-        <a-menu-item key="6"> <router-link to="/sdfdf">Liên hệ </router-link></a-menu-item>
+        <a-menu-item key="2">
+          <router-link :to="{ name: 'ProductList', params: { gender: 'Nữ' } }">
+            Nữ
+          </router-link>
+        </a-menu-item>
+        <a-menu-item key="3">
+          <router-link :to="{ name: 'ProductList', params: { gender: 'Nam' } }">
+            Nam
+          </router-link>
+        </a-menu-item>
+
+        <a-menu-item key="5"> <router-link :to="{ name: 'About' }">Chính sách</router-link></a-menu-item>
+        <a-menu-item key="7"> <router-link :to="{ name: 'Contact' }">Liên hệ </router-link></a-menu-item>
+        <a-sub-menu forceSubMenuRender="true">
+          <template #title>
+            <span>
+
+              <span>Tin tức</span>
+            </span>
+          </template>
+          <a-menu-item :key="6" style="justify-content: flex-start">
+
+            <router-link :to="{ name: 'BlogCategory', params: { categoryCode: 'TIN-TUC-SU-KIEN' } }"> Sự kiện thời
+              trang</router-link>
+          </a-menu-item>
+          <a-menu-item :key="8">
+            <router-link :to="{ name: 'BlogCategory', params: { categoryCode: 'XU-HUONG-THOI-TRANG' } }"> Xu hướng
+              thời trang</router-link>
+          </a-menu-item>
+          <a-menu-item :key="9">
+            <router-link :to="{ name: 'BlogCategory', params: { categoryCode: 'TU-VAN-PHONG-CACH' } }"> Tư vấn
+              phong cách</router-link>
+          </a-menu-item>
+        </a-sub-menu>
+
       </a-menu>
 
     </a-drawer>
@@ -50,10 +82,10 @@
 
         </a-col>
         <a-col :xs="0" :sm="0" :md="0" :lg="16" :xl="16" :xxl="16" style="justify-content: flex-start; display: flex;">
-          <a-row>
+          <a-row style="width: 100%;">
             <a-col :xs="0" :lg="24" :xl="24" :xxl="24" style="width: 100%">
-              <a-menu  mode="horizontal"  selectable="true" forceSubMenuRender="true" v-model:selectedKeys="selectedMenu"
-                style="height: max-content;border: none;font-size:16px" >
+              <a-menu mode="horizontal" selectable="true" forceSubMenuRender="true" v-model:selectedKeys="selectedMenu"
+                style="height: max-content;border: none;font-size:16px">
                 <a-menu-item key="1"> <router-link to="/">
                     Trang chủ </router-link></a-menu-item>
                 <a-menu-item key="2">
@@ -67,23 +99,90 @@
                   </router-link>
                 </a-menu-item>
 
-                <a-menu-item key="5"> <router-link :to="{ name: 'ProductList' }">Về chúng tôi</router-link></a-menu-item>
-                <a-menu-item key="6"> <router-link :to="{ name: 'ProductList' }">Liên hệ </router-link></a-menu-item>
+                <a-menu-item key="5"> <router-link :to="{ name: 'About' }">Chính sách</router-link></a-menu-item>
+                <a-menu-item key="7"> <router-link :to="{ name: 'Contact' }">Liên hệ </router-link></a-menu-item>
+
+                <a-menu-item key="6">
+                  <a-sub-menu forceSubMenuRender="true">
+                    <template #title>
+                      <span>
+
+                        <span>Tin tức</span>
+                      </span>
+                    </template>
+                    <a-menu-item :key="6" style="justify-content: flex-start">
+
+                      <router-link :to="{ name: 'BlogCategory', params: { categoryCode: 'TIN-TUC-SU-KIEN' } }"> Sự kiện
+                        thời
+                        trang</router-link>
+                    </a-menu-item>
+                    <a-menu-item :key="8">
+                      <router-link :to="{ name: 'BlogCategory', params: { categoryCode: 'XU-HUONG-THOI-TRANG' } }"> Xu
+                        hướng
+                        thời trang</router-link>
+                    </a-menu-item>
+                    <a-menu-item :key="9">
+                      <router-link :to="{ name: 'BlogCategory', params: { categoryCode: 'TU-VAN-PHONG-CACH' } }"> Tư vấn
+                        phong cách</router-link>
+                    </a-menu-item>
+                  </a-sub-menu>
+                  <!-- <a-dropdown>
+                    <span class="dropdown-text">Tin tức</span>
+                    <template #overlay>
+                      <a-menu style="margin-top: 10px">
+
+                        <a-menu-item style="justify-content: flex-start">
+
+                          <router-link :to="{ name: 'BlogCategory', params: { categoryCode: 'TIN-TUC-SU-KIEN' } }"> Sự
+                            kiện thời trang</router-link>
+                        </a-menu-item>
+                        <a-menu-item>
+                          <router-link :to="{ name: 'BlogCategory', params: { categoryCode: 'XU-HUONG-THOI-TRANG' } }">
+                            Xu hướng thời trang</router-link>
+                        </a-menu-item>
+                        <a-menu-item>
+                          <router-link :to="{ name: 'BlogCategory', params: { categoryCode: 'TU-VAN-PHONG-CACH' } }"> Tư
+                            vấn phong cách</router-link>
+                        </a-menu-item>
+
+
+
+
+                      </a-menu>
+                    </template>
+                  </a-dropdown> -->
+                </a-menu-item>
               </a-menu>
             </a-col>
           </a-row>
 
         </a-col>
-        <a-col :xs="14" :sm="14" :md="14" :lg="3" :xl="3" :xxl="3">
+        <a-col :xs="14" :sm="14" :md="14" :lg="6" :xl="6" :xxl="6">
           <a-row justify="end">
-            <a-col :span="6">
+            <a-col :span="18">
               <a-tooltip title="Tìm kiếm" placement="bottomRight" color="#de2e21">
                 <a class="ant-dropdown-link" @click.prevent style="color: #383838">
-                  <search-outlined :style="{ fontSize: '20px' }" />
+
+                  <a-input @keyup.enter="handleSearch" style="max-width: 100%;height: auto" :bordered="false"
+                    placeholder="Tìm kiếm">
+                    <template #suffix>
+                      <a-upload :before-upload="beforeUpload" @change="handleChangeImageSearch"
+                        accept=".jpg,.jpeg,.png,.bmp,.webp" :action="apiUrl" :fileList="fileListImageSearch"
+                        :showUploadList="false" multiple="false" listType="none">
+                        <CameraOutlined @click="handleSearchCamera" :style="{ fontSize: '20px' }" />
+                      </a-upload>
+
+                    </template>
+                  </a-input>
+
+
+
                 </a>
+
+
               </a-tooltip>
             </a-col>
-            <a-col :span="6">
+            <a-col :span="3">
               <a-tooltip title="Giỏ hàng" placement="bottomRight" color="#de2e21">
                 <a class="ant-dropdown-link" @click.prevent style="color: #383838">
                   <router-link :to="{ name: 'Cart' }" style="color: #383838">
@@ -93,7 +192,7 @@
                 </a>
               </a-tooltip>
             </a-col>
-            <a-col :span="6">
+            <a-col :span="3">
 
 
               <a-dropdown v-if="isLoggedIn">
@@ -102,14 +201,15 @@
                 </a>
                 <template #overlay>
                   <a-menu style="margin-top: 10px">
-                    <a-menu-item >
+                    <a-menu-item>
                       <UserOutlined :style="{ fontSize: '20px' }" />
                       <router-link :to="{ name: 'CustomerProfile' }"> Trang cá nhân</router-link>
                     </a-menu-item>
                     <a-menu-item>
                       <font-awesome-icon icon="fa-solid fa-boxes-stacked" :style="{ fontSize: '20px' }" />
-                      <router-link :to="{ name: 'TrackingOrder' }"> Đơn hàng</router-link>
+                      <router-link :to="{ name: 'TrackingOrder' }"> Tra cứu đơn hàng</router-link>
                     </a-menu-item>
+
                     <a-menu-item v-if="role != 'CUSTOMER'">
                       <font-awesome-icon icon="fa-solid fa-wrench" :style="{ fontSize: '20px' }" />
                       <router-link :to="{ name: 'AdminHome' }"> Quản trị</router-link>
@@ -130,7 +230,7 @@
                   <a-menu style="margin-top: 10px">
                     <a-menu-item @click="openModalLogin">
                       <UserOutlined :style="{ fontSize: '20px' }" />
-                       Đăng nhập 
+                      Đăng nhập
                     </a-menu-item>
                     <a-menu-item>
                       <font-awesome-icon icon="fa-solid fa-boxes-stacked" :style="{ fontSize: '20px' }" />
@@ -159,7 +259,8 @@
       marginTop: '64px',
       justifyContent: 'center',
       minHeight: '500px',
-      backgroundColor: '#ffffff',
+      backgroundColor: '#f5f5f5',
+
     }">
       <router-view></router-view>
     </a-layout-content>
@@ -210,7 +311,7 @@
               <a-col :xs="0" :sm="0" :md="8">
                 <span style="font-size: 16px; font-weight: bold;">Công ty</span>
                 <br>
-                <a class="footer-link"> Về chúng tôi</a>
+                <a class="footer-link" href="/about"> Về chúng tôi</a>
                 <br>
                 <br>
                 <a class="footer-link"> Tuyển dụng</a>
@@ -221,15 +322,15 @@
               <a-col :xs="0" :sm="0" :md="8">
                 <span style="font-size: 16px; font-weight: bold;">Chính sách</span>
                 <br>
-                <a class="footer-link"> Chính sách thanh toán</a>
+                <a class="footer-link" href="/policy/payment-policy"> Chính sách thanh toán</a>
                 <br>
-                <a class="footer-link"> Chính sách bảo hành, đổi trả</a>
+                <a class="footer-link" href="/policy/warranty-policy"> Chính sách bảo hành, đổi trả</a>
                 <br>
-                <a class="footer-link"> Chính sách giao, nhận hàng và kiếm hàng</a>
+                <a class="footer-link" href="/policy/shipping-policy"> Chính sách giao, nhận hàng và kiếm hàng</a>
                 <br>
-                <a class="footer-link"> Chính sách bảo mật thông tin</a>
+                <a class="footer-link" href="/policy/privacy-policy"> Chính sách bảo mật thông tin</a>
                 <br>
-                <a class="footer-link"> Chính sách mua hàng</a>
+                <a class="footer-link" href="/policy/buying-policy"> Chính sách mua hàng</a>
               </a-col>
 
             </a-row>
@@ -241,17 +342,47 @@
                       <span style="font-size: 16px; font-weight: bold;">Liên hệ</span>
 
                     </template>
-
+                    <font-awesome-icon :icon="['fas', 'phone-volume']" class="footer-link" />
+                    <a class="footer-link"> 034.346.3334</a>
+                    <br>
+                    <font-awesome-icon :icon="['fa-solid', 'fa-location-dot']" class="footer-link" />
+                    <a class="footer-link"> Số 175 Tây Sơn, Đống Đa, Thành phố Hà Nội</a>
+                    <br>
+                    <font-awesome-icon :icon="['fas', 'inbox']" class="footer-link" />
+                    <a class="footer-link"> 034.346.3334 (Zalo)</a>
+                    <br>
+                    <font-awesome-icon :icon="['far', 'envelope']" class="footer-link" />
+                    <a class="footer-link"> cskh@vstyle.vn</a>
+                    <br>
+                    <font-awesome-icon :icon="['far', 'envelope']" class="footer-link" />
+                    <a class="footer-link"> dev.minhtuan07@gmail.com</a>
                   </a-collapse-panel>
                   <a-collapse-panel key="2" :show-arrow="false">
                     <template #header>
                       <span style="font-size: 16px; font-weight: bold;">Công ty</span>
                     </template>
+                    <a class="footer-link" href="/about"> Về chúng tôi</a>
+                    <br>
+                    <br>
+                    <a class="footer-link"> Tuyển dụng</a>
+                    <br>
+                    <br>
+                    <a class="footer-link"> Chuỗi cửa hàng</a>
                   </a-collapse-panel>
                   <a-collapse-panel key="3" :show-arrow="false">
                     <template #header>
                       <span style="font-size: 16px; font-weight: bold;">Chính sách</span>
                     </template>
+
+                    <a class="footer-link" href="/policy/payment-policy"> Chính sách thanh toán</a>
+                    <br>
+                    <a class="footer-link" href="/policy/warranty-policy"> Chính sách bảo hành, đổi trả</a>
+                    <br>
+                    <a class="footer-link" href="/policy/shipping-policy"> Chính sách giao, nhận hàng và kiếm hàng</a>
+                    <br>
+                    <a class="footer-link" href="/policy/privacy-policy"> Chính sách bảo mật thông tin</a>
+                    <br>
+                    <a class="footer-link" href="/policy/buying-policy"> Chính sách mua hàng</a>
                   </a-collapse-panel>
                 </a-collapse>
               </a-col>
@@ -270,15 +401,49 @@
 
     </a-layout-footer>
   </a-layout>
-  <a-back-top :visibilityHeight="100" style="background-color:#c21f24 ">
+  <a-back-top class="btn-back-to-top" :visibilityHeight="100" style="background-color:#c21f24; left:5% ">
+
   </a-back-top>
-<ModalLogin ref="modalCreate"></ModalLogin>
+  <!-- <a-float-button >
+      <template #icon>
+        <div   class="elfsight-app-74c558cc-6b15-4fef-beb5-958f8c4af58e"  data-elfsight-app-lazy 
+        ></div>
+ 
+      </template> 
+     
+    </a-float-button> -->
+  <!-- <div class="elfsight-app-74c558cc-6b15-4fef-beb5-958f8c4af58e" data-elfsight-app-lazy
+    style="width: 20px !important; height: 20px  !important"></div> -->
+  <a-float-button-group trigger="hover" type="primary" :style="{ right: '25px' }">
+    <template #icon>
+      <font-awesome-icon icon="fa-solid fa-question" />
+    </template>
+
+    <a-float-button href="https://zalo.me/0343463334">
+      <template #icon>
+
+        <img src="@/assets/image/zalo.png" style="width: 20px; height: 20px; object-fit: contain" />
+      </template>
+    </a-float-button>
+    <a-float-button href="https://www.facebook.com/profile.php?id=61560898449191">
+      <template #icon>
+        <font-awesome-icon icon="fa-brands fa-facebook-messenger" style="color: #0054e6;" />
+      </template>
+    </a-float-button>
+    <a-float-button href="https://t.me/monkeywise07">
+      <template #icon>
+        <font-awesome-icon icon="fa-brands fa-telegram" style="color: #000000;" />
+      </template>
+    </a-float-button>
+  </a-float-button-group>
+  <ModalLogin ref="modalCreate"></ModalLogin>
 </template>
 
 <script>
-import ModalLogin from "@/views/Auth/login.vue"
+  import weaviate from 'weaviate-ts-client';
+  import ModalLogin from "@/views/Auth/login.vue"
   import EventBus from "@/helpers/EventBus.js";
-  import { ref, onMounted, onUnmounted, reactive, beforeMount, computed,provide } from "vue";
+  import { ref, onMounted, onUnmounted, reactive, beforeMount, computed, provide } from "vue";
   import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -290,7 +455,8 @@ import ModalLogin from "@/views/Auth/login.vue"
     CaretDownOutlined,
     ShoppingCartOutlined,
     SearchOutlined,
-    
+    CameraOutlined,
+
   } from "@ant-design/icons-vue";
   import { message, notification } from "ant-design-vue";
 
@@ -307,12 +473,93 @@ import ModalLogin from "@/views/Auth/login.vue"
       CaretDownOutlined,
       ShoppingCartOutlined,
       SearchOutlined,
-      ModalLogin
+      ModalLogin,
+      CameraOutlined
     },
+
+
     beforeUnmount() {
       window.removeEventListener("scroll", this.handleScroll);
     },
     methods: {
+      handleChangeImageSearch(info) {
+
+        this.fileListImageSearch = [...info.fileList];
+
+        if (info.file.status == 'done') {
+          // Xử lý khi tải lên thành công
+          const file = info.file.originFileObj; // Lấy đối tượng file gốc
+          if (file) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = async () => {
+              const base64Image = reader.result.split(',')[1]; // Lấy phần base64 từ Data URL
+              await this.searchImage(base64Image);
+            };
+            reader.onerror = (error) => {
+              console.error('Error reading file:', error);
+            };
+          }
+        } else if (info.file.status == 'error') {
+          message.error(`${info.file.name} Lỗi .`);
+          this.fileListImageSearch = [];
+          info.file = null
+
+        } else if (info.file.status == null) {
+          this.fileListImageSearch = [];
+          info.file = null
+
+        }
+
+      },
+      async searchImage(base64Image) {
+        try {
+
+          const resImage = await this.client.graphql.get()
+            .withClassName('ProductImage')
+            .withFields(['image', 'path', '_additional { certainty}'])
+            .withNearImage({ image: base64Image, certainty: 0.8 })
+            .withLimit(5)
+            .do();
+
+          resImage.data.Get.ProductImage.sort((a, b) => b._additional.certainty - a._additional.certainty);
+          var imagePaths = []; // Tạo một mảng trống để lưu trữ các imagePath
+
+          if (resImage.data.Get.ProductImage && resImage.data.Get.ProductImage.length > 0) {
+            resImage.data.Get.ProductImage.forEach((image, index) => {
+              const imagePath = image?.path;
+              const certainty = image?._additional?.certainty;
+
+
+              if (imagePath && certainty !== undefined) {
+                imagePaths.push(imagePath);
+
+              } else {
+                console.error(`Lỗi ảnh ${index + 1}: Đường dẫn hoặc độ chính xác hoặc điểm rerank không hợp lệ.`);
+              }
+            });
+
+            localStorage.setItem('imagePaths', JSON.stringify(imagePaths)); // Lưu vào localStorage
+
+            // console.log("imagepath ở layout" , this.imagePaths)
+            // ...
+            this.$router.push({
+              name: 'ResultImageSearch',
+              query: { imagePaths: JSON.stringify(imagePaths) }
+            });
+            // ...
+
+
+
+          } else {
+            console.error('Không tìm thấy hình ảnh sản phẩm nào.');
+          }
+
+        } catch (error) {
+          console.error('Error querying Weaviate:', error);
+        }
+
+      },
       openModalLogin() {
         this.$refs.modalCreate.showModal();
       },
@@ -357,11 +604,22 @@ import ModalLogin from "@/views/Auth/login.vue"
           });
         }
       },
+      handleSearch(event) {
+        const keyword = event.target.value.trim();
+        if (keyword) {
+          // Navigate to the search page with the keyword as a parameter
+          this.$router.push({ name: 'KeywordSearch', params: { keyword } });
+        }
+      }
     },
     data() {
       return {
         isLoggedIn: false,
         role: null,
+        apiUrl: '',
+        fileListImageSearch: [],
+        client: null,
+
       };
     },
     beforeMount() {
@@ -370,8 +628,48 @@ import ModalLogin from "@/views/Auth/login.vue"
     mounted() {
       this.checkLoginStatus();
       window.addEventListener("scroll", this.handleScroll);
+      this.apiUrl = process.env.VUE_APP_URL + 'Account/valid-upload';
+      this.isSynchronizing = true
+      //  this.client = weaviate.client({
+      //   scheme: 'http',
+      //   host: 'localhost:8080'
+      // });
+      //đay là cấu hình dev
+      this.client = weaviate.client({
+        scheme: 'http',
+        host: 'localhost:8081/weaviate'
+      });
+      //Đây là cấu hình docker
     },
     setup() {
+
+      const beforeUpload = file => {
+
+        // Danh sách các phần mở rộng tệp được chấp nhận
+        const allowedExtensions = ['jpg', 'jpeg', 'png', 'bmp', 'webp'];
+        var isJpgOrPng = true;
+        // Kiểm tra phần mở rộng file
+        const extension = file.name.split('.').pop().toLowerCase();
+        if (!allowedExtensions.includes(extension)) {
+          notification.error({
+            message: 'Định dạng ảnh không hợp lệ',
+            description: 'Chọn định dạng ảnh với một phần mở rộng: ' + allowedExtensions.join(', ')
+          })
+          isJpgOrPng = false;
+          return false;
+        }
+
+        const isLt2M = file.size / 1024 / 1024 < 10;
+        if (!isLt2M) {
+          notification.error({
+            message: 'Tính tối đa 10MB',
+            description: 'Tính tối đa 10MB'
+          })
+          return false;
+        }
+
+        return isJpgOrPng && isLt2M;
+      };
       const visible = ref(false);
       const showDrawer = () => {
         visible.value = true;
@@ -385,7 +683,7 @@ import ModalLogin from "@/views/Auth/login.vue"
         return window.innerWidth > 768; // Ví dụ: ẩn menu khi màn hình nhỏ hơn 768px
       });
       const selectedMenu = ref(["Dashboard"]);
-  
+
       const changeSelectedMenu = (newKeys) => {
         selectedMenu.value = [newKeys];
       };
@@ -396,13 +694,17 @@ import ModalLogin from "@/views/Auth/login.vue"
 
 
 
+
       return {
+        beforeUpload,
         visible,
         showDrawer,
         isLargeScreen,
         selectedKeys: ref(["1"]),
         isLoading,
         colorToolTip: ref("#fff"),
+
+
       };
     },
   };
@@ -440,8 +742,9 @@ import ModalLogin from "@/views/Auth/login.vue"
     }
   }
 
-  :deep(.ant-float-btn-body) {
+  :deep(.ant-float-btn-body .btn-back-to-top) {
     background-color: #e54f54;
+
   }
 
   .ant-float-btn-body:hover {
@@ -462,6 +765,8 @@ import ModalLogin from "@/views/Auth/login.vue"
   .footer-link:hover {
     color: #de2128;
   }
-
+:deep(.ant-layout-header) {
+  padding-inline: 10px !important;
+}
 
 </style>

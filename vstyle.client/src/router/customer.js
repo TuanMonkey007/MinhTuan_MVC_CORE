@@ -8,7 +8,7 @@ const customerRouter = [
         path: "",
         name: "CustomerHome",
         component: () => import("../views/Customer/Home/index"),
-        meta: { title: "Trang chủ" },
+        meta: {requiresAuth: false, title: "Trang chủ" },
       },
       {
         path: "/search/:gender?",
@@ -16,6 +16,29 @@ const customerRouter = [
         component: () => import("../views/Customer/Search/ProductList.vue"),
         meta: { title: "VSTYLE - Thời trang Việt" }
       },
+      {
+        path: "/image-search",
+        name: "ResultImageSearch",
+        component: () => import("../views/Customer/Search/ResultImageSearch.vue"),
+        meta: { title: "VSTYLE - Thời trang Việt" },
+        props: (route) => ({ imagePaths: route.query.imagePaths }) // Truyền imagePaths dưới dạng query parameter
+      },
+      {
+        path: "/collection/:collectionCode?",
+        name: "Collection",
+        component: () => import("../views/Customer/Search/Collection.vue"),
+        meta: { title: "VSTYLE - Thời trang Việt" },
+      },
+      
+      
+      {
+        path: "/keyword-search/:keyword?",
+        name: "KeywordSearch",
+        component: () => import("../views/Customer/Search/ResultKeywordSearch.vue"),
+        meta: { title: "VSTYLE - Thời trang Việt" },
+      },
+      
+      
       {
         path: ":code?&:id?",
         name: "ProductDetail",
@@ -107,6 +130,62 @@ const customerRouter = [
         component: () => import("../views/Customer/Home/OrderSuccess.vue"),
         meta: { requiresAuth: false, title: "HOÀN THÀNH" },
       },
+      {
+        path: "/policy/payment-policy",
+        name: "PaymentPolicy",
+        component: () => import("../views/Customer/Policy/Payment.vue"),
+        meta: { requiresAuth: false, title: "Chính sách thanh toán" },
+      },
+      {
+        path: "/policy/warranty-policy",
+        name: "WarrantyPolicy",
+        component: () => import("../views/Customer/Policy/Warranty.vue"),
+        meta: { requiresAuth: false, title: "Chính sách bảo hành và đổi trả" },
+      },
+      {
+        path: "/policy/shipping-policy",
+        name: "ShippingPolicy",
+        component: () => import("../views/Customer/Policy/Shipping.vue"),
+        meta: { requiresAuth: false, title: "Chính sách vận chuyển" },
+      },
+      {
+        path: "/policy/privacy-policy",
+        name: "PrivacyPolicy",
+        component: () => import("../views/Customer/Policy/Privacy.vue"),
+        meta: { requiresAuth: false, title: "Chính sách bảo mật" },
+      },
+      {
+        path: "/policy/buying-policy",
+        name: "BuyingPolicy",
+        component: () => import("../views/Customer/Policy/Buying.vue"),
+        meta: { requiresAuth: false, title: "Chính sách mua hàng" },
+      },
+      
+      {
+        path: "/contact",
+        name: "Contact",
+        component: () => import("../views/Customer/Home/Contact.vue"),
+        meta: { requiresAuth: false, title: "Thông tin liên hệ" },
+      },
+      {
+        path: "/about",
+        name: "About",
+        component: () => import("../views/Customer/Home/About.vue"),
+        meta: { requiresAuth: false, title: "Giới thiệu" },
+      },
+      {
+        path: "/blog/:slug?",
+        name: "BlogDetail",
+        component: () => import("../views/Customer/Article/index.vue"),
+        meta: { requiresAuth: false, title: "Tin tức" },
+      },
+      {
+        path: "/blog-category/:categoryCode?",
+        name: "BlogCategory",
+        component: () => import("../views/Customer/Article/ListArticle.vue"),
+        meta: { requiresAuth: false, title: "Tin tức" },
+      },
+
     ],
   },
 ];

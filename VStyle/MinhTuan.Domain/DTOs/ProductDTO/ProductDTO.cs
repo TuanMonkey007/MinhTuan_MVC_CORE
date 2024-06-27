@@ -19,5 +19,7 @@ namespace MinhTuan.Domain.DTOs.ProductDTO
 
         public string? ThumbnailContentType { get; set; } // Loại nội dung của ảnh (ví dụ: image/jpeg)
         public DateTime? CreatedDate { get; set; }
+        public List<Guid>? ListCategory { get; set; }
+        public List<string>? ListCategoryName { get; set; }
     }
 }

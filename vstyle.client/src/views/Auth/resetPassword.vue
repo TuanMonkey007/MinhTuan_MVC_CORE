@@ -1,12 +1,41 @@
 <template>
-  <div class="container" style="display: grid;
-    
-    justify-content: center;
-    margin-top: 25vh;">
+  
+  <a-row>
+        <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+            <a-page-header style="
+         border: 1px solid rgb(235, 237, 240);
+          background-color: #c22026;
+          height: fit-content;
+        ">
 
-    <a-form style="    padding: 70px;
-    border: 1px solid #ccc;
-    border-radius: 5px;" v-bind="layout" :model="formReset" name="normal_login" class="login-form" @finish="onFinish"
+                <template #title>
+                    <a-breadcrumb separator=">" style="margin-left:30px;">
+                        <a-breadcrumb-item href="">
+
+                            <span style="color: #fff;"> Trang chủ</span>
+                        </a-breadcrumb-item>
+
+                        <a-breadcrumb-item class="active">
+
+                            <span style="color: #fff;"> Đặt lại mật khẩu</span>
+                        </a-breadcrumb-item>
+
+                    </a-breadcrumb>
+                </template>
+
+            </a-page-header>
+        </a-col>
+    </a-row>
+    <div>
+      <a-row justify="center"> 
+        <a-col :xs="24" :sm="24" :md="10" :lg="10" :xl="10">
+          <a-card style="display: grid;
+    justify-content: center;
+    align-items: center;">
+    
+    <a-form style="    padding: 10px;
+    
+   " v-bind="layout" :model="formReset" name="normal_login" class="login-form" @finish="onFinish"
       @finishFailed="onFinishFailed">
 
       <a-form-item label="Mật khẩu" name="Password" :rules="[{ required: true, message: 'Vui lòng nhập mật khẩu!' },
@@ -48,17 +77,22 @@
           </template>
         </a-input-password>
       </a-form-item>
-      <a-button :disabled="disableBtnReset" type="primary" html-type="submit" class="login-form-button">
+      <a-button style="background-color: #c22026;color: #fff" :disabled="disableBtnReset" type="primary" html-type="submit" class="login-form-button">
         Hoàn thành
       </a-button>
     </a-form>
-  </div>
+  </a-card >
+
+          </a-col>  
+      </a-row>
+  
+</div>
 </template>
 
 <script>
   import { defineComponent, reactive, computed } from 'vue';
   import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
-  import { message } from 'ant-design-vue';
+  import { message, notification } from 'ant-design-vue';
   import APIService from '@/helpers/APIService';
   export default {
     components: {
@@ -69,7 +103,13 @@
 
     methods: {
       async onFinish() {
-        message.loading({ content: 'Đang xử lý...', key: "LoadingKey", duration: 0 });
+        notification.info({
+          message: 'Thống báo',
+          description:
+            'Đang xử lý....',
+            key: 'loadingKey',
+            duration: 0
+        })
         try {
           const encodedToken = encodeURIComponent(this.token);
           const resetPasswordViewModel = {
@@ -80,16 +120,35 @@
           console.log(encodedToken);
 
           const response = await APIService.post("account/reset-password", resetPasswordViewModel);
-          if(response.data.data =="") {
-            message.error({ content: response.data.message, key: "LoadingKey", duration: 2 });
-            this.$router.push({ name: 'Login' });
+          console.log(response.data)
+          if(response.data.data !="") {
+            notification.success({
+              message: 'Thống báo',
+              description:
+                'Thay đổi mật khẩu thành công',
+                key: 'loadingKey',
+              
+            })
+            this.$router.push({ name: 'CustomerHome' });
           }else{
-            message.success({ content: response.data.message, key: "LoadingKey", duration: 2 });
-            this.$router.push({ name: 'Login' });
+            notification.error({
+            message: 'Thất bại',
+            description:
+              response.data.message,
+              key: 'loadingKey',
+             
+          })
+            
           }
           
         } catch {
-          message.error({ content: 'Đã xảy ra lỗi', key: "LoadingKey", duration: 2 });
+          notification.error({
+            message: 'Thất bại',
+            description:
+              'Đã có lỗi xảy ra',
+              key: 'loadingKey',
+            
+          })
           
         }
       }
@@ -149,4 +208,38 @@
   .login-form-button {
     width: 100%;
   }
+  .ant-page-header {
+        padding: 0px;
+        /* Giảm padding */
+        margin-bottom: 8px;
+        /* Giảm margin dưới */
+    }
+
+    .ant-page-header {
+        height: 35px;
+        /* Tự động điều chỉnh chiều cao */
+    }
+
+    :deep(.ant-breadcrumb-separator) {
+        color: #ffffff86;
+        /* Đặt màu chữ cho breadcrumb */
+    }
+
+    :deep(.ant-breadcrumb-link a) {
+        color: #ffffff86;
+        /* Đặt màu chữ cho breadcrumb */
+    }
+
+    .active {
+        color: #e60b0b;
+        /* Đặt màu chữ cho breadcrumb */
+    }
+
+    .ant-page-header-heading-title {
+        line-height: normal;
+        /* Đặt màu chữ cho tiêu đề */
+        display: flex;
+        /* Hiển thị theo chiều ngang */
+        color: #ffffff86;
+    }
 </style>

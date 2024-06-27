@@ -1,10 +1,14 @@
 <template>
     <div>
-        <a-modal v-model:open="open" @cancel="closeModal" :maskClosable="true" title="THÊM SẢN PHẨM" :footer="null" width="700px" style="top:20px">
+        <a-modal v-model:open="open" @cancel="closeModal" :maskClosable="true"  :footer="null"
+            width="900px" style="top:20px">
+            <template #title>
+                    <div style="text-align: center; width: 100%; font-size: 20px">CẬP NHẬT SẢN PHẨM</div>
+                </template>
             <a-divider style="margin-top: 0px;"></a-divider>
             <a-form ref="formRef" :model="product" layout="vertical">
                 <a-row :gutter="30">
-                    <a-col :span="12">
+                    <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
                         <a-form-item ref="code" label="Mã sản phẩm" name="code" :rules="[
                             {
                                 required: true,
@@ -21,7 +25,7 @@
                             <a-input v-model:value="product.code" @input="formatInput" />
                         </a-form-item>
                     </a-col>
-                    <a-col :span="12">
+                    <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
                         <a-form-item ref="name" label="Tên sản phẩm" name="name" :rules="[{
                             required: true,
                             message: 'Tên sản phẩm là bắt buộc',
@@ -37,17 +41,25 @@
                     </a-col>
                 </a-row>
 
-                <a-row>
-                    <a-col :span="12">
+                <a-row gutter="30">
+                    <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
                         <a-form-item name="price" label="Giá tiền" :rules="[{ required: true, message: 'Vui lòng nhập giá tiền' },
                         ]">
-                            <a-input-number v-model:value="product.price"></a-input-number>
+                            <a-input-number style="width: 100%" v-model:value="product.price"></a-input-number>
                         </a-form-item>
 
                     </a-col>
-                    <a-col :span="12">
+                    <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+                        <a-form-item label="Danh mục/Tags"
+                            :rules="[{ required: true, message: 'Vui lòng chọn danh mục sản phấm' }]"
+                            name="listCategory">
+                            <a-select   :max-tag-count="2" v-model:value="product.listCategory" :options="categoryOptions" mode="multiple"
+                                size="middle" placeholder="Chọn danh mục sản phẩm"></a-select>
+                        </a-form-item>
+                    </a-col>
+                    <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
                         <a-form-item label="Ảnh Thumbnail" name="thumbnail">
-                            <a-upload list-type="picture-card" :showUploadList="true" accept=".jpg,.jpeg,.png"
+                            <a-upload list-type="picture-card" :showUploadList="true"  accept=".jpg,.jpeg,.png,.bmp,.webp"
                                 maxCount="1" :fileList="fileListThumbnail" :before-upload="beforeUpload"
                                 :action="apiUrl" @change="handleChangeThumbnail">
                                 <template #default>
@@ -59,36 +71,42 @@
                             </a-upload>
                         </a-form-item>
                     </a-col>
-                </a-row>
-                <a-row>
-                    <a-col :span="24">
+                    <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
                         <a-form-item label="Ảnh chi tiết" name="imageDetail">
-                            <a-upload list-type="picture-card" :showUploadList="true" accept=".jpg,.jpeg,.png"
-                                maxCount="25" :fileList="fileList" :before-upload="beforeUpload" :action="apiUrl"
-                                @change="handleChangeImageDetail">
+                            <!-- <a-upload list-type="picture-card" :showUploadList="true"
+                                accept=".jpg,.jpeg,.png,.bmp,.webp" maxCount="25" :fileList="fileList"
+                                :before-upload="beforeUpload" :action="apiUrl" @change="handleChangeImageDetail">
                                 <template #default>
                                     <div>
                                         <font-awesome-icon icon="fa-regular fa-image" />
                                         <div class="ant-upload-text">Tải ảnh lên</div>
                                     </div>
                                 </template>
-                            </a-upload>
+                            </a-upload> -->
+                            
+                            <a-upload-dragger list-type="picture-card" :showUploadList="true"
+                                accept=".jpg,.jpeg,.png,.bmp,.webp" maxCount="25" :fileList="fileList" :multiple="true"
+                                :before-upload="beforeUpload" :action="apiUrl" @change="handleChangeImageDetail">
+                                <p class="ant-upload-drag-icon">
+                                    <font-awesome-icon icon="fa-solid fa-upload" style="color: #0d63f8; font-size: 25px" />
+                                </p>
+                                <p class="ant-upload-text">Chọn hoặc kéo thả và đây để tải ảnh lên</p>
+                                <p class="ant-upload-hint">
+                                    Chỉ nhận ảnh định dạng jpg, jpeg, png, bmp, webp
+                                </p>
+                            </a-upload-dragger>
                         </a-form-item>
                     </a-col>
                 </a-row>
-                <a-row>
-                    <a-col :span="24">
-                        <a-form-item label="Chọn danh mục sản phẩm"
-                            :rules="[{ required: true, message: 'Vui lòng chọn danh mục sản phấm' }]" name="listCategory">
-                            <a-select v-model:value="product.listCategory" :options="categoryOptions" mode="multiple"
-                                size="large" placeholder="Chọn danh mục sản phẩm"></a-select>
-                        </a-form-item>
-                    </a-col>
-                </a-row>
+                
+                   
+                
+                
 
                 <a-row>
                     <a-col :span="24"><a-form-item ref="description" label="Mô tả" name="description">
-                            <a-textarea v-model:value="product.description" />
+                            <!-- <a-textarea v-model:value="product.description" /> -->
+                            <ckeditor :editor="editor" v-model="product.description" :config="editorConfig"></ckeditor>
                         </a-form-item></a-col>
                 </a-row>
 
@@ -99,8 +117,7 @@
                                 style="margin-right: 20px;" class="login-form-button">
                                 Hoàn thành
                             </a-button>
-                            <a-button  @click="closeModal" style="margin-right: 20px;"
-                                class="login-form-button">
+                            <a-button @click="closeModal" style="margin-right: 20px;" class="login-form-button">
                                 Đóng
                             </a-button>
 
@@ -120,21 +137,39 @@
 </template>
 <script>
     import { computed } from "vue";
+    import { CKEditor } from '@ckeditor/ckeditor5-vue';
+    import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
     import APIService from "@/helpers/APIService"
     import { ref, reactive } from "vue";
-    import { message,notification } from "ant-design-vue";
-import { Date } from "core-js";
+    import { message, notification } from "ant-design-vue";
+    import { Date } from "core-js";
 
     export default {
+
         setup() {
             const beforeUpload = file => {
-                const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg';
-                if (!isJpgOrPng) {
-                    message.error('Định dạng ảnh không hợp lệ');
+                // Danh sách các phần mở rộng tệp được chấp nhận
+                const allowedExtensions = ['jpg', 'jpeg', 'png', 'bmp', 'webp'];
+                var isJpgOrPng = true;
+                // Kiểm tra phần mở rộng file
+                const extension = file.name.split('.').pop().toLowerCase();
+                console.log(extension)
+                if (!allowedExtensions.includes(extension)) {
+                    notification.error({
+                        message: 'Định dạng ảnh không hợp lệ',
+                        description: 'Chọn định dạng ảnh với một phần mở rộng: ' + allowedExtensions.join(', ')
+                    })
+                    isJpgOrPng = false;
+                    return false;
                 }
+
                 const isLt2M = file.size / 1024 / 1024 < 10;
                 if (!isLt2M) {
-                    message.error('Ảnh tối đa 10MB');
+                    notification.error({
+                        message: 'Tính tối đa 10MB',
+                        description: 'Tính tối đa 10MB'
+                    })
+                    return false;
                 }
 
                 return isJpgOrPng && isLt2M;
@@ -169,10 +204,20 @@ import { Date } from "core-js";
                 apiUrl: '',
                 fileListThumbnail: [],
                 fileList: [],
-                id:null,
+                id: null,
                 thumbnail: null,
                 thumbnailBase64: null,
                 thumbnailContentType: null,
+                editor: ClassicEditor,
+
+                editorConfig: {
+                    toolbar: [
+                        'heading', '|',
+                        'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|',
+                        'undo', 'redo'
+                    ],
+                
+                }
             }
         },
         mounted() {
@@ -231,7 +276,7 @@ import { Date } from "core-js";
                 inputValue = inputValue.replace(/[^A-Z0-9_-]/g, '');
                 this.product.code = inputValue;
             },
-          async  showModal(id) {
+            async showModal(id) {
                 this.open = true
                 this.id = id
                 const res_getbyid = await APIService.get(`product/${id}`)
@@ -252,7 +297,7 @@ import { Date } from "core-js";
                     const byteArray = new Uint8Array(byteNumbers);
                     const blob = new Blob([byteArray], { type: this.thumbnailContentType });
                     const file = new File([blob], this.thumbnail, { type: this.thumbnailContentType });
-                   
+
                     this.fileListThumbnail = [
                         {
                             uid: Date.now(), // ID duy nhất
@@ -266,9 +311,9 @@ import { Date } from "core-js";
                     this.fileListThumbnail = [];
                 }
                 const res_getlistimage = await APIService.get(`product/get-all-product-image-by-id/${id}`)
-               
+
                 if (res_getlistimage.data.data.length > 0) {
-                    for(const item of res_getlistimage.data.data){
+                    for (const item of res_getlistimage.data.data) {
                         const byteCharacters = atob(item.base64);
                         const byteNumbers = new Array(byteCharacters.length);
                         for (let i = 0; i < byteCharacters.length; i++) { // Sửa vòng lặp for
@@ -288,16 +333,16 @@ import { Date } from "core-js";
                             }
                         )
                     }
-                    
+
                 } else {
                     this.fileList = []
                 }
                 const res_getListCategory = await APIService.get(`product/get-category-by-product-id/${id}`)
                 this.product.listCategory = res_getListCategory.data.data;
-           
+
             },
             closeModal() {
-                
+
                 this.product = reactive({
                     name: '',
                     code: '',
@@ -306,7 +351,7 @@ import { Date } from "core-js";
                     listCategory: []
                 })
                 this.fileListThumbnail = [],
-                this.fileList = []
+                    this.fileList = []
                 this.isLoading = false
                 this.$refs.formRef.resetFields();
                 this.open = false
@@ -315,7 +360,7 @@ import { Date } from "core-js";
             async handleSubmitAsync() {
                 this.$refs.formRef.validate().then(async () => {
                     this.isLoading = true
-                   notification.info({
+                    notification.info({
                         message: 'Thông báo',
                         description: 'Đang xử lý...',
                         key: 'keyLoading',
@@ -327,7 +372,7 @@ import { Date } from "core-js";
                     formData.append('name', this.product.name);
                     formData.append('description', this.product.description);
                     formData.append('price', this.product.price);
-                   
+
                     if (this.fileListThumbnail.length > 0 && this.fileListThumbnail[0].originFileObj != null) {
                         formData.append('thumbnailFile', this.fileListThumbnail[0].originFileObj);
                     }
@@ -336,7 +381,7 @@ import { Date } from "core-js";
                             formData.append('listImageFile', file.originFileObj);
                         });
                     }
-                    
+
                     this.product.listCategory.forEach(item => {
                         formData.append('listCategory', item);
                     });
@@ -344,14 +389,14 @@ import { Date } from "core-js";
                     const serverResponse = await APIService.put(`product/update/${this.id}`, formData)
                     if (serverResponse.data.message == "Cập nhật thành công") {
                         this.closeModal()
-                        notification.success({message:"Thành công", description: serverResponse.data.message, key: 'keyLoading', duration: 2 });
+                        notification.success({ message: "Thành công", description: serverResponse.data.message, key: 'keyLoading', duration: 2 });
                         this.$emit('updateSuccess')
                     } else {
                         this.isLoading = false
-                        notification.error({ message:"Thất bại",description: serverResponse.data.message, key: 'keyLoading', duration: 2 });
+                        notification.error({ message: "Thất bại", description: serverResponse.data.message, key: 'keyLoading', duration: 2 });
                     }
                 }).catch(error => {
-                    notification.error({ message:"Lỗi hệ thống",description: 'Vui lòng kiểm tra lại thông tin', key: 'keyLoading', duration: 2 });
+                    notification.error({ message: "Lỗi hệ thống", description: 'Vui lòng kiểm tra lại thông tin', key: 'keyLoading', duration: 2 });
                     this.isLoading = false
                 }).finally(() => {
                     this.isLoading = false

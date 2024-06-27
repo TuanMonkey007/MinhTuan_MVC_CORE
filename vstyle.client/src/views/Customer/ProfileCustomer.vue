@@ -67,7 +67,7 @@
                     <a-row>
                         <a-col :span="24">
                             <a-tabs v-model:activeKey="activeKey">
-                                <a-tab-pane key="1" tab="Tổng quan">
+                                <a-tab-pane key="1" tab="Tổng quan" >
                                     <a-row>
                                         <a-col :span="24">
                                             <a-descriptions title="Thông tin cá nhân">
@@ -212,10 +212,10 @@
                                     </a-form>
 
                                 </a-tab-pane>
-                                <a-tab-pane key="3" tab="Đổi mật khẩu">
+                                <a-tab-pane key="3" tab="Đổi mật khẩu" force-render>
                                     <a-row justify="center">
                                         <a-col :span="18" style="margin-top: 30px;">
-                                            <a-form :model="formChangePassword" :ref="formChangePassword">
+                                            <a-form  ref="formRefChangePassword" :model="this.formChangePassword">
                                                 <a-form-item label="Mật khẩu cũ" name="password"
                                                     :rules="[{ required: true, message: 'Nhập mật khẩu cũ' }]">
                                                     <a-input-password v-model:value="formChangePassword.password">
@@ -439,8 +439,8 @@
 
             },
             async handleChangePassword() {
-
-                notification.info({
+                this.$refs.formRefChangePassword.validate().then(async () => {
+                    notification.info({
                     message: 'Đang xử lý...',
                     key: 'loadingKey',
                     duration: 0
@@ -468,6 +468,12 @@
                     });
                     window.location.reload();
                 }
+                }).catch(error => {
+                    console.log('error', error);
+                }).finally(() => {
+                    this.isLoading = false;
+                })
+                
 
 
             },
@@ -573,9 +579,12 @@
 
             }; // Gán lại account.birthDay sau khi chuyển đổi
             const fullAddress = this.account.address
-            const addressParts = fullAddress.split('|');
-            this.addressChange = addressParts[0].trim(); // Lấy phần tử đầu tiên và loại bỏ khoảng trắng thừa
-
+            if(fullAddress != null && fullAddress.includes('|')){
+                const addressParts = fullAddress.split('|');
+                this.addressChange = addressParts[0].trim(); // Lấy phần tử đầu tiên và loại bỏ khoảng trắng thừa
+            }else{
+                this.addressChange = fullAddress
+            }
             
 
             this.id = serverResponse.data.data.id;

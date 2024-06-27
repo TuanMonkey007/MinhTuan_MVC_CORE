@@ -1,0 +1,9 @@
+**/Uploads
+bin/
+obj/
+*.user
+*.suo
+*.sln.docstates
+.vscode/
+*.log
+testresults/

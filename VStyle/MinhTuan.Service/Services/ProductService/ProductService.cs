@@ -23,6 +23,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 using System.Linq.Dynamic.Core;
+using MinhTuan.Domain.DTOs.ArticleDTO;
 
 namespace MinhTuan.Service.Services.ProductService
 {
@@ -36,11 +37,13 @@ namespace MinhTuan.Service.Services.ProductService
         private readonly IProductVariantRepository _productVariantRepository;
         private readonly IDataCategoryRepository _dataCategoryRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICategoryRepository _categoryRepository;
         public ProductService(IUnitOfWork unitOfWork, IMapper mapper, IProductRepository productRepository,
             IProductCategoryRepository productCategoryRepository,
             IProductVariantRepository productVariantRepository,
             IProductImageRepository productImageRepository,
-            IDataCategoryRepository dataCategoryRepository
+            IDataCategoryRepository dataCategoryRepository,
+            ICategoryRepository categoryRepository
             ) : base(unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -50,6 +53,7 @@ namespace MinhTuan.Service.Services.ProductService
             _productImageRepository = productImageRepository;
             _productVariantRepository = productVariantRepository;
             _dataCategoryRepository = dataCategoryRepository;
+            _categoryRepository = categoryRepository;
         }
         private static string ImageToBase64(string imagePath)
         {
@@ -73,6 +77,8 @@ namespace MinhTuan.Service.Services.ProductService
             {
                 ".jpg" or ".jpeg" => "image/jpeg",
                 ".png" => "image/png",
+                ".bmp" => "image/bmp", // Thêm định dạng BMP
+                ".webp" => "image/webp", // Thêm định dạng WebP
                 _ => "application/octet-stream",
             };
         }
@@ -83,6 +89,8 @@ namespace MinhTuan.Service.Services.ProductService
             {
                 ".jpg" or ".jpeg" => "image/jpeg",
                 ".png" => "image/png",
+                ".bmp" => "image/bmp", // Thêm định dạng BMP
+                ".webp" => "image/webp", // Thêm định dạng WebP
                 _ => "application/octet-stream",
             };
         }
@@ -119,7 +127,7 @@ namespace MinhTuan.Service.Services.ProductService
             return resultList;
         }
         //xử lý bất đồng bộ
-        public  ResponseWithDataDto<PagedList<ProductDTO>> GetDataByPage(ProductSearchDTO searchDTO)
+        public async  Task<ResponseWithDataDto<PagedList<ProductDTO>>> GetDataByPage(ProductSearchDTO searchDTO)
         {
             try
             {
@@ -170,7 +178,9 @@ namespace MinhTuan.Service.Services.ProductService
                     }
                     if (!searchDTO.CategoryCode_Filter.IsNullOrEmpty())
                     {
-                        var categoryId = _dataCategoryRepository.FindBy(x => x.Code.Equals(searchDTO.CategoryCode_Filter)).FirstOrDefault().Id;
+                        var parentCategory = _categoryRepository.FindByAsync(x => x.Code.Equals("SAN_PHAM"));
+                      var parentId= parentCategory.Result.FirstOrDefault().Id;
+                        var categoryId = _dataCategoryRepository.FindBy(x => x.Code.Equals(searchDTO.CategoryCode_Filter) && x.ParentId.Equals(parentId)  ).FirstOrDefault().Id;
                         query = query.Where(p => _productCategoryRepository.GetQueryable().Any(pc => pc.ProductId == p.Id && pc.CategoryId.Equals(categoryId)));
                     }
                     if (searchDTO.Size_Filter != null && searchDTO.Size_Filter.Length > 0)
@@ -213,6 +223,20 @@ namespace MinhTuan.Service.Services.ProductService
                     productDTO.Thumbnail = thumbnailImage.Path;
                     productDTO.ThumbnailBase64 = ImageToBase64(thumbnailImage.Path);
                     productDTO.ThumbnailContentType = GetContentTypeFromExtension(Path.GetExtension(thumbnailImage.Path).ToLowerInvariant());
+                    //Lấy ra tất cả danh mục của sản phẩm
+                    var listCategory = _productCategoryRepository.FindByAsync(x => x.ProductId.Equals(productDTO.Id)).Result;
+
+                    List<Guid> listCategoryId = new List<Guid>();
+                    List<string> listCategoryName = new List<string>();
+                    foreach (var item in listCategory)
+                    {
+                        listCategoryId.Add(item.CategoryId);
+                        var category = await _dataCategoryRepository.FindByAsync(x => x.Id.Equals(item.CategoryId));
+                        var xxx = category.FirstOrDefault();
+                        listCategoryName.Add(xxx.Name);
+                    }
+                    productDTO.ListCategory = listCategoryId;
+                    productDTO.ListCategoryName = listCategoryName;
                 }
                 return new ResponseWithDataDto<PagedList<ProductDTO>>()
                 {
@@ -485,8 +509,9 @@ namespace MinhTuan.Service.Services.ProductService
 
         public async Task<ResponseWithDataDto<PagedList<ProductDTO>>> GetProductById(Guid id)
         {
-            var search = new ProductSearchDTO() { Id_Filter = id, PageIndex = 1, PageSize = 99999 };
-            return GetDataByPage(search);
+            var search = new ProductSearchDTO() { Id_Filter = id, PageIndex = 1, PageSize = 1 };
+            var result = await  GetDataByPage(search);
+            return result;
             
         }
 
@@ -527,6 +552,87 @@ namespace MinhTuan.Service.Services.ProductService
             var listSizeDTO = _mapper.Map<List<DataCategoryDTO>>(result2);
             var response = new ResponseWithDataDto<List<DataCategoryDTO>>() { Data = listSizeDTO };
             return response;
+        }
+
+        public ResponseWithDataDto<PagedList<ProductDTO>> GetDataByListImagePath(ImageSearchDTO searchDTO)
+        {
+            try
+            {
+
+                var imagePathList = searchDTO.ImagePaths; // Danh sách imagePath từ Weaviate response
+
+                var query = (from product in _productRepository.GetQueryable()
+                             join productImage in _productImageRepository.GetQueryable()
+                             on product.Id equals productImage.ProductId
+                             where product.IsDelete != true && imagePathList.Contains(productImage.Path)
+                             select product)
+                             .Distinct(); // Lấy các sản phẩm duy nhất
+
+                // Chuyển đổi sang ProductDTO
+                var productDTOQuery = query.Select(product => new ProductDTO
+                {
+                    Id = product.Id,
+                    Name = product.Name ?? string.Empty,
+                    Code = product.Code ?? string.Empty,
+                    Description = product.Description ?? string.Empty,
+                    Price = product.Price,
+                    StockQuantity = product.StockQuantity,
+                    CreatedDate = product.CreatedDate,
+                });
+                //searchDTO.PageSize = 30;
+                //searchDTO.PageIndex = 1;
+                var result = PagedList<ProductDTO>.Create(productDTOQuery, searchDTO);
+                // Lấy danh sách ProductId
+                var productIds = result.Items.Select(p => p.Id).ToList();
+                // Truy vấn ảnh thumbnail (chỉ lấy những ảnh có IsThumbnail = true)
+                // Truy vấn ảnh thumbnail (chỉ lấy ảnh đầu tiên có IsThumbnail = true cho mỗi sản phẩm)
+                var thumbnailImages = _productImageRepository.GetQueryable()
+                    .Where(pi => productIds.Contains(pi.ProductId) && pi.IsThumbnail)
+                    .GroupBy(pi => pi.ProductId)
+                    .Select(g => g.FirstOrDefault()) // Lấy ảnh thumbnail đầu tiên trong mỗi nhóm
+                    .ToList();
+                // Gán ảnh thumbnail vào ProductDTO
+                foreach (var productDTO in result.Items)
+                {
+                    var thumbnailImage = thumbnailImages.FirstOrDefault(pi => pi.ProductId == productDTO.Id);
+                    if (thumbnailImage == null) continue;
+                    productDTO.Thumbnail = thumbnailImage.Path;
+                    productDTO.ThumbnailBase64 = ImageToBase64(thumbnailImage.Path);
+                    productDTO.ThumbnailContentType = GetContentTypeFromExtension(Path.GetExtension(thumbnailImage.Path).ToLowerInvariant());
+                }
+                return new ResponseWithDataDto<PagedList<ProductDTO>>()
+                {
+                    Data = result,
+
+                    Message = "Lấy thành công"
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponseWithDataDto<PagedList<ProductDTO>>()
+                {
+                    Data = null,
+
+                    Message = ex.Message
+
+                };
+            }
+        }
+
+        public async Task<ResponseWithDataDto<PagedList<ProductDTO>>> GetRelativeProductById(Guid id)
+        {
+            var search = new ProductSearchDTO() {PageIndex = 1, PageSize = 20 };
+            var product_Categories = await _productCategoryRepository.FindByAsync(x => x.ProductId == id);
+            var categoryIds =  product_Categories.Select(x => x.CategoryId).ToArray();
+            search.Category_Filter = categoryIds;
+            var result =await GetDataByPage(search);
+            var productToRemove = result.Data.Items.FirstOrDefault(p => p.Id == id);
+            if (productToRemove != null)
+            {
+                result.Data.Items.Remove(productToRemove);
+            }
+            return result;
         }
     }
 }

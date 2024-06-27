@@ -27,7 +27,9 @@
     <!-- Filter -->
     <a-row justify="center">
         <a-col :xs="20" :sm="20" :md="20" :lg="20" :xl="20">
-            <a-row :gutter="[16, 16]" justify="start" style="width:100%">
+            <a-row justify="space-between" style="align-items: center;">
+                <a-col :span="20">
+                    <a-row :gutter="[16, 16]" justify="start" style="width:100%">
                 <a-col :xs="12" :sm="12" :md="12" :lg="3" :xl="3">
                     <a-select v-model:value="selectedCategory" style="width: 100%" :options="categoryOptions"
                         placeholder="Danh mục" mode="multiple" :max-tag-count="1" @blur="handleChangeFilter">
@@ -60,13 +62,18 @@
                 </a-col>
 
             </a-row>
+                </a-col>
+                <a-col :span="3" style="color:grey;font-size: 16px;align-items: center">{{ this.pagination.total }} sản phẩm</a-col>
+            </a-row>
+            
         </a-col>
+        
     </a-row>
     <!-- End Filter -->
 
     <!-- Product List -->
    
-    <a-row :gutter="[16, 16]" justify="center" style="width:100%">
+    <a-row :gutter="[16, 16]" justify="center" style="width:100%;">
         <a-col :xs="22" :sm="22" :md="22" :lg="20" :xl="20">
             <a-row justify="start" style="margin-top: 20px" :gutter="[16, 16]">
                  
@@ -89,7 +96,7 @@
                                 <template #description>
                                     <span style="font-size: 16px; align-items: center">{{ item.code }}</span>
                                     <br>
-                                    <span class="price-product">{{ item.price }}&#8363;</span>
+                                    <span class="price-product">{{fomartPrice(item.price)}}&#8363;</span>
                                 </template>
 
                             </a-card-meta>
@@ -98,7 +105,7 @@
 
                 </a-col>
             </a-row>
-            <a-row>
+            <a-row  >
                 <a-col :span="24">
                     <a-pagination v-if="pagination.total > 0" style="margin-top: 20px; text-align: center"
                         v-model:current="pagination.current" :pageSize="pagination.pageSize" :total="pagination.total"
@@ -112,7 +119,7 @@
         </a-col>
     </a-row>
     
-    <a-row v-if="bestSellerImages.length == 0">
+    <a-row v-if="isNotFound">
         <a-col :span="24">
             <a-result status="404" title="Không tìm thấy" sub-title="Vui lòng chọn lại bộ lọc sản phẩm">
             </a-result>
@@ -127,6 +134,7 @@
         data() {
             const categoryOptions = []
             return {
+                isNotFound: false,
                 isLoading: true,
                 gender: "",
                 categoryOptions,
@@ -216,7 +224,7 @@
             try {
                 const response = await APIService.post('product/get-data-by-page', {
                     pageIndex: 1,
-                    pageSize: 10,
+                    pageSize:30,
                     category_Filter: [this.defaultGender]
                 });
                 this.bestSellerImages = response.data.data.items;
@@ -224,6 +232,9 @@
                 this.pagination.total = response.data.data.totalCount;
                 this.pagination.current = response.data.data.pageIndex;
                 this.pagination.pageSize = response.data.data.pageSize;
+                if (this.bestSellerImages.length == 0) {
+                    this.isNotFound = true
+                }
 
             } catch (error) {
                 console.error('Error fetching banner images:', error);
@@ -233,8 +244,12 @@
 
         },//end mounted
         methods: {
+            
+            fomartPrice(price) {
+                return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            },
             handlePaginationChange(){
-
+                this.handleChangeFilter()
             },
             async fetchColorAndSize() {
                 const serverResponse = await APIService.get(`datacategory/get-list-by-parent-code/MAU_SAC`)
@@ -257,8 +272,8 @@
 
                     this.isLoading = true;
                     const payload = {
-                        pageIndex: 1,
-                        pageSize: 30,
+                        pageIndex: this.pagination.current,
+                        pageSize: this.pagination.pageSize,
                         sortQuery: this.selectedSortType,
                         size_Filter: this.selectedSize,
                         color_Filter: this.selectedColor,
@@ -268,7 +283,7 @@
                     } else {
                         payload.category_Filter = this.selectedCategory
                     }
-                    console.log("patload.category_Filter:", payload.category_Filter)
+                    
                     var priceRange = []
                     if (this.selectedPriceRange != null) {
                         priceRange = this.selectedPriceRange.split('-').map(Number);
@@ -280,7 +295,11 @@
                     this.pagination.total = response.data.data.totalCount;
                     this.pagination.current = response.data.data.pageIndex;
                     this.pagination.pageSize = response.data.data.pageSize;
-
+                    if (this.bestSellerImages.length == 0) {
+                        this.isNotFound = true
+                    }else{
+                        this.isNotFound = false
+                    }
                     this.isLoading = false;
 
 

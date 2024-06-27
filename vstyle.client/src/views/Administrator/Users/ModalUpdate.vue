@@ -6,7 +6,7 @@
                     <a-col :span="12">
 
                         <a-form-item label="Avatar" name="avatar">
-                            <a-upload list-type="picture-card" :showUploadList="true" accept=".jpg,.jpeg,.png"
+                            <a-upload list-type="picture-card" :showUploadList="true" accept=".jpg,.jpeg,.png,.bmp,.webp"
                                 maxCount="1" :fileList="fileList" :before-upload="beforeUpload" :action="apiUrl"
                                 @change="handleChangeAvatar">
 
@@ -139,13 +139,28 @@
                 return Promise.resolve();
             };
             const beforeUpload = file => {
-                const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg';
-                if (!isJpgOrPng) {
-                    message.error('Định dạng ảnh không hợp lệ');
+                 // Danh sách các phần mở rộng tệp được chấp nhận
+                 const allowedExtensions = ['jpg', 'jpeg', 'png', 'bmp', 'webp'];
+                var isJpgOrPng = true;
+                // Kiểm tra phần mở rộng file
+                const extension = file.name.split('.').pop().toLowerCase();
+                console.log(extension)
+                if (!allowedExtensions.includes(extension)) {
+                    notification.error({
+                        message: 'Định dạng ảnh không hợp lệ',
+                        description: 'Chọn định dạng ảnh với một phần mở rộng: ' + allowedExtensions.join(', ')
+                    })
+                    isJpgOrPng = false;
+                    return false;
                 }
+               
                 const isLt2M = file.size / 1024 / 1024 < 10;
                 if (!isLt2M) {
-                    message.error('Ảnh tối đa 10MB');
+                    notification.error({
+                        message: 'Tính tối đa 10MB',
+                        description: 'Tính tối đa 10MB'
+                    })
+                    return false;
                 }
 
                 return isJpgOrPng && isLt2M;

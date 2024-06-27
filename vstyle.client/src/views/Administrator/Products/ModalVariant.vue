@@ -14,7 +14,7 @@
                                 message: 'Chọn Size',
                             }">
                                 <!-- <a-input v-model:value="productVariant.size" placeholder="Kích cỡ" /> -->
-                                <a-select v-model:value="productVariant.sizeId" placeholder="Kích cỡ"
+                                <a-select show-search optionFilterProp="label" v-model:value="productVariant.sizeId" placeholder="Kích cỡ"
                                     :options="sizeOptions" @select="handleSelectSize(index)">
 
                                 </a-select>
@@ -29,7 +29,7 @@
                                 message: 'Chọn màu sắc',
                             }">
 
-                                <a-select v-model:value="productVariant.colorId" placeholder="Màu sắc"
+                                <a-select show-search optionFilterProp="label" v-model:value="productVariant.colorId" placeholder="Màu sắc"
                                     :options="colorOptions" @select="handleSelectColor(index)">
 
                                 </a-select>
@@ -127,11 +127,13 @@
             return {
                 open: false,
                 productId: null,
+                defaultPrice: 0
             };
         },
 
-        mounted() {
-            this.fetchColorAndSize();
+       async mounted() {
+             await  this.fetchColorAndSize();
+          
             
         },
         watch: {
@@ -217,7 +219,7 @@
                 this.dynamicValidateForm.productVariants.push({
                     sizeId: null,
                     colorId: null,
-                    price: null,
+                    price: this.defaultPrice,
                     stockQuantity: 0,
                     productId: this.productId,
                 });
@@ -242,7 +244,9 @@
             async fetchAllProductVariant() {
                 const serverResponse = await APIService.get(`product/get-product-variant/${this.productId}`)
                 this.dynamicValidateForm.productVariants = serverResponse.data.data
-                console.log(typeof(this.dynamicValidateForm.productVariants[0].price))
+          
+                const res =  await APIService.get(`product/${this.productId}`);
+                this.defaultPrice = res.data.data.items[0].price;
             },
             showModal(id) {
                

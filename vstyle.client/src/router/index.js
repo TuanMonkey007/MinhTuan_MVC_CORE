@@ -30,12 +30,15 @@ const router = createRouter({
 });
 // Thêm navigation guard
 router.beforeEach((to, from, next) => {
+
+  document.dispatchEvent(new CustomEvent('loading', { detail: true }));
+ 
     const isAuthenticated = localStorage.getItem('accessToken');
     const userRole = localStorage.getItem('role');
     document.title = to.meta.title + " | VStyle - Thời trang Việt" || 'VStyle - Thời trang Việt'; // Nếu route không có meta.title, sử dụng title mặc định
     if (to.matched.some(record => record.meta.requiresAuth)) {
       if (!isAuthenticated) {
-        next({ name: 'Login' });
+        next({ name: 'Unauthorized' });
       } else {
         if (to.meta.roles && !to.meta.roles.includes(userRole)) {
           next({ name: 'Unauthorized' });
@@ -47,4 +50,12 @@ router.beforeEach((to, from, next) => {
       next();
     }
   });
+  router.afterEach(() => {
+    document.dispatchEvent(new CustomEvent('loading', { detail: true }));
+  
+    setTimeout(() => {
+      document.dispatchEvent(new CustomEvent('loading', { detail: false }));
+    }, 1500); // Thời gian delay trước khi ẩn loader (miligiây)
+  });
+  
 export default router;

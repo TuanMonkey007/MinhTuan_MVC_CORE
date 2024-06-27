@@ -1,0 +1,62 @@
+version: '3.8'
+services:
+
+  frontend:
+    build:
+      context: ./vstyle.client
+      dockerfile: Dockerfile
+    ports:
+      - "8081:80"
+    networks:
+      - vstyle_network
+  backend-api:
+    build:
+      context: ./VStyle
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8080"  # Đổi port ngoài (host) và port trong container ở đây
+    depends_on:
+      - database
+    volumes:
+      - E:\BE_STUDYING\DATN\Code\Uploads_Volume:/app/Uploads
+    networks:
+      - vstyle_network
+  database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: Tuandeptrai@123
+    ports:
+      - "1433:1433"
+    volumes:
+      - E:\BE_STUDYING\DATN\Code\SQL_Docker_Volume/data:/var/opt/mssql/data
+      - E:\BE_STUDYING\DATN\Code\SQL_Docker_Volume/log:/var/opt/mssql/log
+      - E:\BE_STUDYING\DATN\Code\SQL_Docker_Volume/secrets:/var/opt/mssql/secrets
+    networks:
+      - vstyle_network
+  weaviate:
+    image: cr.weaviate.io/semitechnologies/weaviate:1.25.4
+    ports:
+      - "8080:8080"  # Change host port to 8090 to avoid conflict
+      - "50051:50051"
+    restart: on-failure:0
+    environment:
+      IMAGE_INFERENCE_API: 'http://i2v-neural:8080'
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
+      DEFAULT_VECTORIZER_MODULE: 'img2vec-neural'
+      ENABLE_MODULES: 'img2vec-neural'
+      CLUSTER_HOSTNAME: 'node1'
+    networks:
+      - vstyle_network
+
+  i2v-neural:
+    image: cr.weaviate.io/semitechnologies/img2vec-pytorch:resnet50
+    environment:
+      ENABLE_CUDA: '0'
+    networks:
+      - vstyle_network    
+networks:
+  vstyle_network:
+    driver: bridge

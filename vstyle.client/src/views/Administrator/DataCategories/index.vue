@@ -57,6 +57,10 @@
           :scroll="{ x: 1000 }"   :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : null)"
             @change="handleTableChange">
             <template #bodyCell="{ column, record }">
+              <template v-if="column.key === 'description'">
+                      <span
+                        v-html="record.description.substring(0, 100) + (record.description.length > 100 ? '...' : '')"></span>
+                    </template>
               <template v-if="column.key === 'action'">
                 <a-space>
                   <a-tooltip title="Chỉnh sửa">

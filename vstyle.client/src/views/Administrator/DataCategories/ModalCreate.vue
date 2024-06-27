@@ -33,7 +33,9 @@
 
 
                 <a-form-item ref="description" label="Mô tả" name="description">
-                    <a-textarea v-model:value="category.description" />
+                    <!-- <a-textarea v-model:value="category.description" /> -->
+                    <ckeditor :editor="editor" v-model="category.description" :config="editorConfig"></ckeditor>
+                     
                 </a-form-item>
                 <a-form-item>
                     <a-button @click="handleSubmitAsync" :disabled="disableBtnSubmit" :loading="isLoading"
@@ -54,6 +56,7 @@
 <script>
     import { computed } from "vue";
     import APIService from "@/helpers/APIService"
+    import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
     import { ref, reactive } from "vue";
     import { message, notification } from "ant-design-vue";
 
@@ -82,7 +85,17 @@
                 wrapperCol: {
                     span: 14,
                 },
-                disableBtnSubmit
+                disableBtnSubmit,
+                editor: ClassicEditor,
+
+                editorConfig: {
+                    toolbar: [
+                        'heading', '|',
+                        'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|',
+                        'undo', 'redo'
+                    ],
+                  
+                }
 
             }
         },// end setup
@@ -118,7 +131,7 @@
                     notification.info({
                         message: 'Thông báo',
                         description: 'Đang xử lý...',
-                        key : 'loadingKey',
+                        key: 'loadingKey',
                         duration: 0
                     })
                     const serverResponse = await APIService.post('datacategory/create', this.category)
@@ -126,8 +139,8 @@
                         notification.success({
                             message: 'Thông báo',
                             description: 'Tạo mới thành công',
-                            key : 'loadingKey',
-                            
+                            key: 'loadingKey',
+
                         })
                         this.isLoading = false
 
@@ -138,7 +151,7 @@
                         notification.error({
                             message: 'Thông báo',
                             description: 'Tạo mới thất bại',
-                            key : 'loadingKey',
+                            key: 'loadingKey',
                         })
                     }
                 }).catch(error => {
@@ -146,7 +159,7 @@
                     notification.error({
                         message: 'Thông báo',
                         description: 'Vui lòng kiểm tra lại thông tin',
-                        key : 'loadingKey',
+                        key: 'loadingKey',
                     })
                 }).finally(() => {
                     this.isLoading = false;

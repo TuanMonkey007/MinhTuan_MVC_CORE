@@ -33,7 +33,9 @@
 
 
                 <a-form-item ref="description" label="Mô tả" name="description">
-                    <a-textarea v-model:value="category.description" />
+                    <!-- <a-textarea v-model:value="category.description" /> -->
+                    <ckeditor :editor="editor" v-model="category.description" :config="editorConfig"></ckeditor>
+
                 </a-form-item>
                 <a-form-item>
                     <a-button @click="handleSubmitAsync" :loading="isLoading" type="primary" style="margin-right: 20px;"
@@ -56,7 +58,8 @@
     import APIService from "@/helpers/APIService"
     import { ref, reactive } from "vue";
     import { message, notification } from "ant-design-vue";
-
+    import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+    import MyBase64UploadAdapterPlugin from "@/helpers/UploadAdapter";
     export default {
         setup() {
 
@@ -82,6 +85,12 @@
                 },
 
                 open: false,
+                editor: ClassicEditor,
+
+                editorConfig: {
+                     extraPlugins: [MyBase64UploadAdapterPlugin], // Add the Base64 upload adapter plugin
+     
+                }
 
             }
         },
@@ -100,7 +109,6 @@
                 const serverResponse = await APIService.get(`datacategory/${id}`)
                 this.category = serverResponse.data.data
                 this.id = id
-
             },
             closeModal() {
                 this.open = false
@@ -121,11 +129,11 @@
                     })
                     const serverResponse = await APIService.put(`datacategory/update/${this.id}`, this.category)
                     if (serverResponse.data.message == "Cập nhật thành công") {
-                       notification.success({
+                        notification.success({
                             message: 'Thông báo',
                             description: serverResponse.data.message,
                             key: 'loadingKey',
-                    
+
                         })
                         this.closeModal()
                     } else {
@@ -142,7 +150,7 @@
                         message: 'Lỗi hệ thống',
                         description: 'Cập nhật thất bại',
                         key: 'loadingKey',
-                        
+
                     })
                 }).finally(() => {
                     this.isLoading = false;

@@ -43,6 +43,25 @@ const adminRouter=[
                 meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF], title: "Quản lý phiếu giảm giá" }
             },
             {
+                path:"Article",
+                name:"ArticleHome",
+                component:()=>import("../views/Administrator/Articles/index.vue"),
+                meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF], title: "Quản lý bài viết" },
+              
+            },
+            {
+                path:"Article/Create",
+                name:"ArticleCreate",
+                component:()=>import("../views/Administrator/Articles/Create.vue"),
+                meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF], title: "Tạo bài viết mới", }
+            },
+            {
+                path:"Article/Update/:id?",
+                name:"ArticleUpdate",
+                component:()=>import("../views/Administrator/Articles/Update.vue"),
+                meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF], title: "Sửa bài viết", }
+            },
+            {
                 path:"DataCategory/:id?",
                 name:"DataCategoryHome",
                 component:()=>import("../views/Administrator/DataCategories/index.vue"),
