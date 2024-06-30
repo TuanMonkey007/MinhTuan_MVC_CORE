@@ -11,6 +11,7 @@ using MinhTuan.Domain.DTOs.StatisticDTO;
 using MinhTuan.Domain.DTOs.VNPayDTO;
 using MinhTuan.Domain.Entities;
 using MinhTuan.Domain.Helper.Pagination;
+using MinhTuan.Domain.Repository.ProductRepository;
 using MinhTuan.Service.SearchDTO;
 using MinhTuan.Service.Services.CartService;
 using MinhTuan.Service.Services.CategoryService;
@@ -43,6 +44,8 @@ namespace MinhTuan.API.Controllers
         private readonly IConfiguration _config;
         private readonly IPaymentInfoService _paymentInfoService;
         private readonly IProductService _productService;
+      //  private readonly IProductVariantRepository _productVariantRepository;
+        private readonly IProductVariantService _productVariantService;
 
         public OrderController(
              IMapper mapper,
@@ -57,7 +60,9 @@ namespace MinhTuan.API.Controllers
                 IVnPayService vnPayService,
                 IConfiguration config,
                 IPaymentInfoService paymentInfoService,
-                IProductService productService
+                IProductService productService,
+           //     IProductVariantRepository productVariantRepository,
+                IProductVariantService productVariantService
                )
         {
             _mapper = mapper;
@@ -73,6 +78,8 @@ namespace MinhTuan.API.Controllers
             _config = config;
             _paymentInfoService = paymentInfoService;
             _productService = productService;
+         //   _productVariantRepository = productVariantRepository;
+            _productVariantService = productVariantService;
             
         }
 
@@ -178,6 +185,10 @@ namespace MinhTuan.API.Controllers
                         Price = (double)item.ProductPrice
                     };
                     await _orderItemService.CreateAsync(newOrderItem);
+                    //Giảm số lượng sản phẩm khi đã đặt hóa đơn hàng
+                    var productVariant = await _productVariantService.GetByIdAsync(item.ProductVariantId);
+                    productVariant.StockQuantity -= item.Quantity;
+                    await _productVariantService.UpdateAsync(productVariant);
                 }
                 var newPaymentInfo = new PaymentInfo()
                 {
@@ -186,7 +197,7 @@ namespace MinhTuan.API.Controllers
                     TotalAmount = modelDTO.TotalAmount,
                     PaymentStatusId = _dataCategoryService.GetIdByCodeandParentCode("CHO_THANH_TOAN", "PAYMENT_STATUS").Result
 
-            };
+                };
                 if (namePaymentMethod != "TIEN_MAT")//Nếu thanh toán bằng VNPay
                 {
                     var vnpayModel = new VnPaymentRequestDTO
@@ -201,7 +212,7 @@ namespace MinhTuan.API.Controllers
                     await _paymentInfoService.CreateAsync(newPaymentInfo);
                     serverResponse.Message = _vnpayService.CreatePaymentUrl(HttpContext, vnpayModel);
                 }
-                else
+                else //Nếu thanh toàn bằng tiền mặt
                 {
                      await _paymentInfoService.CreateAsync(newPaymentInfo);
                 }
@@ -241,25 +252,25 @@ namespace MinhTuan.API.Controllers
 
             try
             {
-                //Tạo giỏ hàng chứa 1 sản phẩm
-                var newCart = new Cart()
-                {
-                    IsOrder = true
-                };
-                if (model.UserId.HasValue)
-                {
-                    newCart.UserId = model.UserId.Value;
-                }
-                await _cartService.CreateAsync(newCart);
-                //Thêm mới cartItem
-                var newCartItem = new CartItem() { CartId = newCart.Id, Quantity = model.Quantity, ProductVariantId = model.ProductVariantId };
-                await _cartItemService.CreateAsync(newCartItem);
+                ////Tạo giỏ hàng chứa 1 sản phẩm
+                //var newCart = new Cart()
+                //{
+                //    IsOrder = true
+                //};
+                //if (model.UserId.HasValue)
+                //{
+                //    newCart.UserId = model.UserId.Value;
+                //}
+                //await _cartService.CreateAsync(newCart);
+                ////Thêm mới cartItem
+                //var newCartItem = new CartItem() { CartId = newCart.Id, Quantity = model.Quantity, ProductVariantId = model.ProductVariantId };
+                //await _cartItemService.CreateAsync(newCartItem);
 
                 var modelDTO = _mapper.Map<OrderDTO>(model);
                 var newCode = await _orderService.AutoGenOrderCode();
                 modelDTO.Code = newCode;
                 var entity = _mapper.Map<Order>(modelDTO);
-                entity.CartId = newCart.Id;
+               // entity.CartId = newCart.Id;
                 //Tạo được rồi thì đổi trạng thái giỏ hàng
                 //dựa trên cartid
            
@@ -283,7 +294,10 @@ namespace MinhTuan.API.Controllers
                         Price = (double)model.Price
                     };
                     await _orderItemService.CreateAsync(newOrderItem);
-                
+                //Giảm số lượng sản phẩm khi đã đặt hóa đơn hàng
+                var productVariant = await _productVariantService.GetByIdAsync(model.ProductVariantId);
+                productVariant.StockQuantity -= model.Quantity;
+                await _productVariantService.UpdateAsync(productVariant);
                 var newPaymentInfo = new PaymentInfo()
                 {
                     OrderId = entity.Id,
@@ -474,11 +488,17 @@ namespace MinhTuan.API.Controllers
             {
                 var orderUpdate = await _orderService.GetByIdAsync(orderId);
                 orderUpdate.Status = statusId;
-               //var statusDataCategory= await _dataCategoryService.GetByIdAsync(statusId);
-               // if(statusDataCategory.Code != "CHO_THANH_TOAN")//Nếu trạng thái cập nhật không phải trạng thái chờ thanh toán
-               // {
-               //     //Cập
-               // }
+            
+               //Nếu trạng thái thành công thì cập nhật thông tin thanh toán
+               var statusSuccessIdCOD = await _dataCategoryService.GetIdByCodeandParentCode("GIAO_HANG_THANHCONG", "STATUS_COD");
+                if (orderUpdate.Status == statusSuccessIdCOD)
+                {
+                    var paymentInfo = await _paymentInfoService.FindByAsync(x => x.OrderId.Equals(orderId) && x.IsDelete != true);
+                    var paymentInfoUpdate = paymentInfo.FirstOrDefault();
+                    var paymentStatusId = await _dataCategoryService.GetIdByCodeandParentCode("DA_THANH_TOAN", "PAYMENT_STATUS");
+                    paymentInfoUpdate.PaymentStatusId = paymentStatusId;
+                    await _paymentInfoService.UpdateAsync(paymentInfoUpdate);
+                }
                 await _orderService.UpdateAsync(orderUpdate);
                 return Ok(response);
             }
@@ -502,6 +522,27 @@ namespace MinhTuan.API.Controllers
                 order.IsCancelled = true;
                 order.ReasonCancelled = model.ReasonCancel;
                 await _orderService.UpdateAsync(order);
+                //Cập nhật trạng thái thanh toán
+                var cancelStatusId = await _dataCategoryService.GetIdByCodeandParentCode("DA_HUY", "PAYMENT_STATUS");
+                var paymentInfo = await _paymentInfoService.FindByAsync(x => x.OrderId.Equals(id) && x.IsDelete != true);
+                var paymentInfoUpdate = paymentInfo.FirstOrDefault();
+                paymentInfoUpdate.PaymentStatusId = cancelStatusId;
+
+                //Cập nhật mã giảm giá nếu hủy đơn
+                if(order.VoucherId != null)
+                {
+                    var voucher = await _voucherService.GetByIdAsync(order.VoucherId);
+                    voucher.Quantity += 1;
+                    await _voucherService.UpdateAsync(voucher);
+                }
+                //Tăng số lượng sản phẩm lên
+                var orderItems = await _orderItemService.FindByAsync(x => x.OrderId.Equals(id) && x.IsDelete != true);
+                foreach (var item in orderItems)
+                {
+                   await _orderService.UpdateCancelProductVariant(item.ProductVariantId, item.Quantity);
+                }
+
+                await _paymentInfoService.UpdateAsync(paymentInfoUpdate);
                 return Ok(response);
             }
             catch(Exception e)
@@ -532,6 +573,7 @@ namespace MinhTuan.API.Controllers
                 updateInfo.TransactionId = response.TransactionId;
                 var paymentStatusId = await _dataCategoryService.GetIdByCodeandParentCode("DA_THANH_TOAN", "PAYMENT_STATUS");
                 updateInfo.PaymentStatusId = paymentStatusId;
+                updateInfo.VnpPayDate = DateTime.Now;
                 await _paymentInfoService.UpdateAsync(updateInfo);
                 //Cập nhật trạng thái đơn hàng
 

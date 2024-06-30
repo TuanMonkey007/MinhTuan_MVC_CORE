@@ -19,6 +19,7 @@ using MinhTuan.Service.Services.CategoryService;
 using System.Text;
 using MinhTuan.Service.Services.VNPAY;
 using MinhTuan.Service.Services.ImageSearch;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -120,8 +121,8 @@ foreach (var intf in serviceTypes.Where(t => t.IsInterface))
 builder.Services.AddSingleton<IVnPayService, VnPayService>(); //Inject VNPay service
 builder.Services.AddScoped<IImageSearchSevice, ImageSearchService>(); //Inject ImageSearch service>
 // Thêm logging vào container dịch vụ
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
+//builder.Logging.ClearProviders();
+//builder.Logging.AddConsole();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 #endregion 
 
@@ -158,7 +159,12 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true; // Chỉ cho phép truy cập cookie qua HTTP (tăng tính bảo mật)
     options.Cookie.IsEssential = true; // Đánh dấu cookie là cần thiết
 });
-
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.File("logs/vstyle-log-.txt", rollingInterval: RollingInterval.Day)
+    .WriteTo.Console()
+    .CreateLogger();
+builder.Host.UseSerilog();
 
 
 

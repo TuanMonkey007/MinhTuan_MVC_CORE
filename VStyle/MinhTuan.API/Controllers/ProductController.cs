@@ -8,9 +8,12 @@ using MinhTuan.Domain.DTOs.CategoryDTO;
 using MinhTuan.Domain.DTOs.ProductDTO;
 using MinhTuan.Domain.Entities;
 using MinhTuan.Domain.Helper.Pagination;
+using MinhTuan.Domain.Repository.ProductRepository;
 using MinhTuan.Service.SearchDTO;
+using MinhTuan.Service.Services.DataCategoryService;
 using MinhTuan.Service.Services.ProductService;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace MinhTuan.API.Controllers
 {
@@ -21,13 +24,20 @@ namespace MinhTuan.API.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
         private readonly IProductService _productService;
+        private readonly IDataCategoryService _dataCategoryService;
+        private readonly IProductVariantRepository _productVariantRepository;
 
 
-        public ProductController(IMapper mapper, IProductService productService,IHttpContextAccessor httpContextAccessor)
+        public ProductController(IMapper mapper, IProductService productService,IHttpContextAccessor httpContextAccessor,
+            IDataCategoryService dataCategoryService,
+            IProductVariantRepository productVariantRepository
+            )
         {
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
             _productService = productService;
+            _dataCategoryService = dataCategoryService;
+            _productVariantRepository = productVariantRepository;
         }
         [HttpPost("get-data-by-page")]
         public async Task<IActionResult> GetDataByPage([FromBody] ProductSearchDTO searchDTO)
@@ -71,7 +81,8 @@ namespace MinhTuan.API.Controllers
                 if (resultGetted != null && resultGetted.Data != null && resultGetted.Data.Items != null)
                 {
                     jsonData = JsonConvert.SerializeObject(resultGetted.Data);
-                    HttpContext.Session.SetString(sessionKey, jsonData);
+                     _httpContextAccessor.HttpContext.Session.SetString(sessionKey, jsonData);
+                
                 }
 
                 return Ok(resultGetted); // Trả về resultGetted dù có hay không có dữ liệu
@@ -243,6 +254,13 @@ namespace MinhTuan.API.Controllers
                     serverResponse.Status = "Fail";
                     return Ok(serverResponse);
                 }
+                if(_productVariantRepository.FindByAsync(x => x.ProductId.ToString() == id.ToString() && x.IsDelete != true).Result.Count() > 0)
+                {
+                    serverResponse.Message = "Không thể xóa dữ liệu";
+                    serverResponse.Status = "Fail";
+                    return Ok(serverResponse);
+                }
+                
                 await _productService.SoftDeleteAsync(data);
                 return Ok(serverResponse);
 

@@ -10,6 +10,7 @@ using MinhTuan.Domain.Entities;
 using MinhTuan.Domain.Helper.Pagination;
 using MinhTuan.Service.SearchDTO;
 using MinhTuan.Service.Services.CategoryService;
+using MinhTuan.Service.Services.OrderService;
 using MinhTuan.Service.Services.VoucherService;
 using Newtonsoft.Json;
 
@@ -22,16 +23,19 @@ namespace MinhTuan.API.Controllers
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IVoucherService _voucherService;
+        private readonly IOrderService _orderService;
 
         public VoucherController(
               IMapper mapper,
                IHttpContextAccessor httpContextAccessor,
-               IVoucherService voucherService
+               IVoucherService voucherService,
+               IOrderService orderService
             )
         {
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
             _voucherService = voucherService;
+            _orderService = orderService;
         }
 
         [HttpPost("get-data-by-page")]
@@ -129,6 +133,12 @@ namespace MinhTuan.API.Controllers
                 if (data == null)
                 {
                     serverResponse.Message = "Không tìm thấy dữ liệu";
+                    serverResponse.Status = "Fail";
+                    return Ok(serverResponse);
+                }
+                if(_orderService.FindByAsync(x=>x.VoucherId.Equals(id)).Result.Count() > 0)
+                {
+                    serverResponse.Message = "Không thể xóa dữ liệu này";
                     serverResponse.Status = "Fail";
                     return Ok(serverResponse);
                 }

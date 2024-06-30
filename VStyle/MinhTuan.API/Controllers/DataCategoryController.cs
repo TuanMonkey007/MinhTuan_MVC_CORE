@@ -8,8 +8,13 @@ using MinhTuan.Domain.DTOs.CategoryDTO;
 using MinhTuan.Domain.DTOs.DataCategoryDTO;
 using MinhTuan.Domain.Entities;
 using MinhTuan.Domain.Helper.Pagination;
+using MinhTuan.Domain.Repository.ArticleRepository;
+using MinhTuan.Domain.Repository.ProductRepository;
 using MinhTuan.Service.SearchDTO;
+using MinhTuan.Service.Services.AccountService;
 using MinhTuan.Service.Services.DataCategoryService;
+using MinhTuan.Service.Services.OrderService;
+using MinhTuan.Service.Services.PaymentInfoService;
 using Newtonsoft.Json;
 
 namespace MinhTuan.API.Controllers
@@ -22,12 +27,34 @@ namespace MinhTuan.API.Controllers
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IDataCategoryService _dataCategoryService;
+        private readonly IProductCategoryRepository _productCategoryRepository;
+        private readonly IProductVariantRepository _productVariantRepository;
+        private readonly IAccountService _accountService;
+        private readonly IArticleCategoryRepository _articleCategoryRepository;
+        private readonly IOrderService _orderService;
+        private readonly IPaymentInfoService _paymentInfoService;
 
-        public DataCategoryController(IMapper mapper, IHttpContextAccessor httpContextAccessor,IDataCategoryService dataCategoryService)
+
+        public DataCategoryController(IMapper mapper,
+            IProductCategoryRepository productCategoryRepository,
+            IProductVariantRepository productVariantRepository,
+            IArticleCategoryRepository articleCategoryRepository,
+            IOrderService orderService,
+            IPaymentInfoService paymentInfoService,
+            IAccountService accountService,
+            IHttpContextAccessor httpContextAccessor,IDataCategoryService dataCategoryService)
         {
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
             _dataCategoryService = dataCategoryService;
+            _productCategoryRepository = productCategoryRepository;
+            _productVariantRepository = productVariantRepository;
+            _articleCategoryRepository = articleCategoryRepository;
+            _accountService = accountService;
+            _orderService = orderService;
+            _paymentInfoService = paymentInfoService;
+
+            
 
         }
         [HttpPost("get-data-by-page")]
@@ -136,6 +163,43 @@ namespace MinhTuan.API.Controllers
                     serverResponse.Status = "Fail";
                     return Ok(serverResponse);
                 }
+                if (_productCategoryRepository.FindByAsync(x => x.CategoryId.ToString() == id.ToString() && x.IsDelete != true).Result.Count() > 0)
+                {
+                    serverResponse.Message = "Không thể xóa dữ liệu này";
+                    serverResponse.Status = "Fail";
+                    return Ok(serverResponse);
+                }
+                if(_productVariantRepository.FindByAsync(x =>( x.SizeId.ToString() == id.ToString() || x.ColorId.ToString() == id.ToString()) && x.IsDelete != true).Result.Count() > 0)
+                {
+                    serverResponse.Message = "Không thể xóa dữ liệu này";
+                    serverResponse.Status = "Fail";
+                    return Ok(serverResponse);
+                }
+                if (_articleCategoryRepository.FindByAsync(x => x.CategoryId.ToString() == id.ToString() && x.IsDelete != true).Result.Count() > 0)
+                {
+                    serverResponse.Message = "Không thể xóa dữ liệu này";
+                    serverResponse.Status = "Fail";
+                    return Ok(serverResponse);
+                }
+                if (_accountService.FindByAsync(x => x.Gender.Equals(id)).Result.Count() > 0)
+                {
+                    serverResponse.Message = "Không thể xóa dữ liệu này";
+                    serverResponse.Status = "Fail";
+                    return Ok(serverResponse);
+                }
+                if (_orderService.FindByAsync(x => x.PaymentMethod.Equals(id) || x.Status.Equals(id) && x.IsDelete != true).Result.Any())
+                {
+                    serverResponse.Message = "Không thể xóa dữ liệu này";
+                    serverResponse.Status = "Fail";
+                    return Ok(serverResponse);
+                }
+                if(_paymentInfoService.FindByAsync(x => x.PaymentMethodId.Equals(id)  || x.PaymentStatusId.Equals(id) && x.IsDelete != true).Result.Any())
+                {
+                    serverResponse.Message = "Không thể xóa dữ liệu này";
+                    serverResponse.Status = "Fail";
+                    return Ok(serverResponse);
+                }
+
                 await _dataCategoryService.SoftDeleteAsync(data);
                 return Ok(serverResponse);
 

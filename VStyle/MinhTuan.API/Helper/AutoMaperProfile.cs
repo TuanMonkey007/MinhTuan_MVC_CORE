@@ -15,6 +15,7 @@ using MinhTuan.Domain.DTOs.CartDTO;
 using MinhTuan.Domain.DTOs.CategoryDTO;
 using MinhTuan.Domain.DTOs.DataCategoryDTO;
 using MinhTuan.Domain.DTOs.OrderDTO;
+using MinhTuan.Domain.DTOs.PaymentInfoDTO;
 using MinhTuan.Domain.DTOs.ProductDTO;
 using MinhTuan.Domain.DTOs.VoucherDTO;
 using MinhTuan.Domain.Entities;
@@ -67,6 +68,8 @@ public class AutoMapperProfile : Profile
         CreateMap<OrderDTO, CreateOrderViewModel>().ReverseMap();
         CreateMap<OrderItemDTO, OrderItem>().ReverseMap();
         CreateMap<BuyNowViewModel, OrderDTO>().ReverseMap();
+
+        CreateMap<PaymentInfo, PaymentInfoDTO>().ReverseMap();
 
         //Mapper article
         CreateMap<Article, ArticleDTO>().ReverseMap();

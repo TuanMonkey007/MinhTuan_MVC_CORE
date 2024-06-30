@@ -2,6 +2,7 @@
 {
     public class ProductVariantViewModel
     {
+        public Guid? Id { get; set; }
         public Guid ProductId { get; set; }
         public Guid SizeId { get; set; }
         public Guid ColorId { get; set; }

@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 using System.Linq.Dynamic.Core;
 using MinhTuan.Domain.DTOs.ArticleDTO;
+using MinhTuan.Domain.Repository.OrderItemRepository;
 
 namespace MinhTuan.Service.Services.ProductService
 {
@@ -37,13 +38,15 @@ namespace MinhTuan.Service.Services.ProductService
         private readonly IProductVariantRepository _productVariantRepository;
         private readonly IDataCategoryRepository _dataCategoryRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IOrderItemRepository _orderItemRepository;
         private readonly ICategoryRepository _categoryRepository;
         public ProductService(IUnitOfWork unitOfWork, IMapper mapper, IProductRepository productRepository,
             IProductCategoryRepository productCategoryRepository,
             IProductVariantRepository productVariantRepository,
             IProductImageRepository productImageRepository,
             IDataCategoryRepository dataCategoryRepository,
-            ICategoryRepository categoryRepository
+            ICategoryRepository categoryRepository,
+            IOrderItemRepository orderItemRepository
             ) : base(unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -54,6 +57,7 @@ namespace MinhTuan.Service.Services.ProductService
             _productVariantRepository = productVariantRepository;
             _dataCategoryRepository = dataCategoryRepository;
             _categoryRepository = categoryRepository;
+            _orderItemRepository = orderItemRepository;
         }
         private static string ImageToBase64(string imagePath)
         {
@@ -119,13 +123,31 @@ namespace MinhTuan.Service.Services.ProductService
             return _mapper.Map<ProductDTO>(result);
         }
 
-        public  List<ProductVariantDTO> GetAllProductVariantByProductId(Guid id)
-        {
-            var result =   _productVariantRepository.FindBy(x => x.ProductId.Equals(id)).ToList();
+        //public  List<ProductVariantDTO> GetAllProductVariantByProductId(Guid id)
+        //{
+        //    var result =   _productVariantRepository.FindBy(x => x.ProductId.Equals(id)).ToList();
 
-            var resultList =  _mapper.Map<List<ProductVariantDTO>>(result);
+        //    var resultList =  _mapper.Map<List<ProductVariantDTO>>(result);
+        //    return resultList;
+        //}
+        public List<ProductVariantDTO> GetAllProductVariantByProductId(Guid id)
+        {
+            // Lấy tất cả các ProductVariant với ProductId tương ứng
+            var result = _productVariantRepository.FindBy(x => x.ProductId.Equals(id)).ToList();
+
+            // Lấy danh sách các ProductVariantId từ kết quả
+            var productVariantIds = result.Select(x => x.Id).ToList();
+           
+            // Ánh xạ danh sách ProductVariant sang ProductVariantDTO
+            var resultList = _mapper.Map<List<ProductVariantDTO>>(result);
+            foreach (var item in resultList)
+            {
+                var isExist= _orderItemRepository.FindBy(x => x.ProductVariantId.Equals(item.Id)).Any();
+                item.Changeable = !isExist;
+            }
             return resultList;
         }
+
         //xử lý bất đồng bộ
         public async  Task<ResponseWithDataDto<PagedList<ProductDTO>>> GetDataByPage(ProductSearchDTO searchDTO)
         {
@@ -143,6 +165,7 @@ namespace MinhTuan.Service.Services.ProductService
                                 Price = product.Price,
                                 StockQuantity = product.StockQuantity,
                                 CreatedDate = product.CreatedDate,
+                               
                                
                             };
 
@@ -417,67 +440,93 @@ namespace MinhTuan.Service.Services.ProductService
                 {
                     return false;
                 }
-               
+                foreach(var item in listModel)
+                {
+                    //Nếu đã tồn tại thì cập nhật số lượng và giá
+                    if(item.Id != Guid.Empty)
+                    {
+                       var itemUpdate =  _mapper.Map<Product_Variant>(item);
+                       _productVariantRepository.Update(itemUpdate);
+                    }
+                    else
+                    {
+                        var itemCreate = _mapper.Map<Product_Variant>(item);
+                        _productVariantRepository.Add(itemCreate);
+                    }
+                }
+
                 var existingProductVariants = _productVariantRepository.FindBy(pv => pv.ProductId.Equals(id))
                     .ToList();
-                var existingVariantsCopy = existingProductVariants.ToList();
-               
-                // Lặp qua từng biến thể hiện có (dùng bản sao)
-                for (int i = 0; i < existingVariantsCopy.Count; i++)
+                //Xóa các bản ghi không có trong listmodel
+                if (existingProductVariants.Any())
                 {
-                    var existingVariant = existingVariantsCopy[i];
-                    var matchingNewVariant = listModel.FirstOrDefault(nv =>
-                        nv.SizeId == existingVariant.SizeId && nv.ColorId == existingVariant.ColorId);
-
-                    if (matchingNewVariant == null)
+                    var existingVariantsCopy = new List<Product_Variant>(existingProductVariants);
+                    foreach (var item in existingVariantsCopy)
                     {
-                        // Nếu không tồn tại, thực hiện soft delete
-                        existingVariant.IsDelete = true;
-                    }
-                    else
-                    {
-                        // Nếu tồn tại, cập nhật thông tin
-                        existingVariant.Price = matchingNewVariant.Price;
-                        existingVariant.StockQuantity = matchingNewVariant.StockQuantity;
-                        // ... (cập nhật các thuộc tính khác nếu cần)
-
-                        // Loại bỏ khỏi listModel để tối ưu việc thêm mới
-                       listModel.Remove(matchingNewVariant);
-                    }
-                   
-                }
-                await _unitOfWork.SaveChangesAsync();
-
-                // Lặp qua từng biến thể mới (sử dụng vòng lặp for)
-                for (int i = 0; i < listModel.Count; i++)
-                {
-
-                    var newVariant = listModel[i];
-
-                    // Kiểm tra xem biến thể này có tồn tại trong danh sách hiện có không
-                    var existingVariant = existingProductVariants.FirstOrDefault(pv =>
-                        pv.ProductId == id && pv.SizeId == newVariant.SizeId && pv.ColorId == newVariant.ColorId);
-
-                    if (existingVariant == null)
-                    {
-                        // Nếu không tồn tại, thêm biến thể mới vào repository
-                        var productVariant = new Product_Variant()
+                        var matchingNewVariant = listModel.FirstOrDefault(nv =>
+                            nv.SizeId == item.SizeId && nv.ColorId == item.ColorId);
+                        if (matchingNewVariant == null)
                         {
-                            ProductId = id,
-                            ColorId = newVariant.ColorId,
-                            SizeId = newVariant.SizeId,
-                            Price = newVariant.Price,
-                            StockQuantity = newVariant.StockQuantity
-                        };
-                        _productVariantRepository.Add(productVariant);
-                    }
-                    else
-                    {
-                        listModel.Remove(newVariant);
-                        i--;
+                            _productVariantRepository.Delete(item);
+                        }
                     }
                 }
-                await _unitOfWork.SaveChangesAsync();
+                    //// Lặp qua từng biến thể hiện có (dùng bản sao)
+                    //for (int i = 0; i < existingVariantsCopy.Count; i++)
+                    //{
+                    //    var existingVariant = existingVariantsCopy[i];
+                    //    var matchingNewVariant = listModel.FirstOrDefault(nv =>
+                    //        nv.SizeId == existingVariant.SizeId && nv.ColorId == existingVariant.ColorId);
+
+                    //    if (matchingNewVariant == null)
+                    //    {
+                    //        // Nếu không tồn tại, thực hiện soft delete
+                    //        existingVariant.IsDelete = true;
+                    //    }
+                    //    else
+                    //    {
+                    //        // Nếu tồn tại, cập nhật thông tin
+                    //        existingVariant.Price = matchingNewVariant.Price;
+                    //        existingVariant.StockQuantity = matchingNewVariant.StockQuantity;
+                    //        // ... (cập nhật các thuộc tính khác nếu cần)
+
+                    //        // Loại bỏ khỏi listModel để tối ưu việc thêm mới
+                    //       listModel.Remove(matchingNewVariant);
+                    //    }
+
+                    //}
+                    //await _unitOfWork.SaveChangesAsync();
+
+                    //// Lặp qua từng biến thể mới (sử dụng vòng lặp for)
+                    //for (int i = 0; i < listModel.Count; i++)
+                    //{
+
+                    //    var newVariant = listModel[i];
+
+                    //    // Kiểm tra xem biến thể này có tồn tại trong danh sách hiện có không
+                    //    var existingVariant = existingProductVariants.FirstOrDefault(pv =>
+                    //        pv.ProductId == id && pv.SizeId == newVariant.SizeId && pv.ColorId == newVariant.ColorId);
+
+                    //    if (existingVariant == null)
+                    //    {
+                    //        // Nếu không tồn tại, thêm biến thể mới vào repository
+                    //        var productVariant = new Product_Variant()
+                    //        {
+                    //            ProductId = id,
+                    //            ColorId = newVariant.ColorId,
+                    //            SizeId = newVariant.SizeId,
+                    //            Price = newVariant.Price,
+                    //            StockQuantity = newVariant.StockQuantity
+                    //        };
+                    //        _productVariantRepository.Add(productVariant);
+                    //    }
+                    //    else
+                    //    {
+                    //        listModel.Remove(newVariant);
+                    //        i--;
+                    //    }
+                    //}
+                    await _unitOfWork.SaveChangesAsync();
                 // Cập nhật StockQuantity của sản phẩm
                 await UpdateProductStockQuantity(id);
                 

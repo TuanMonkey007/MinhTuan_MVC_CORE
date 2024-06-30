@@ -25,7 +25,7 @@ namespace MinhTuan.Domain.DTOs.OrderDTO
         public Guid? VoucherId { get; set; }
         public string? VoucherCode { get; set; }
         public double ShippingCost { get; set; }
-        public Guid CartId { get; set; }
+        public Guid? CartId { get; set; }
         public DateTime? CreatedDate { get; set; }
         //Thông tin người dùng (nếu có) 
         public string? UserName { get; set; }

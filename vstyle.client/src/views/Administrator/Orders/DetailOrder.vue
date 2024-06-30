@@ -317,10 +317,6 @@
                 this.currentStep = this.orderStatusList.findIndex(
                     (item) => item.id == this.orderInfo.status
                 );
-              
-              
-            
-
             },
             fomartPrice(price) {
                 return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');

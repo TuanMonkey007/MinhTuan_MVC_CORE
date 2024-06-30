@@ -28,10 +28,11 @@ using MinhTuan.Service.SearchDTO;
 using System.Linq.Dynamic.Core;
 using System.Data.Entity;
 using MinhTuan.Domain.Repository.AccountRepository;
+using MinhTuan.Service.Core;
 
 namespace MinhTuan.Service.Services.AccountService;
 
-public class AccountService : IAccountService
+public class AccountService :Service<AppUser>, IAccountService
 {
     
     private readonly IUnitOfWork _unitOfWork;
@@ -56,7 +57,7 @@ public class AccountService : IAccountService
         IEmailService emailService,
         IAccountRepository accountRepository,
         LinkGenerator linkGenerator
-        )
+        ):base(unitOfWork)
     {
     
         _unitOfWork = unitOfWork;

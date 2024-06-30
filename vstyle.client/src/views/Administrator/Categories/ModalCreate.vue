@@ -104,9 +104,7 @@
                
                 this.$refs.formRef.resetFields();
             },
-            handleOk() {
-                console.log(this.category)
-            },
+           
             async handleSubmitAsync() {
                 this.$refs.formRef.validate().then(async () => {
                 this.isLoading = true

@@ -29,6 +29,9 @@ using System.IO;
 using MinhTuan.Service.Services.DataCategoryService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNet.Identity;
+using MinhTuan.Service.Services.CartService;
+using MinhTuan.Service.Services.OrderService;
+using MinhTuan.Service.Services.ArticleService;
 
 namespace MinhTuan.API.Controllers
 {
@@ -44,8 +47,13 @@ namespace MinhTuan.API.Controllers
         private readonly Microsoft.AspNetCore.Identity.UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly Microsoft.AspNetCore.Identity.RoleManager<IdentityRole> _roleManager;
+        private readonly ICartService _cartService;
+        private readonly IOrderService _orderService;
+        private readonly IArticleService _articleService;
         public AccountController(
-          
+            IArticleService articleService,
+            ICartService    cartService,
+            IOrderService orderService,
             IAccountService accountService,
             IDataCategoryService dataCategoryService,
             IMapper mapper,
@@ -66,6 +74,9 @@ namespace MinhTuan.API.Controllers
             _emailService = emailService;
             _dataCategoryService = dataCategoryService;
             _roleManager = roleManger;
+            _cartService = cartService;
+            _orderService = orderService;
+            _articleService = articleService;
         }
         
 
@@ -275,7 +286,6 @@ namespace MinhTuan.API.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var serverResponse = new ResponseWithMessageDto() { Message = "Xóa thành công" };
-
             try
             {
               
@@ -283,6 +293,32 @@ namespace MinhTuan.API.Controllers
                 if (data == null)
                 {
                     serverResponse.Message = "Không tìm thấy dữ liệu";
+                    serverResponse.Status = "Fail";
+                    return Ok(serverResponse);
+                }
+                
+                if(_orderService.FindByAsync(x => x.UserId.ToString() == id.ToString()).Result.Count() > 0)
+                {
+                    serverResponse.Message = "Không thể xóa dữ liệu này";
+                    serverResponse.Status = "Fail";
+                    return Ok(serverResponse);
+                }
+                if(_articleService.FindByAsync(x => x.CreatedID.ToString() == id.ToString()).Result.Count() > 0)
+                {
+                    serverResponse.Message = "Không thể xóa dữ liệu này";
+                    serverResponse.Status = "Fail";
+                    return Ok(serverResponse);
+                }
+                //Xóa giỏ hàng
+                var cartFinded = _cartService.FindByAsync(x => x.UserId.ToString() == id.ToString()).Result;
+                if (cartFinded.Count() > 0)
+                {
+                    foreach (var item in cartFinded)
+                    {
+                        await _cartService.SoftDeleteAsync(item);
+                    }
+
+                    serverResponse.Message = "Không thể xóa dữ liệu này";
                     serverResponse.Status = "Fail";
                     return Ok(serverResponse);
                 }

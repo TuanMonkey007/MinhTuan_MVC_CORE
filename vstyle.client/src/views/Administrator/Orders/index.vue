@@ -125,7 +125,7 @@
                       </a-tooltip>
                       <a-tooltip title="Cập nhật trạng thái" placement="leftTop">
                         
-                        <a-button type="link" @click="openModalUpdateStatus(record.id,record.paymentMethodName, record.isCancelled)" shape="circle">
+                        <a-button type="link" @click="openModalUpdateStatus(record.id,record.paymentMethodName, record.isCancelled,record.statusName)" shape="circle">
                           <font-awesome-icon icon="fa-solid fa-pen-to-square"
                           style="color: #ffd43b" />
 
@@ -270,14 +270,23 @@
       this.fetchData(this.pagination.current, this.pagination.pageSize);
     }, //end mounted
     methods: {
-      openModalUpdateStatus(id,statusName,isCancelled) {
-        if(isCancelled == true){
+      openModalUpdateStatus(id,statusName,isCancelled,recordStatusName) {
+        
+        if(isCancelled == true || recordStatusName.includes("Thành công")){
           notification.warning({
             message: "Không thể hành động",
-            description: "Đơn hàng đã bị hủy",
+            description: "Đơn hàng không thể thay đổi trạng thái",
           })
           return
         }
+        if(recordStatusName.includes("Chờ thanh toán")){
+          notification.warning({
+            message: "Không thể hành động",
+            description: "Đơn hàng chưa được thanh toán",
+          })
+          return
+        }
+       
         this.$refs.modalUpdateStatus.showModal(id,statusName);
       },
       getColor(isCancelled,statusName) {
@@ -297,10 +306,10 @@
           })
           return
         }
-        if(statusName.includes("Đang vận chuyển")  || statusName.includes("Đang giao hàng")){ 
-          console.log(statusName)
+        if(statusName.includes("Đang vận chuyển")||statusName.includes("Thành công")  || statusName.includes("Đang giao hàng")){ 
+        
           notification.warning({
-            message: "Thể hành động",
+            message: "Không thể hành động",
             description: "Đơn hàng không thể hủy trong thời gian này",
           })
           return
@@ -351,7 +360,7 @@
         }
       },
       handlePaginationChange() {
-        this.fetchData(this.pagination.current, this.pagination.pageSize);
+        this.SearchData()
       },
       SearchData() {
         this.formSearch.startTime_Filter=this.formSearch.rangeTime_Filter[0]

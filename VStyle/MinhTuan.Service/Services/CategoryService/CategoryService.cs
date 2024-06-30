@@ -76,7 +76,8 @@ namespace MinhTuan.Service.Services.CategoryService
                                 Id = entityTbl.Id,
                                 Name = entityTbl.Name ?? string.Empty,
                                 Code = entityTbl.Code ?? string.Empty,
-                                Description = entityTbl.Description ?? string.Empty
+                                Description = entityTbl.Description ?? string.Empty,
+                                CreatedDate = entityTbl.CreatedDate
                             };
 
 

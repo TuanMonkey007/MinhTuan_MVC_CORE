@@ -37,7 +37,12 @@
             <span> Đơn hàng</span>
           </router-link>
         </a-menu-item>
-
+        <a-menu-item key="PaymentInfo">
+                          <router-link :to="{ name: 'PaymentInfoHome' }">
+                            <font-awesome-icon icon="fa-brands fa-cc-mastercard" style="margin-right: 5px;" />
+                            <span> Thanh toán</span>
+                          </router-link>
+                        </a-menu-item>
         <a-menu-item key="Voucher">
           <router-link :to="{ name: 'VoucherHome' }">
             <font-awesome-icon icon="fa-solid fa-tags" style="margin-right: 5px;" />
@@ -181,6 +186,12 @@
                           <router-link :to="{ name: 'OrderHome' }">
                             <font-awesome-icon icon="fa-solid fa-cart-shopping" style="margin-right: 5px;" />
                             <span>Đơn hàng</span>
+                          </router-link>
+                        </a-menu-item>
+                        <a-menu-item key="PaymentInfo">
+                          <router-link :to="{ name: 'PaymentInfoHome' }">
+                            <font-awesome-icon icon="fa-brands fa-cc-mastercard" style="margin-right: 5px;" />
+                            <span> Thanh toán</span>
                           </router-link>
                         </a-menu-item>
                         <a-menu-item key="Voucher">

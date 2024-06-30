@@ -32,5 +32,6 @@ namespace MinhTuan.Service.Services.OrderService
         List<RevenueCategoryDTO> GetRevenueCategoriesDayToDay(List<Guid> categoryIdList,DateTime startDay, DateTime endDay);
         List<ProductTopSellingDTO> GetProductTopSellingOfWeek();
         List<ProductTopSellingDTO> GetProductTopSellingDayToDay(DateTime startDay, DateTime endDay);
+        Task<bool> UpdateCancelProductVariant(Guid id, int quantity);
     }
 }

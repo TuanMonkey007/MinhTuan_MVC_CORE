@@ -14,9 +14,8 @@
                                 message: 'Chọn Size',
                             }">
                                 <!-- <a-input v-model:value="productVariant.size" placeholder="Kích cỡ" /> -->
-                                <a-select show-search optionFilterProp="label" v-model:value="productVariant.sizeId" placeholder="Kích cỡ"
+                                <a-select :disabled="!productVariant.changeable" show-search optionFilterProp="label" v-model:value="productVariant.sizeId" placeholder="Kích cỡ"
                                     :options="sizeOptions" @select="handleSelectSize(index)">
-
                                 </a-select>
                             </a-form-item>
                         </a-tooltip>
@@ -29,7 +28,7 @@
                                 message: 'Chọn màu sắc',
                             }">
 
-                                <a-select show-search optionFilterProp="label" v-model:value="productVariant.colorId" placeholder="Màu sắc"
+                                <a-select :disabled="!productVariant.changeable"  show-search optionFilterProp="label" v-model:value="productVariant.colorId" placeholder="Màu sắc"
                                     :options="colorOptions" @select="handleSelectColor(index)">
 
                                 </a-select>
@@ -61,7 +60,7 @@
 
                     </a-col>
                     <a-col :span="1">
-                        <MinusCircleOutlined @click="removeproductVariant(productVariant)" />
+                        <MinusCircleOutlined v-if="productVariant.changeable == true" @click="removeproductVariant(productVariant)" />
                     </a-col>
 
 
@@ -193,6 +192,7 @@
                 });
                 // Chuẩn bị dữ liệu
                 const listModel = this.dynamicValidateForm.productVariants.map((productVariant) => ({
+                    id: productVariant.id,
                     sizeId: productVariant.sizeId,
                     colorId: productVariant.colorId,
                     price: productVariant.price,
@@ -212,7 +212,7 @@
                     notification.error({ message: response.data.message, key: 'keyLoading', duration: 2 });
                 }}
                 catch(error){
-                    notification.error({ message: "Lỗi vãi L", key: 'keyLoading', duration: 2 });
+                    notification.error({ message: "Lỗi", key: 'keyLoading', duration: 2 });
                 }
             },
             addproductVariant() {
@@ -222,6 +222,7 @@
                     price: this.defaultPrice,
                     stockQuantity: 0,
                     productId: this.productId,
+                    changeable: true
                 });
 
             },
@@ -244,7 +245,7 @@
             async fetchAllProductVariant() {
                 const serverResponse = await APIService.get(`product/get-product-variant/${this.productId}`)
                 this.dynamicValidateForm.productVariants = serverResponse.data.data
-          
+                console.log("danh sách size", this.dynamicValidateForm.productVariants)
                 const res =  await APIService.get(`product/${this.productId}`);
                 this.defaultPrice = res.data.data.items[0].price;
             },

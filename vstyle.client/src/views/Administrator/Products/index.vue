@@ -392,10 +392,11 @@
         }
       },
       handlePaginationChange() {
-        this.fetchData(this.pagination.current, this.pagination.pageSize);
+        // this.fetchData(this.pagination.current, this.pagination.pageSize);
+        this.SearchData()
       },
       SearchData() {
-        console.log(this.formSearch);
+       
         this.fetchData(
           this.pagination.current,
           this.pagination.pageSize,

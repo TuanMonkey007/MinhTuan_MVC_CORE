@@ -137,7 +137,7 @@ namespace MinhTuan.Service.Services.OrderService
                                 TotalAmount = entityTbl.TotalAmount,
                                 ShippingCost = entityTbl.ShippingCost,
                                 VoucherId = entityTbl.VoucherId,
-                                CartId = entityTbl.CartId,
+                                CartId = entityTbl.CartId != null ? entityTbl.CartId : Guid.Empty,
                                 CreatedDate = entityTbl.CreatedDate,
                                 IsCancelled = entityTbl.IsCancelled,
                                 ReasonCancelled = entityTbl.ReasonCancelled,
@@ -434,6 +434,16 @@ namespace MinhTuan.Service.Services.OrderService
             {
                 throw;
             }
+        }
+
+        public async Task<bool> UpdateCancelProductVariant(Guid id, int quantity)
+        {
+            var productVariant = await _productVariantRepository.GetByIdAsync(id);
+            productVariant.StockQuantity += quantity;
+            _productVariantRepository.Update(productVariant);
+          //  await _unitOfWork.SaveChangesAsync();
+            return true;
+
         }
     }
 }

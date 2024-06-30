@@ -14,5 +14,6 @@ namespace MinhTuan.Domain.DTOs.ProductDTO
         public Guid ColorId { get; set; }
         public float Price { get; set; }
         public int StockQuantity { get; set; }
+        public bool? Changeable { get; set; }
     }
 }

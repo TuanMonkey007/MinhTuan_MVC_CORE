@@ -40,23 +40,38 @@ namespace MinhTuan.API.Controllers
                 var newCartItem = new CartItem() { CartId = newCart.Id, Quantity = model.Quantity, ProductVariantId = model.ProductVariantId };
                 await _cartItemService.CreateAsync(newCartItem);
                 response.Message = newCartItem.CartId.ToString();
+                
             }
             else
             {
-                var check = _cartItemService.FindByAsync(x => x.ProductVariantId.Equals(model.ProductVariantId) && x.IsDelete !=true);
-                await check;
-                if (check.Result.Any())
+                //Kiểm tra xem cartId còn hợp lệ không
+                var checkCart =await _cartService.FindByAsync(x => x.Id.Equals((Guid)model.CartId) && x.IsDelete != true);
+                if(checkCart.Count() == 0)
                 {
-                    var updateCartItem = check.Result.FirstOrDefault();
-                    updateCartItem.Quantity += model.Quantity;
-                    await _cartItemService.UpdateAsync(updateCartItem);
-                    response.Message = updateCartItem.CartId.ToString();
-                    return Ok(response);
+                    var newCart = new Cart() { UserId = Guid.Empty, IsOrder = false };
+                    await _cartService.CreateAsync(newCart);
+                    //Thêm mới
+                    var newCartItem = new CartItem() { CartId = newCart.Id, Quantity = model.Quantity, ProductVariantId = model.ProductVariantId };
+                    await _cartItemService.CreateAsync(newCartItem);
+                    response.Message = newCartItem.CartId.ToString();
                 }
-                //Thêm mới
-                var newCartItem = new CartItem() { CartId = (Guid)model.CartId, Quantity = model.Quantity, ProductVariantId = model.ProductVariantId };
-                await _cartItemService.CreateAsync(newCartItem);
-                response.Message = newCartItem.CartId.ToString();
+                else {
+                    var check = _cartItemService.FindByAsync(x => x.ProductVariantId.Equals(model.ProductVariantId) && x.IsDelete != true);
+                    await check;
+                    if (check.Result.Any())
+                    {
+                        var updateCartItem = check.Result.FirstOrDefault();
+                        updateCartItem.Quantity += model.Quantity;
+                        await _cartItemService.UpdateAsync(updateCartItem);
+                        response.Message = updateCartItem.CartId.ToString();
+                        return Ok(response);
+                    }
+                    //Thêm mới
+                    var newCartItem = new CartItem() { CartId = (Guid)model.CartId, Quantity = model.Quantity, ProductVariantId = model.ProductVariantId };
+                    await _cartItemService.CreateAsync(newCartItem);
+                    response.Message = newCartItem.CartId.ToString();
+                }
+                
             }
             
             return Ok(response);

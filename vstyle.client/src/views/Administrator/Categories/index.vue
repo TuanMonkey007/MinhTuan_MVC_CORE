@@ -106,7 +106,7 @@
       </a-col>
     </a-row>
   </transition>
-  <ModalCreate @addSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalCreate" />
+  <ModalCreate @addSuccess="fetchDataAfterCreated()" ref="modalCreate" />
   <ModalUpdate @updateSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalUpdate" />
 </template>
 <script>
@@ -227,6 +227,29 @@
           this.pagination.pageSize,
           this.formSearch
         );
+      },
+      async fetchDataAfterCreated() {
+        this.loadingTable = true;
+        var searchParam = {
+     
+          pageIndex: 1,
+          pageSize: this.pagination.pageSize,
+          sortQuery: "createdDate desc",
+        };
+
+        try {
+          const response = await APIService.post(
+            "/category/get-data-by-page",
+            searchParam
+          );
+          this.dataSourceTable = response.data.data.items;
+          this.pagination.total = response.data.data.totalCount;
+          this.pagination.current = response.data.data.pageIndex;
+          this.pagination.pageSize = response.data.data.pageSize;
+        } catch (error) {
+          message.error(error);
+        }
+        this.loadingTable = false;
       },
       async fetchData(pageIndex, pageSize, params) {
         this.loadingTable = true;

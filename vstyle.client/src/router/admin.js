@@ -89,6 +89,12 @@ const adminRouter=[
                 component:()=>import("../views/Administrator/Banners/index.vue"),
                 meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF], title: "Quản lý banner" }
             },
+            {
+                path:"PaymentInfo",
+                name:"PaymentInfoHome",
+                component:()=>import("../views/Administrator/PaymentInfos/index.vue"),
+                meta: { requiresAuth: true, roles: [Role.ADMIN, Role.STAFF], title: "Quản lý thông tin thanh toán" }
+            },
            
         ]
     }

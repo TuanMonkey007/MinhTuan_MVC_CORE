@@ -13,6 +13,7 @@ using MinhTuan.Service.Core.Services;
 using MinhTuan.Service.SearchDTO;
 using MinhTuan.Service.Services.AccountService;
 using MinhTuan.Service.Services.CategoryService;
+using MinhTuan.Service.Services.DataCategoryService;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
@@ -25,16 +26,19 @@ namespace MinhTuan.API.Controllers
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICategoryService _categoryService;
-
+        private readonly IDataCategoryService _dataCategoryService ;
         public CategoryController(
              IMapper mapper,
                IHttpContextAccessor httpContextAccessor,
-               ICategoryService categoryService
+               ICategoryService categoryService,
+               IDataCategoryService dataCategoryService 
              )
         {
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
             _categoryService = categoryService;
+            _dataCategoryService = dataCategoryService;
+
         }
         [HttpPost("get-data-by-page")]
         public async Task<IActionResult> GetDataByPage([FromBody] CategorySearchDTO searchDTO)
@@ -139,7 +143,13 @@ namespace MinhTuan.API.Controllers
                     serverResponse.Message = "Không tìm thấy dữ liệu";
                     serverResponse.Status = "Fail";
                     return Ok(serverResponse);
-               }
+                }
+                if(_dataCategoryService.FindByAsync(x => x.ParentId.ToString() == id.ToString() &&x.IsDelete != true ).Result.Count() > 0)
+                {
+                    serverResponse.Message = "Không thể xóa dữ liệu này";
+                    serverResponse.Status = "Fail";
+                    return Ok(serverResponse);
+                }
                 await _categoryService.SoftDeleteAsync(data);
                 return Ok(serverResponse);
 

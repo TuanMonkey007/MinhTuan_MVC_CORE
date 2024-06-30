@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using MinhTuan.Domain.Core.DTO;
 using MinhTuan.Domain.DTOs.AccountDTO;
+using MinhTuan.Domain.Entities;
 using MinhTuan.Domain.Helper.Pagination;
+using MinhTuan.Service.Core.Services;
 using MinhTuan.Service.SearchDTO;
 using System;
 using System.Collections.Generic;
@@ -13,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace MinhTuan.Service.Services.AccountService;
 
-public interface IAccountService
+public interface IAccountService:IService<AppUser>
 {
     public ResponseWithDataDto<PagedList<UserDTO>> GetDataByPage(AccountSearchDTO search);
     public Task<ResponseWithDataDto<List<string>>> GetRoleByIdAsync(Guid id);

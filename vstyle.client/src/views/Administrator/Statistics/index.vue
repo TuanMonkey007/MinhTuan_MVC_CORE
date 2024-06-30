@@ -2,7 +2,7 @@
   <div style="min-height: 100vh">
     <transition name="route" mode="out-in" appear>
       <a-row style="justify-content: space-evenly;">
-        <a-col :xs="20" :md="10" :lg="5" :xl="5" style="margin: 15px;">
+        <a-col :xs="20" :md="10" :lg="10" :xl="5" style="margin: 15px;">
           <a-card :loading="isLoadingCard" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.08);">
             <a-row :gutter="20" justify="space-around">
               <a-col :span="6"
@@ -21,7 +21,7 @@
 
           </a-card>
         </a-col>
-        <a-col :xs="20" :md="10" :lg="5" :xl="5" style="margin: 15px;">
+        <a-col :xs="20" :md="10" :lg="10" :xl="5" style="margin: 15px;">
           <a-card :loading="isLoadingCard" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.08);">
             <a-row :gutter="20" justify="space-around">
               <a-col :span="6"
@@ -42,7 +42,7 @@
           </a-card>
         </a-col>
 
-        <a-col :xs="20" :md="10" :lg="5" :xl="5" style="margin: 15px;">
+        <a-col :xs="20" :md="10" :lg="10" :xl="5" style="margin: 15px;">
           <a-card :loading="isLoadingCard" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.08);">
             <a-row :gutter="20" justify="space-around">
               <a-col :span="6"
@@ -63,7 +63,7 @@
           </a-card>
         </a-col>
 
-        <a-col :xs="20" :md="10" :lg="5" :xl="5" style="margin: 15px;">
+        <a-col :xs="20" :md="10" :lg="10" :xl="5" style="margin: 15px;">
           <a-card :loading="isLoadingCard" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.08);">
             <a-row :gutter="20" justify="space-around">
               <a-col :span="6"
@@ -127,7 +127,7 @@
     <!-- Table sản phẩm bán chạy -->
     <transition name="route" mode="in-out" appear>
       <a-row justify="center">
-        <a-col :xs="22" :sm="22" :md="16" :lg="16" :xl="16" >
+        <a-col :xs="22" :sm="22" :md="18" :lg="18" :xl="18" >
           <a-card  title="Top sản phẩm bán chạy">
             <template #extra>
               <a-range-picker :placeholder="['Ngày bắt đầu','Ngày kết thúc']" v-model:value="rangeTimeTopSelling" format="YYYY-MM-DD"
