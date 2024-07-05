@@ -9,6 +9,14 @@
             <a-form ref="formRef" :model="product" layout="vertical">
                 <a-row :gutter="30">
                     <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+                        <a-form-item label="Hiển thị" name="isDisplay">
+                            <a-radio-group v-model:value="product.isDisplay" :rules="[{required: true, message:'Chọn trạng thái hiển thị'}]">
+                                <a-radio :value="true">Hiển thị</a-radio>
+                                <a-radio :value="false">Ẩn</a-radio>
+                            </a-radio-group>
+                        </a-form-item>
+                    </a-col>
+                    <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
                         <a-form-item ref="code" label="Mã sản phẩm" name="code" :rules="[
                             {
                                 required: true,
@@ -25,7 +33,7 @@
                             <a-input v-model:value="product.code" @input="formatInput" />
                         </a-form-item>
                     </a-col>
-                    <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+                    <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
                         <a-form-item ref="name" label="Tên sản phẩm" name="name" :rules="[{
                             required: true,
                             message: 'Tên sản phẩm là bắt buộc',
@@ -143,6 +151,7 @@
     import { ref, reactive } from "vue";
     import { message, notification } from "ant-design-vue";
     import { Date } from "core-js";
+    import MyBase64UploadAdapterPlugin from "@/helpers/UploadAdapter";
 
     export default {
 
@@ -179,7 +188,8 @@
                 code: '',
                 price: 0,
                 description: '',
-                listCategory: []
+                listCategory: [],
+                isDisplay: true
             })
             const categoryOptions = ref([]);
 
@@ -214,8 +224,10 @@
                     toolbar: [
                         'heading', '|',
                         'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|',
-                        'undo', 'redo'
+                        'imageUpload', 'mediaEmbed', 'undo', 'redo',
+                
                     ],
+                    extraPlugins: [MyBase64UploadAdapterPlugin], // Add the Base64 upload adapter plugin
                 
                 }
             }
@@ -283,6 +295,7 @@
                 this.product.name = res_getbyid.data.data.items[0].name
                 this.product.code = res_getbyid.data.data.items[0].code
                 this.product.price = res_getbyid.data.data.items[0].price
+                this.product.isDisplay = res_getbyid.data.data.items[0].isDisplay
                 this.product.description = res_getbyid.data.data.items[0].description
                 this.thumbnail = res_getbyid.data.data.items[0].thumbnail
                 this.thumbnailBase64 = res_getbyid.data.data.items[0].thumbnailBase64
@@ -372,7 +385,7 @@
                     formData.append('name', this.product.name);
                     formData.append('description', this.product.description);
                     formData.append('price', this.product.price);
-
+                    formData.append('isDisplay', this.product.isDisplay);
                     if (this.fileListThumbnail.length > 0 && this.fileListThumbnail[0].originFileObj != null) {
                         formData.append('thumbnailFile', this.fileListThumbnail[0].originFileObj);
                     }

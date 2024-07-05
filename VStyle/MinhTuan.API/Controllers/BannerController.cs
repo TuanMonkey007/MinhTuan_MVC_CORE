@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using MinhTuan.API.Helper;
@@ -31,6 +32,7 @@ public class BannerController : Controller
     }
 
     [HttpPost("create")]
+    [Authorize]
     public async Task<IActionResult> Create([FromForm] BannerViewModel model)
     {
         var serverResponse = new ResponseWithMessageDto() { Message = "Tạo banner mới thành công" };
@@ -118,6 +120,7 @@ public class BannerController : Controller
     }
 
     [HttpDelete("soft-delete/{id}")]
+    [Authorize]
     public async Task<IActionResult> SoftDelete(Guid id)
     {
         var serverResponse = new ResponseWithMessageDto() { Message = "Xóa thành công" };
@@ -180,6 +183,7 @@ public class BannerController : Controller
     }
 
     [HttpPut("update/{id}")]
+    [Authorize]
     public async Task<IActionResult> Update(Guid id , [FromForm] BannerViewModel model)
     {
         var serverResponse = new ResponseWithMessageDto() { Message = "Cập nhật thành công" };

@@ -18,5 +18,6 @@ namespace MinhTuan.Service.SearchDTO
         public string? CategoryCode_Filter { get; set; }
         public Guid[]? Size_Filter { get; set; }
         public Guid[]? Color_Filter { get; set; }
+        public bool? IsDisplay_Filter { get; set; }
     }
 }

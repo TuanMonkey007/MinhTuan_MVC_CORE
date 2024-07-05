@@ -259,7 +259,7 @@
       marginTop: '64px',
       justifyContent: 'center',
       minHeight: '500px',
-      backgroundColor: '#f5f5f5',
+      backgroundColor: '#FFF8F3',
 
     }">
       <router-view></router-view>
@@ -459,6 +459,7 @@
 
   } from "@ant-design/icons-vue";
   import { message, notification } from "ant-design-vue";
+import APIService from '@/helpers/APIService';
 
   export default {
     name: "LayoutCustomer",
@@ -514,14 +515,18 @@
       },
       async searchImage(base64Image) {
         try {
-
+          const resCertain = await APIService.get(`datacategory/get-data-by-code-and-parent-code/CERTAINTY/CAU_HINH_HE_THONG`);
+          const certaintyData = resCertain.data.data.name;
+          const ResWithLimit = await APIService.get(`datacategory/get-data-by-code-and-parent-code/WITH_LIMIT/CAU_HINH_HE_THONG`);
+          const withLimit = ResWithLimit.data.data.name;
+          console.log("Độ tương đồng:",certaintyData)
           const resImage = await this.client.graphql.get()
             .withClassName('ProductImage')
             .withFields(['image', 'path', '_additional { certainty}'])
-            .withNearImage({ image: base64Image, certainty: 0.8 })
-            .withLimit(5)
+            .withNearImage({ image: base64Image, certainty: certaintyData })
+            .withLimit(withLimit)
             .do();
-
+         
           resImage.data.Get.ProductImage.sort((a, b) => b._additional.certainty - a._additional.certainty);
           var imagePaths = []; // Tạo một mảng trống để lưu trữ các imagePath
 
@@ -552,7 +557,10 @@
 
 
           } else {
-            console.error('Không tìm thấy hình ảnh sản phẩm nào.');
+            this.$router.push({
+              name: 'ResultImageSearch',
+              query: { imagePaths: JSON.stringify(imagePaths) }
+            });
           }
 
         } catch (error) {
@@ -625,21 +633,26 @@
     beforeMount() {
       this.checkLoginStatus();
     },
-    mounted() {
+   async mounted() {
+     
       this.checkLoginStatus();
       window.addEventListener("scroll", this.handleScroll);
       this.apiUrl = process.env.VUE_APP_URL + 'Account/valid-upload';
       this.isSynchronizing = true
-      //  this.client = weaviate.client({
+      this.client = weaviate.client({
+        scheme: 'http',
+        host: 'doan-vstyle.xyz:8080'
+      });
+      // this.client = weaviate.client({
+      //   scheme: 'http',
+      //   host: 'localhost:8081/weaviate'
+      // });
+      //Đây là cấu hình docker
+         //  this.client = weaviate.client({
       //   scheme: 'http',
       //   host: 'localhost:8080'
       // });
       //đay là cấu hình dev
-      this.client = weaviate.client({
-        scheme: 'http',
-        host: 'localhost:8081/weaviate'
-      });
-      //Đây là cấu hình docker
     },
     setup() {
 

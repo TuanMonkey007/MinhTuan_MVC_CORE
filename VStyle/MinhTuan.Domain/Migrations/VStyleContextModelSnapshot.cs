@@ -656,7 +656,7 @@ namespace MinhTuan.Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CartId")
+                    b.Property<Guid?>("CartId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Code")
@@ -906,6 +906,9 @@ namespace MinhTuan.Domain.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsDisplay")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")

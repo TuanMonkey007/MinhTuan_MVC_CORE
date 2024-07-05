@@ -28,7 +28,7 @@
     <div v-if="isLoading">
         <a-skeleton :loading="isLoading" :paragraph="{ rows: 20 }" />
     </div>
-    <a-row v-if="!isLoading" style="align-items: top" :gutter="20">
+    <a-row v-if="!isLoading" style="align-items: top" :gutter="20" justify="center">
         <a-col :xs="0" :sm="0" :md="0" :lg="3" :xl="3" :xxl="3" style="margin-left: 30px">
             <swiper v-if="mainImages.length > 0" @swiper="setThumbsSwiper" :slidesPerView="4" :loop="true"
                 :watchSlidesProgress="true" :modules="modules" class="mySwiper" direction="vertical" freeMode="true">
@@ -54,8 +54,8 @@
 
         </a-col>
 
-        <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12" :xxl="12">
-            <a-row>
+        <a-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8" :xxl="8">
+            <a-row style="border: 0.5px solid;border-radius: 10px;padding: 30px;margin: 10px">
                 <a-col :span="24">
                     <h3 style="font-size: 24px; font-weight: 600;">{{ this.productInfo.name }}</h3>
                     <h4
@@ -74,34 +74,27 @@
                     </a-radio-group>
                 </a-col>
                 <a-col :span="24">
-                    <a-row justify="start" :gutter="[16, 16]">
-                        <a-col :span="24">
+                   
+                      
                             <h4>Chọn size: <span style="font-weight: 500;"> {{ getSelectedSizeLabel() }}
                                 </span></h4>
 
                             <a-radio-group v-model:value="selectedSize" :options="productSizeOptions"
                                 button-style="solid" optionType="button" @change="handleSizeChange">
                             </a-radio-group>
-                        </a-col>
-                        <a-col :span="8" style="display: flex; align-items: flex-end;">
-                            <a-tooltip color="#de2e21" :title="'Chọn lại màu'" placement="right">
-                            <a-button @click="handleResetSizeColor"> <font-awesome-icon
+                            <a-tooltip color="#de2e21"  :title="'Chọn lại'" placement="right">
+                            <a-button style="margin-left: 10px" @click="handleResetSizeColor"> <font-awesome-icon
                                     :icon="['fas', 'arrows-rotate']" /></a-button>
                                     </a-tooltip>    
-                        </a-col>
-                    </a-row>
-
-
-
-
                 </a-col>
-            </a-row>
-            <a-row>
-                <a-col :span="24" style="margin-top: 10px; margin-bottom: -10px">
+                <a-col :span="24">
+                    <a-row :gutter="[16,16]">
+                <a-col :span="12" style="margin-top: 10px; margin-bottom: -10px">
                     <span>Số lượng: <span style="font-weight: 500;"> {{ this.quantity }} </span></span>
                 </a-col>
-            </a-row>
-            <a-row justify="flex-start" :gutter="[16, 16]" style="margin-top: 20px;">
+                <a-col :span="12" style="display: flex; align-items: flex-end;">
+                            
+                        </a-col>
                 <a-col :xs="24" :sm="24" :md="5" :lg="5" :xl="5">
                     <a-input-number v-model:value="quantity" min="1" max="10" size="small" :controls="false"
                         class="inputQuantity">
@@ -113,12 +106,19 @@
                         </template>
                     </a-input-number>
                 </a-col>
-                <a-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
+
+            </a-row>
+                    </a-col>    
+            </a-row>
+          
+            <a-row justify="center" :gutter="[16, 16]" style="margin-top: 20px;">
+            
+                <a-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
                     <a-button @click="handleAddToCart" class="btn-add-to-cart">
                         <font-awesome-icon icon="fa-solid fa-cart-plus" style="color: #ad2b1f;" />
                     </a-button>
                 </a-col>
-                <a-col :xs="24" :sm="24" :md="10" :lg="10" :xl="10">
+                <a-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
                     <a-button type="primary" @click="handleBuyNow" class="btn-buy-now">Mua ngay</a-button>
                 </a-col>
             </a-row>

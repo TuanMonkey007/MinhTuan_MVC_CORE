@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MinhTuan.API.Helper;
 using MinhTuan.API.ViewModels.CategoryViewModel;
@@ -102,6 +103,7 @@ namespace MinhTuan.API.Controllers
             return Ok(result);
         }
         [HttpPost("create")]
+        [Authorize]
         public async Task<IActionResult> Create([FromForm] CreateProductViewModel model)
         {
             var serverResponse = new ResponseWithMessageDto() { Message = "Tạo mới thành công" };
@@ -173,6 +175,7 @@ namespace MinhTuan.API.Controllers
         }
 
         [HttpPut("update/{id}")]
+        [Authorize]
         public async Task<IActionResult> Update(Guid id, [FromForm] CreateProductViewModel model)
         {
             var serverResponse = new ResponseWithMessageDto() { Message = "Cập nhật thành công" };
@@ -224,7 +227,7 @@ namespace MinhTuan.API.Controllers
                 productNeedUpdate.Code = model.Code;
                 productNeedUpdate.Description = model.Description;
                 productNeedUpdate.Price = model.Price;
-              
+                productNeedUpdate.IsDisplay = model.IsDisplay;
                 await _productService.UpdateAsync(productNeedUpdate);
                 await _productService.UpdateProductImageThumbnail(id, thumbnailFileName);//Cập nhật lại ảnh đại diện
                 await _productService.UpdateProductImage(id, listImageFileName);//Cập nhật tất cả ảnh sản phẩm
@@ -241,6 +244,7 @@ namespace MinhTuan.API.Controllers
             return Ok(serverResponse);
         }
         [HttpDelete("soft-delete/{id}")]
+        [Authorize]
         public async Task<IActionResult> SoftDelete(Guid id)
         {
             var serverResponse = new ResponseWithMessageDto() { Message = "Xóa thành công" };
@@ -273,6 +277,7 @@ namespace MinhTuan.API.Controllers
         }
 
         [HttpPut("update-product-variant/{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateProductVariant(Guid id, [FromBody] ListProductVariantViewModal listModel)
         {
             var serverResponse = new ResponseWithMessageDto() { Message = "Cập nhật thành công" };

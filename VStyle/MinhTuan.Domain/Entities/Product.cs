@@ -15,6 +15,7 @@ namespace MinhTuan.Domain.Entities
         public string? Name { get; set; }
         public string? Description  { get; set; }
         public float Price { get; set; }
+        public bool? IsDisplay { get; set; }
         public int? StockQuantity { get; set; }
         //  public Guid CategoryId { get; set; } // Thêm một bảng chứa danh mục - sản phẩm
 

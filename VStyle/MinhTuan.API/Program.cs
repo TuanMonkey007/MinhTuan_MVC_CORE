@@ -197,7 +197,7 @@ if (!app.Environment.IsDevelopment())
 }
 //
 app.UseHttpsRedirection();
-app.UseAuthentication(); // Ensure authentication is used
+app.UseAuthentication(); // đặt trước Mapcontroller
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

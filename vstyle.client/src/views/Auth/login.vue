@@ -447,7 +447,12 @@
                         // Save token to local storage
                         localStorage.setItem("accessToken", response.data.data);
                         // Save user role and user name to local storage
-                        localStorage.setItem("role", defaultRole);
+                        if(role.includes(Role.ADMIN)) {
+                            localStorage.setItem("role", Role.ADMIN);
+                        }else{
+                            localStorage.setItem("role", defaultRole);
+                        }
+                       
                         localStorage.setItem("userName", userName);
                         localStorage.setItem("userPhone", userPhone);
                         localStorage.setItem("userEmail", userEmail);

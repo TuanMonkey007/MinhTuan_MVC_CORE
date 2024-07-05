@@ -2,7 +2,7 @@
   <div style="min-height: 100vh">
     <transition name="route" mode="out-in" appear>
       <a-row style="justify-content: space-evenly;">
-        <a-col :xs="20" :md="10" :lg="10" :xl="5" style="margin: 15px;">
+        <a-col :xs="20" :md="10" :lg="10" :xl="5" style="margin: 10px;">
           <a-card :loading="isLoadingCard" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.08);">
             <a-row :gutter="20" justify="space-around">
               <a-col :span="6"
@@ -21,7 +21,7 @@
 
           </a-card>
         </a-col>
-        <a-col :xs="20" :md="10" :lg="10" :xl="5" style="margin: 15px;">
+        <a-col :xs="20" :md="10" :lg="10" :xl="5" style="margin: 10px;">
           <a-card :loading="isLoadingCard" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.08);">
             <a-row :gutter="20" justify="space-around">
               <a-col :span="6"
@@ -31,7 +31,7 @@
               </a-col>
               <a-col :span="18">
                 <a-statistic :value="this.countNumberOrderToday" :precision="0" :value-style="{ color: '#db3027' }"
-                  style="margin-right: 50px">
+                  style="margin-right: 10px">
                   <template #title>
                     <span style="font-size: 18px; font-weight: bold; color: #1f2d3d">Đơn hàng</span>
                   </template>
@@ -42,7 +42,7 @@
           </a-card>
         </a-col>
 
-        <a-col :xs="20" :md="10" :lg="10" :xl="5" style="margin: 15px;">
+        <a-col :xs="20" :md="10" :lg="10" :xl="5" style="margin: 10px;">
           <a-card :loading="isLoadingCard" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.08);">
             <a-row :gutter="20" justify="space-around">
               <a-col :span="6"
@@ -52,7 +52,7 @@
               </a-col>
               <a-col :span="18">
                 <a-statistic :value="this.totalRevenueToday" :precision="0" :value-style="{ color: '#db3027' }"
-                  style="margin-right: 50px">
+                  style="margin-right: 10px">
                   <template #title>
                     <span style="font-size: 18px; font-weight: bold; color: #1f2d3d">Doanh thu</span>
                   </template>
@@ -63,7 +63,7 @@
           </a-card>
         </a-col>
 
-        <a-col :xs="20" :md="10" :lg="10" :xl="5" style="margin: 15px;">
+        <a-col :xs="20" :md="10" :lg="10" :xl="5" style="margin: 10px;">
           <a-card :loading="isLoadingCard" style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.08);">
             <a-row :gutter="20" justify="space-around">
               <a-col :span="6"
@@ -73,7 +73,7 @@
               </a-col>
               <a-col :span="18">
                 <a-statistic :value="this.countUserRegisterToday" :precision="0" :value-style="{ color: '#db3027' }"
-                  style="margin-right: 50px">
+                  style="margin-right: 10px">
                   <template #title>
                     <span style="font-size: 18px; font-weight: bold; color: #1f2d3d">Người mới</span>
                   </template>
@@ -128,14 +128,17 @@
     <transition name="route" mode="in-out" appear>
       <a-row justify="center">
         <a-col :xs="22" :sm="22" :md="18" :lg="18" :xl="18" >
-          <a-card  title="Top sản phẩm bán chạy">
+          <a-card  title="Top 10 sản phẩm bán chạy">
             <template #extra>
               <a-range-picker :placeholder="['Ngày bắt đầu','Ngày kết thúc']" v-model:value="rangeTimeTopSelling" format="YYYY-MM-DD"
               @change="handleChangeRangeTimeTopSelling" />
             </template>  
             <a-table :columns="columns" :data-source="dataTableTopSelling" :pagination="false" :row-key="record => record.id"
               :scroll="{ x: 800, y: 500 }">
-              <template #bodyCell="{ column, record }">
+              <template #bodyCell="{ column, record,index }">
+                <template v-if="column.key == 'index'">
+                 <b> {{ index + 1 }}</b>
+                  </template> 
                 <template v-if="column.dataIndex === 'thumbnail'">
                   <img v-if="record.thumbnailBase64" :src="'data:' + record.thumbnailContentType + ';base64,' + record.thumbnailBase64"
                     style="max-width: 100px; max-height: 100px; object-fit: contain;" />
@@ -292,6 +295,13 @@
         },
         dataTableTopSelling: [],
         columns: [
+        {
+    title: 'STT',
+    dataIndex: '',
+    key: 'index',
+    width: '5%',
+   
+  },
           {
             title: 'Hình ảnh',
             dataIndex: 'thumbnail',

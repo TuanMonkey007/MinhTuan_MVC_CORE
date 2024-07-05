@@ -9,6 +9,7 @@ using System.Text;
 using MathNet.Numerics.LinearAlgebra;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Net.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MinhTuan.API.Controllers
 {
@@ -25,10 +26,11 @@ namespace MinhTuan.API.Controllers
             _httpClientFactory = httpClientFactory;
             _httpClient = _httpClientFactory.CreateClient();
 
-            _httpClient.BaseAddress = new Uri("http://weaviate:8080");
+            _httpClient.BaseAddress = new Uri("http://doan-vstyle.xyz:8080");
            //  _httpClient.BaseAddress = new Uri("http://localhost:8080");
         }
         [HttpPost("reload-image-to-model")]
+        [Authorize]
         public async Task<IActionResult> ReloadData()
         {
             var imagesDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "Product");
@@ -60,7 +62,7 @@ namespace MinhTuan.API.Controllers
 
                 promises.Add(Task.Run(async () =>
                 {
-                    var request = new HttpRequestMessage(HttpMethod.Post, "http://weaviate:8080/v1/objects") { Content = content };
+                    var request = new HttpRequestMessage(HttpMethod.Post, "http://doan-vstyle.xyz:8080/v1/objects") { Content = content };
                    // var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:8080/v1/objects") { Content = content };
                     var response = await _httpClient.SendAsync(request);
 
@@ -78,6 +80,7 @@ namespace MinhTuan.API.Controllers
             return Ok("Đã load thành công dữ liệu.");
         }
         [HttpGet("config-schema-module")]
+        [Authorize]
         public async Task<IActionResult> ConfigureSchemaAndModule()
         {
 

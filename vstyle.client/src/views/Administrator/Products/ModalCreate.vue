@@ -8,6 +8,15 @@
             <a-form ref="formRef" :model="product" layout="vertical">
                 <a-row :gutter="30">
                     <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+                        <a-form-item label="Hiển thị" name="isDisplay">
+                            <a-radio-group v-model:value="product.isDisplay" :rules="[{required: true, message:'Chọn trạng thái hiển thị'}]">
+                                <a-radio :value="true">Hiển thị</a-radio>
+                                <a-radio :value="false">Ẩn</a-radio>
+                            </a-radio-group>
+                        </a-form-item>
+                    </a-col>
+                    <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+                       
                         <a-form-item ref="code" label="Mã sản phẩm" name="code" :rules="[
                             {
                                 required: true,
@@ -24,7 +33,8 @@
                             <a-input v-model:value="product.code" @input="formatInput" />
                         </a-form-item>
                     </a-col>
-                    <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+                   
+                    <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
                         <a-form-item ref="name" label="Tên sản phẩm" name="name" :rules="[{
                             required: true,
                             message: 'Tên sản phẩm là bắt buộc',
@@ -134,6 +144,7 @@
     </div>
 </template>
 <script>
+import MyBase64UploadAdapterPlugin from "@/helpers/UploadAdapter";
     import { computed } from "vue";
     import APIService from "@/helpers/APIService"
     import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -170,6 +181,7 @@
                 return isJpgOrPng && isLt2M;
             };
             const product = reactive({
+                isDisplay: true,
                 name: '',
                 code: '',
                 price: 0,
@@ -205,9 +217,11 @@
                     toolbar: [
                         'heading', '|',
                         'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|',
+                        'imageUpload', 'mediaEmbed', '|',
                         'undo', 'redo'
                     ],
-               
+                    extraPlugins: [MyBase64UploadAdapterPlugin], // Add the Base64 upload adapter plugin
+                    
                 }
             }
         },
@@ -295,6 +309,7 @@
                     formData.append('name', this.product.name);
                     formData.append('description', this.product.description);
                     formData.append('price', this.product.price);
+                    formData.append('isDisplay', this.product.isDisplay);
 
                     if (this.fileListThumbnail.length > 0 && this.fileListThumbnail[0].originFileObj != null) {
                         formData.append('thumbnailFile', this.fileListThumbnail[0].originFileObj);

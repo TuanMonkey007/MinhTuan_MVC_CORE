@@ -165,6 +165,7 @@ namespace MinhTuan.Service.Services.ProductService
                                 Price = product.Price,
                                 StockQuantity = product.StockQuantity,
                                 CreatedDate = product.CreatedDate,
+                                IsDisplay = product.IsDisplay
                                
                                
                             };
@@ -172,6 +173,10 @@ namespace MinhTuan.Service.Services.ProductService
 
                 if (searchDTO != null)
                 {
+                    if(searchDTO.IsDisplay_Filter != null)
+                    {
+                        query = query.Where(x => x.IsDisplay == searchDTO.IsDisplay_Filter);
+                    }
                     if (!string.IsNullOrEmpty(searchDTO.Name_Filter))
                     {
                         var idSearch = searchDTO.Name_Filter.ToString().RemoveAccentsUnicode();
@@ -613,7 +618,7 @@ namespace MinhTuan.Service.Services.ProductService
                 var query = (from product in _productRepository.GetQueryable()
                              join productImage in _productImageRepository.GetQueryable()
                              on product.Id equals productImage.ProductId
-                             where product.IsDelete != true && imagePathList.Contains(productImage.Path)
+                             where product.IsDelete != true && imagePathList.Contains(productImage.Path) && product.IsDisplay == true
                              select product)
                              .Distinct(); // Lấy các sản phẩm duy nhất
 

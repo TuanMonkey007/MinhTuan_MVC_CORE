@@ -225,7 +225,8 @@
                 const response = await APIService.post('product/get-data-by-page', {
                     pageIndex: 1,
                     pageSize:30,
-                    category_Filter: [this.defaultGender]
+                    category_Filter: [this.defaultGender],
+                    isDisplay_Filter: true
                 });
                 this.bestSellerImages = response.data.data.items;
                 this.isLoading = false;
@@ -277,6 +278,7 @@
                         sortQuery: this.selectedSortType,
                         size_Filter: this.selectedSize,
                         color_Filter: this.selectedColor,
+                        isDisplay_Filter: true
                     }
                     if (this.selectedCategory.length == 0) {
                         payload.category_Filter = [this.defaultGender]

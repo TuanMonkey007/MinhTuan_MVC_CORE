@@ -93,6 +93,7 @@ namespace MinhTuan.API.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize]
         public async Task<IActionResult> Create([FromBody] CreateVoucherViewModel model)
         {
             var serverResponse = new ResponseWithMessageDto() { Message = "Tạo voucher mới thành công" };
@@ -123,6 +124,7 @@ namespace MinhTuan.API.Controllers
             return Ok(serverResponse);
         }
         [HttpDelete("soft-delete/{id}")]
+        [Authorize]
         public async Task<IActionResult> SoftDelete(Guid id)
         {
             var serverResponse = new ResponseWithMessageDto() { Message = "Xóa thành công" };

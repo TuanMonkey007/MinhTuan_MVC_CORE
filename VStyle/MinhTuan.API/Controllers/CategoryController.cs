@@ -7,6 +7,7 @@ using MinhTuan.Domain.Core.DTO;
 using MinhTuan.Domain.DTOs.AccountDTO;
 using MinhTuan.Domain.DTOs.CategoryDTO;
 using MinhTuan.Domain.Entities;
+using MinhTuan.Domain.Helper.Constants;
 using MinhTuan.Domain.Helper.Pagination;
 using MinhTuan.Service.Core.Services;
 
@@ -96,6 +97,8 @@ namespace MinhTuan.API.Controllers
 
 
         [HttpPost("create")]
+        //  [Authorize(Roles = AppRole.ADMINISTRATOR)]
+        [Authorize]
         public async Task<IActionResult> Create([FromBody] CreateCategoryViewModel model)
         {
             var serverResponse = new ResponseWithMessageDto() {Message = "Tạo danh mục mới thành công" };
@@ -131,6 +134,7 @@ namespace MinhTuan.API.Controllers
         }
 
         [HttpDelete("soft-delete/{id}")]
+        [Authorize]
         public async Task<IActionResult> SoftDelete(Guid id)
         {
             var serverResponse = new ResponseWithMessageDto() { Message = "Xóa thành công" };

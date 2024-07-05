@@ -59,7 +59,12 @@
                         <a-input v-model:value="orderInfo.fullName" placeholder="Nhập họ tên người nhận" />
                     </a-form-item>
                     <a-form-item label="Số điện thoại" name="phoneNumber"
-                        :rules="[{ required: true, message: 'Nhập số điện thoại người nhận' }]">
+                        :rules="[{ required: true, message: 'Nhập số điện thoại người nhận' },
+                            {
+                                            pattern: /^[0-9]{10}$/,
+                                            message: 'Số điện thoại không hợp lệ!',
+                                        },
+                        ]">
                         <a-input v-model:value="orderInfo.phoneNumber" placeholder="Nhập số điện thoại" />
                     </a-form-item>
 

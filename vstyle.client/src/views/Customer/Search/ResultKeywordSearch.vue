@@ -128,7 +128,8 @@
                       const response = await APIService.post("product/get-data-by-page", {
                         pageIndex: this.pagination.current,
                         pageSize: this.pagination.pageSize,
-                        name_Filter: this.$route.params.keyword
+                        name_Filter: this.$route.params.keyword,
+                        isDisplay_Filter: true
                       })
                         this.bestSellerImages = response.data.data.items;
                         this.isLoading = false;

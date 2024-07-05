@@ -82,6 +82,7 @@ namespace MinhTuan.API.Controllers
 
         [HttpPost]
         [Route("get-all-user")]
+    
         public async Task<IActionResult> GetDataByPage([FromBody] AccountSearchDTO searchDTO)
         {
             try
@@ -216,6 +217,7 @@ namespace MinhTuan.API.Controllers
 
         [HttpPost]
         [Route("Login")]
+      
         public async Task<IActionResult> Login([FromBody] LogInViewModel model)
         {
             var response = new ResponseWithDataDto<string> { Message = "Đăng nhập thành công" };
@@ -283,6 +285,7 @@ namespace MinhTuan.API.Controllers
         }
 
         [HttpDelete("delete/{id}")]
+        [Authorize]
         public async Task<IActionResult> Delete(Guid id)
         {
             var serverResponse = new ResponseWithMessageDto() { Message = "Xóa thành công" };
@@ -595,7 +598,7 @@ namespace MinhTuan.API.Controllers
 
 
         [HttpGet("get-roles/{id}")]
-      //  [Authorize]
+        [Authorize]
         public async Task<IActionResult> GetRoleByID(Guid id)
         {
 
@@ -713,6 +716,7 @@ namespace MinhTuan.API.Controllers
         }
 
         [HttpGet("count-user-regis-today")]
+        [Authorize]
         public async Task<IActionResult> CountUserRegisToday()
         {
             var response = new ResponseWithDataDto<int>();
@@ -720,6 +724,7 @@ namespace MinhTuan.API.Controllers
             return Ok(response);
         }
         [HttpGet("count-total-user")]
+        [Authorize]
         public async Task<IActionResult> CountTotalUser()
         {
             var response = new ResponseWithDataDto<int>();

@@ -140,16 +140,17 @@
       <a-layout>
         <a-row>
           <a-col :span="24">
-            <a-layout-content style="background-color: #f5f5f5 ;overflow: hidden;">
+            <a-layout-content style="background-color: #FBF8DD ;overflow: hidden;">
               <a-row :gutter="0" >
                 <a-col :xs="0" :sm="0" :md="0" :lg="4" class="menu-column" :xl="4"
                   style="background-color: #2c3e50 ;min-height: 100vh;">
                   <a-row justify="center">
                     <a-col :span="24" style="justify-content: center; display: flex">
                       <div style="padding: 10px 0px 10px 10px;">
+                        <RouterLink :to="{ name: 'AdminProfile' }">
                         <a-avatar v-if="avatarBase64" :src="'data:' + avatarContentType + ';base64,' + avatarBase64"
                           :size="80"></a-avatar>
-                          <a-avatar v-else :size="80"></a-avatar>
+                          <a-avatar v-else :size="80"></a-avatar></RouterLink>  
                       </div>
                    
                     </a-col>

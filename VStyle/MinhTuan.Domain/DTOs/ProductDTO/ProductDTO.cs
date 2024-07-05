@@ -16,7 +16,7 @@ namespace MinhTuan.Domain.DTOs.ProductDTO
         public int? StockQuantity { get; set; }
         public string? Thumbnail { get; set; }
         public string? ThumbnailBase64 { get; set; } // Chuỗi base64 của ảnh
-
+        public bool? IsDisplay { get; set; }
         public string? ThumbnailContentType { get; set; } // Loại nội dung của ảnh (ví dụ: image/jpeg)
         public DateTime? CreatedDate { get; set; }
         public List<Guid>? ListCategory { get; set; }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MinhTuan.API.ViewModels.CategoryViewModel;
@@ -589,6 +590,7 @@ namespace MinhTuan.API.Controllers
 
 
         [HttpGet("get-all-order-today")]
+        [Authorize]
         public async Task<IActionResult> GetAllOrderToday()
         {
             
@@ -600,6 +602,7 @@ namespace MinhTuan.API.Controllers
             return Ok(response);
         }
         [HttpGet("count-order-today")]
+        [Authorize]
         public async Task<IActionResult> CountOrderToday()
         {
 
@@ -618,6 +621,7 @@ namespace MinhTuan.API.Controllers
             return Ok(response);
         }
         [HttpGet("count-order-waiting-confirm")]
+        [Authorize]
         public async Task<IActionResult> CountOrderWaitingConfirm()
         {
 
@@ -629,6 +633,7 @@ namespace MinhTuan.API.Controllers
         }
 
         [HttpGet("get-revenue-today")]
+        [Authorize]
         public async Task<IActionResult> GetRevenueToday()
         {
            
@@ -638,6 +643,7 @@ namespace MinhTuan.API.Controllers
         }
 
         [HttpGet("get-revenue-of-month")]
+        [Authorize]
         public async Task<IActionResult> GetRevenueOfMonth()
         {
             var response = new ResponseWithDataDto<List<RevenueDTO>>();
@@ -645,6 +651,7 @@ namespace MinhTuan.API.Controllers
             return Ok(response);
         }
         [HttpGet("get-revenue-day-to-day/{startDay}/{endDay}")]
+        [Authorize]
         public async Task<IActionResult> GetRevenueDayToDay(DateTime startDay, DateTime endDay)
         {
             var response = new ResponseWithDataDto<List<RevenueDTO>>();
@@ -653,6 +660,7 @@ namespace MinhTuan.API.Controllers
         }
 
         [HttpGet("get-revenue-of-category")]
+        [Authorize]
         public async Task<IActionResult> GetRevenueOfCategory()
         {
             var response = new ResponseWithDataDto<List<RevenueCategoryDTO>>();
@@ -667,6 +675,7 @@ namespace MinhTuan.API.Controllers
             return Ok(response);
         }
         [HttpGet("get-revenue-of-category-day-to-day/{startDay}/{endDay}")]
+        [Authorize]
         public async Task<IActionResult> GetRevenueOfCategoryDayToDay(DateTime startDay, DateTime endDay)
         {
             var response = new ResponseWithDataDto<List<RevenueCategoryDTO>>();
@@ -682,6 +691,7 @@ namespace MinhTuan.API.Controllers
         }
 
         [HttpGet("get-top-product-selling")] //Lấy sản phẩm bán chạy trong tuần
+        [Authorize]
         public async Task<IActionResult> GetTopProductSelling()
         {
             var response = new ResponseWithDataDto<List<ProductTopSellingDTO>>();
@@ -700,6 +710,7 @@ namespace MinhTuan.API.Controllers
         }
 
         [HttpGet("get-top-product-selling-day-to-day/{startDay}/{endDay}")] //Lấy sản phẩm bán chạy trong tuần
+        [Authorize]
         public async Task<IActionResult> GetTopProductSellingDayToDay(DateTime startDay, DateTime endDay)
         {
             var response = new ResponseWithDataDto<List<ProductTopSellingDTO>>();

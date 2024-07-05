@@ -10,6 +10,7 @@ namespace MinhTuan.API.ViewModels.ProductViewModel
         public string Name { get; set; }
         public string? Description { get; set; }
         public float Price { get; set; }
+        public bool? IsDisplay { get; set; }
         public IFormFile? ThumbnailFile { get; set; }
         public List<IFormFile>? ListImageFile { get; set; }
         public List<Guid> ListCategory { get; set; }

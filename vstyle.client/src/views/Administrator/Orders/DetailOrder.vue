@@ -6,13 +6,8 @@
                     <font-awesome-icon :icon="['fas', 'backward']" style="color: white; margin-left: 30px" />
                 </template>
                 <template #title>
-                    <span style="
-              color: white;
-              font-size: 16px;
-              margin-bottom: auto;
-              display: block;
-            ">Quản lý đơn hàng</span>
-                </template>
+          <span style="color: white; font-size: 16px; margin-bottom: auto;display: block;">Chi tiết đơn hàng</span>
+        </template>
                 <template #extra>
                     <a-breadcrumb separator=">" style="margin-right: 30px">
                         <a-breadcrumb-item href="">
@@ -38,8 +33,7 @@
                     <a-row>
                         <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
 
-                            <a-steps v-model:current="currentStep"
-                                :status="this.orderInfo.isCancelled ? 'error' : ''">
+                            <a-steps v-model:current="currentStep" :status="this.orderInfo.isCancelled ? 'error' : ''">
                                 <a-step v-for="(status, index) in orderStatusList" :key="index" :title="status.name"
                                     :disabled="true" />
                             </a-steps>
@@ -80,7 +74,7 @@
                                                     label="Trạng thái">
                                                     <a-tag :color="getColor(orderInfo.isCancelled)">
                                                         {{ orderInfo.isCancelled ? 'Hủy đơn' : (orderInfo.statusName ||
-                                                        'Chưa xác định') }}
+                                                            'Chưa xác định') }}
                                                     </a-tag>
                                                 </a-descriptions-item>
 
@@ -104,7 +98,7 @@
                                                     orderInfo.customerNote }}
                                                 </a-descriptions-item>
                                                 <a-descriptions-item span="24" label="Thời gian đặt">{{
-                                                   formatCreatedDate(orderInfo.createdDate) }}</a-descriptions-item>
+                                                    formatCreatedDate(orderInfo.createdDate) }}</a-descriptions-item>
                                                 <a-descriptions-item span="24"
                                                     label="Đơn vị vận chuyển ">GHN</a-descriptions-item>
                                             </a-descriptions>
@@ -114,8 +108,9 @@
                                                 <a-descriptions-item span="24" label="Phương thức thanh toán"><a-tag
                                                         color="default">{{ orderInfo.paymentMethodName
                                                         }}</a-tag></a-descriptions-item>
-                                                <a-descriptions-item v-if="isVnpay" span="24" label="Trạng thái thanh toán">
-                                                    <a-tag color="green"> {{ this.orderInfo.paymentStatusName}}</a-tag>
+                                                <a-descriptions-item v-if="isVnpay" span="24"
+                                                    label="Trạng thái thanh toán">
+                                                    <a-tag color="green"> {{ this.orderInfo.paymentStatusName }}</a-tag>
                                                 </a-descriptions-item>
                                                 <a-descriptions-item span="24" label="Tổng tiền"><span
                                                         style="color: red">{{
@@ -141,7 +136,8 @@
                                                 :pagination="false" :scroll="{ x: 1000 }">
                                                 <template #bodyCell="{ column, record }">
                                                     <template v-if="column.key == 'price'">
-                                                        <span style="color: red">{{ fomartPrice(record.price) }}&#8363;</span>
+                                                        <span style="color: red">{{ fomartPrice(record.price)
+                                                            }}&#8363;</span>
                                                     </template>
                                                     <template v-if="column.key == 'variant'">
                                                         <a-tag color="green">{{ record.colorName }} | {{ record.sizeName
@@ -172,7 +168,7 @@
 </template>
 <script>
     import dayjs from "dayjs";
-  
+
     import { Modal } from "ant-design-vue";
     import APIService from "@/helpers/APIService";
     import { message, notification } from "ant-design-vue";
@@ -270,20 +266,23 @@
                 previousStep: 0,
             };
         },
-       async mounted() {
-          await  this.fetchOrderInfo();
+        async mounted() {
+            await this.fetchOrderInfo();
             this.fetchOrderItem();
             this.fetchListStatus();
-         
+
 
         },//end mounted
         methods: {
-          
 
+
+            goBack() {
+        this.$router.go(-1); // Điều hướng trở lại trang trước
+      },
             getColor(isCancelled) {
                 return isCancelled ? "red" : "green";
             },
-            
+
             async fetchOrderInfo() {
                 const id = this.$route.params.id;
                 const response = await APIService.get(`order/get-order-info-by-id/${id}`);
@@ -291,7 +290,7 @@
                 if (this.orderInfo.isCancelled) {
                     this.loadingChangeStep = true
                 }
-                if(this.orderInfo.paymentMethodName == 'VNPay'){
+                if (this.orderInfo.paymentMethodName == 'VNPay') {
                     this.isVnpay = true
                 }
 
@@ -311,9 +310,9 @@
                     response = await APIService.get(`datacategory/get-list-by-parent-code/STATUS_COD`);
                 }
                 this.orderStatusList = response.data.data;
-              
-              
-                
+
+
+
                 this.currentStep = this.orderStatusList.findIndex(
                     (item) => item.id == this.orderInfo.status
                 );
@@ -322,8 +321,8 @@
                 return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
             },
             formatCreatedDate(date) {
-        return dayjs(date).format("HH:mm:ss DD/MM/YYYY ");
-      }
+                return dayjs(date).format("HH:mm:ss DD/MM/YYYY ");
+            }
 
 
 

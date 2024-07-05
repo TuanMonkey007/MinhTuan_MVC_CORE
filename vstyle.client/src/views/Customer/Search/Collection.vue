@@ -143,7 +143,8 @@
                     const res = await APIService.post("product/get-data-by-page", {
                         pageIndex: this.pagination.current,
                         pageSize: this.pagination.pageSize,
-                        categoryCode_Filter: this.$route.params.collectionCode
+                        categoryCode_Filter: this.$route.params.collectionCode,
+                        isDisplay_Filter: true
                     })
 
                     this.bestSellerImages = res.data.data.items;

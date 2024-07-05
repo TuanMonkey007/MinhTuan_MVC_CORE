@@ -116,7 +116,7 @@
         async mounted() {
 
             await this.fetchData();
-            console.log("param router ",this.imagePaths)
+
         },//end mounted
         methods: {
             
@@ -128,6 +128,8 @@
             },
             async fetchData() {
                 try {
+                    this.bestSellerImages = [];
+                    this.pagination.total = 0;
                     const imagePaths = JSON.parse(this.imagePaths);
                     var formData = new FormData();
                     if (imagePaths.length > 0) {

@@ -16,6 +16,7 @@ using MinhTuan.Service.Services.ProductService;
 using Newtonsoft.Json;
 using System.IO;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MinhTuan.API.Controllers
 {
@@ -93,6 +94,7 @@ namespace MinhTuan.API.Controllers
 
 
         [HttpPost("create")]
+        [Authorize]
         public async Task<IActionResult> Create([FromForm] CreateArticleViewModel model)
         {
             var serverResponse = new ResponseWithMessageDto() { Message = "Tạo bài viết mới thành công" };
@@ -137,6 +139,7 @@ namespace MinhTuan.API.Controllers
             return Ok(serverResponse);
         }
         [HttpDelete("soft-delete/{id}")]
+        [Authorize]
         public async Task<IActionResult> SoftDelete(Guid id)
         {
             var serverResponse = new ResponseWithMessageDto() { Message = "Xóa thành công" };
@@ -193,6 +196,7 @@ namespace MinhTuan.API.Controllers
 
 
         [HttpPut("update/{id}")]
+        [Authorize]
         public async Task<IActionResult> Update(Guid id, [FromForm] CreateArticleViewModel model)
         {
             var serverResponse = new ResponseWithMessageDto() { Message = "Cập nhật thành công" };

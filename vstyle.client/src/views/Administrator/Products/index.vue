@@ -64,12 +64,12 @@
                     </template>
                     <a-row style="margin-bottom: 20px" :gutter="24">
 
-                      <a-col :span="12">
+                      <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
                         <a-input v-model:value="formSearch.code_Filter" @keyup.enter="SearchData"
                           placeholder="Mã sản phẩm">
                         </a-input>
                       </a-col>
-                      <a-col :span="12">
+                      <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
                         <a-input v-model:value="formSearch.name_Filter" @keyup.enter="SearchData"
                           placeholder="Tên sản phẩm">
                         </a-input>
@@ -77,15 +77,25 @@
                     </a-row>
                     <a-row :gutter="24">
 
-                      <a-col :span="12">
-                        <span>Chọn khoảng giá</span>
+                      <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+                        <a-row>
+                          <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+                        
                         <a-slider style="max-width: 70%" v-model:value="formSearch.price_Filter" range :min="0"
                           :max="1000000" placeholder="Chọn khoảng giá" />
                       </a-col>
-                      <a-col :span="12">
+                      <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+                
+                        <a-select style="min-width: 100%" v-model:value="formSearch.isDisplay_Filter" :options="statusOptions" placeholder="Chọn trang thái" />
 
-                        <a-select showSearch="true" optionFilterProp="label" style="min-width: 100%" v-model:value="formSearch.category_Filter" mode="multiple"
-                          :options="categoryOptions" placeholder="Chọn danh mục" />
+                        </a-col>
+                        </a-row>
+                      </a-col>
+                      <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
+
+                        <a-select showSearch="true" optionFilterProp="label" style="min-width: 100%"
+                          v-model:value="formSearch.category_Filter" mode="multiple" :options="categoryOptions"
+                          placeholder="Chọn danh mục" />
                       </a-col>
                     </a-row>
 
@@ -111,6 +121,13 @@
                   :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : null)"
                   @change="handleTableChange" bordered>
                   <template #bodyCell="{ column, record }">
+                    <template v-if="column.key == 'isDisplay'">
+                      <a-tooltip v-if="record.isDisplay == true" title="Hiện" placement="right">
+                        <font-awesome-icon :icon="['fas', 'check-circle']" :style="{ color: '#52c41a' }" /></a-tooltip>
+                      <a-tooltip v-else title="Ẩn" placement="right"> <font-awesome-icon :icon="['fas', 'times-circle']"
+                          :style="{ color: '#f5222d' }" /></a-tooltip>
+
+                    </template>
                     <template v-if="column.key === 'categories'">
                       <a-tag v-for="item in record.listCategoryName" :key="item.id" color="default">{{ item }}</a-tag>
                     </template>
@@ -170,7 +187,7 @@
         </a-col>
       </a-row>
     </transition>
-    <ModalCreate @addSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalCreate" />
+    <ModalCreate @addSuccess="fetchDataAfterCreate()" ref="modalCreate" />
     <ModalVariant @addSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalVariant" />
     <ModalUpdate @updateSuccess="fetchData(pagination.current, pagination.pageSize)" ref="modalUpdate" />
   </a-spin>
@@ -204,7 +221,30 @@
       return {
         isSynchronizing: false,
         categoryOptions: [],
+        statusOptions: [
+            {
+                value: null,
+                label: "Tất cả"
+            },
+            {
+                value: true,
+                label: "Sản phẩm hiển thị"
+            },
+            {
+                value: false,
+                label: "Sản phẩm ẩn"
+            },
+
+        ],
         tableColumns: [
+          {
+            title: "",
+            dataIndex: "isDisplay",
+            key: "isDisplay",
+            width: "5%",
+            sorter: true,
+            showSorterTooltip: false
+          },
           {
             title: "Hình ảnh",
             dataIndex: "thumbnail",
@@ -245,7 +285,7 @@
           },
           {
             title: "Danh mục",
-           
+
             key: "categories",
             width: "30%",
           },
@@ -299,7 +339,7 @@
         //đay là cấu hình dev
         const client = weaviate.client({
           scheme: 'http',
-          host: 'localhost:8081/weaviate'
+          host: 'doan-vstyle.xyz:8080'
         });
         //Đây là cấu hình docker
 
@@ -396,13 +436,39 @@
         this.SearchData()
       },
       SearchData() {
-       
+
         this.fetchData(
           this.pagination.current,
           this.pagination.pageSize,
           this.formSearch
         );
       },
+      async fetchDataAfterCreate() {
+        this.loadingTable = true;
+        var searchParam = {
+
+          pageIndex: 1,
+          pageSize: this.formSearch.pageSize,
+          sortQuery: 'createdDate desc',
+        };
+
+        try {
+          const response = await APIService.post(
+            "/product/get-data-by-page",
+            searchParam
+          );
+          this.dataSourceTable = response.data.data.items;
+          this.pagination.total = response.data.data.totalCount;
+          this.pagination.current = response.data.data.pageIndex;
+          this.pagination.pageSize = response.data.data.pageSize;
+        } catch (error) {
+          notification.error({
+            message: "Lỗi",
+            description: error,
+          });
+        }
+        this.loadingTable = false;
+      }, //end fetchDataAfter
       async fetchData(pageIndex, pageSize, params) {
         this.loadingTable = true;
         var searchParam = {

@@ -9,6 +9,8 @@ services:
       - "8081:80"
     networks:
       - vstyle_network
+    # environment:
+    #   - VUE_APP_URL=http://backend-api:8080/api/
   backend-api:
     build:
       context: ./VStyle
@@ -19,6 +21,7 @@ services:
       - database
     volumes:
       - E:\BE_STUDYING\DATN\Code\Uploads_Volume:/app/Uploads
+      - E:\BE_STUDYING\DATN\Code\Log_Volume:/app/logs
     networks:
       - vstyle_network
   database:

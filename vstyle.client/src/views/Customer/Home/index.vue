@@ -64,9 +64,11 @@
     </a-row>
     <!-- end Slider -->
     <!-- Collection -->
-    <div v-if="isLoadingCollection">
-        <a-skeleton :loading="true" :paragraph="{ rows: 10 }" />
-    </div>
+    <a-row v-if="isLoadingCollection" justify="center" style="margin-bottom: 30px">
+        <a-col :xs="24" :sm="24" :md="20" :lg="16" :xl="16">
+            <a-skeleton :loading="true" :paragraph="{ rows: 10 }" />
+        </a-col>    
+    </a-row>
     <div v-else>
     <div  v-for="collection in this.collections" :key="collection.banner.id">
         <a-row style="margin-top: 30px">
@@ -285,6 +287,7 @@
                         pageIndex: 1,
                         pageSize: 10,
                         categoryCode_Filter: nameCollection,
+                        isDisplay_Filter: true,
 
                     });
                     // this.collections.banner[0] = response.data.data.items;
@@ -305,7 +308,8 @@
                         pageSize: 5,
                         sortQuery: 'publishDate desc',
                         status_Filter: true,
-                        category_Filter: [catetgoryId]
+                        category_Filter: [catetgoryId],
+                        
 
                     });
                     console.log("Tin tức:", response.data)
